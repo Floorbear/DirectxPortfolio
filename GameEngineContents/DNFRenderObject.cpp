@@ -2,7 +2,8 @@
 #include "DNFRenderObject.h"
 
 DNFRenderObject::DNFRenderObject():
-	MainRenderer_(nullptr)
+	MainRenderer_(nullptr),
+	IsStart_(false)
 {
 }
 
@@ -12,6 +13,10 @@ DNFRenderObject::~DNFRenderObject()
 
 void DNFRenderObject::ErrorCheck()
 {
+	if (IsStart_ == false)
+	{
+		MsgBoxAssert("DnfStart를 호출하지 않았습니다.");
+	}
 	if (MainRenderer_ == nullptr)
 	{
 		MsgBoxAssert("MainRenderer_ 세팅이 안됬습니다.");
@@ -31,4 +36,5 @@ void DNFRenderObject::DNFUpdate()
 void DNFRenderObject::DNFStart()
 {
 	MainRenderer_ = CreateComponent<GameEngineTextureRenderer>(GetNameCopy());
+	IsStart_ = true;
 }

@@ -26,5 +26,9 @@ protected:
 
 	void CreateCamera(float4 _Pos, float _ZoomRate);
 
+private:
+	//에러 체크용 Bool 함수
+	bool IsStart_;
+
 };
 

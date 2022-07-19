@@ -3,6 +3,10 @@
 
 #include "GameEngineContents/SeriaRoom.h"
 #include "GameEngineContents/Elvenguard.h"
+#include "GameEngineContents/Elvenguard_Front.h"
+#include "Bar.h"
+
+#include "Vilmark_0.h"
 
 #include "GameEngineContents/LoginLevel.h"
 #include "GameEngineContents/PlayLevel.h"
@@ -36,17 +40,37 @@ void ContentsCore::Start()
 		//}
 	}
 
+
+	//노말 텍스처 로드
 	{
 		GameEngineDirectory Dir;
 		Dir.MoveParentToExitsChildDirectory("ConstantResources");
 		Dir.Move("ConstantResources");
-		Dir.Move("Texture");
+		Dir.Move("NormalTexture");
 
-		std::vector<GameEngineFile> Shaders = Dir.GetAllFile();
-
-		for (size_t i = 0; i < Shaders.size(); i++)
+		std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
+		for (GameEngineDirectory Dir_i : Dirs)
 		{
-			GameEngineTexture::Load(Shaders[i].GetFullPath());
+			std::vector<GameEngineFile> Shaders = Dir_i.GetAllFile();
+
+			for (size_t i = 0; i < Shaders.size(); i++)
+			{
+				GameEngineTexture::Load(Shaders[i].GetFullPath());
+			}
+		}
+	}
+
+	//폴더 텍스처 로드
+	{
+		GameEngineDirectory Dir;
+		Dir.MoveParentToExitsChildDirectory("ConstantResources");
+		Dir.Move("ConstantResources");
+		Dir.Move("FolderTexture");
+
+		std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
+		for (GameEngineDirectory Dir_i : Dirs)
+		{
+			GameEngineFolderTexture::Load(Dir_i.GetFullPath());
 		}
 	}
 
@@ -69,6 +93,10 @@ void ContentsCore::Start()
 	// RTTI 런 타임 타입 인포메이션
 	CreateLevel<SeriaRoom>("SeriaRoom");
 	CreateLevel<Elvenguard>("Elvenguard");
+	CreateLevel<Elvenguard_Front>("Elvenguard_Front");
+	CreateLevel<Bar>("Bar");
+
+	CreateLevel<Vilmark_0>("Vilmark_0");
 	//CreateLevel<State0>("Title");
 	//CreateLevel<State1>("Title");
 	ChangeLevel("SeriaRoom");
@@ -92,6 +120,14 @@ void ContentsCore::Update(float _DeltaTime)
 	if (GameEngineInput::GetInst()->IsDown("MoveElvenguard_Front") == true)
 	{
 		ChangeLevel("Elvenguard_Front");
+	}
+	if (GameEngineInput::GetInst()->IsDown("MoveVilmark") == true)
+	{
+		ChangeLevel("Vilmark_0");
+	}
+	if (GameEngineInput::GetInst()->IsDown("MoveBar") == true)
+	{
+		ChangeLevel("Bar");
 	}
 
 	

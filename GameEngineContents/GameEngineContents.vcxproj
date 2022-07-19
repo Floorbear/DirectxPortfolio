@@ -157,6 +157,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Bar.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Bar_Background.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="ContentsCore.h">
       <SubType>
       </SubType>
@@ -173,7 +181,15 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="ElvenguardTileBackground.h">
+    <ClInclude Include="Elvenguard_Background.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Elvenguard_Front.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Elvenguard_Front_Background.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -187,6 +203,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Player.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Player_Main.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -218,8 +238,24 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Vilmark_0.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Vilmark_0_Background.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bar.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Bar_Background.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="ContentsCore.cpp">
       <SubType>
       </SubType>
@@ -236,7 +272,15 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="ElvenguardTileBackground.cpp">
+    <ClCompile Include="Elvenguard_Background.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Elvenguard_Front.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Elvenguard_Front_Background.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -249,6 +293,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Player.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Player_Main.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -279,6 +327,14 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="SeriaRoom.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Vilmark_0.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Vilmark_0_Background.cpp">
       <SubType>
       </SubType>
     </ClCompile>

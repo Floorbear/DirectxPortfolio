@@ -31,6 +31,18 @@
     <Filter Include="SeriaRoom">
       <UniqueIdentifier>{0ff0206f-186d-4bc8-a278-1cec16b3e720}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Elvengurad_Front">
+      <UniqueIdentifier>{b071a7ac-08c2-46d2-8e80-bf45441e20a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vilmark">
+      <UniqueIdentifier>{fb8de053-150b-475c-a3b4-3a00791f4b36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bar">
+      <UniqueIdentifier>{aac0a086-ebc1-44e1-bcf4-c0fca5d582c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{2aba7355-124a-4582-9e2d-3d6612746e4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ContentsCore.h">
@@ -67,7 +79,7 @@
     <ClInclude Include="Elvenguard.h">
       <Filter>Elvenguard</Filter>
     </ClInclude>
-    <ClInclude Include="ElvenguardTileBackground.h">
+    <ClInclude Include="Elvenguard_Background.h">
       <Filter>Elvenguard</Filter>
     </ClInclude>
     <ClInclude Include="SeriaRoom.h">
@@ -78,6 +90,27 @@
     </ClInclude>
     <ClInclude Include="DNFRenderObject.h">
       <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Elvenguard_Front.h">
+      <Filter>Elvengurad_Front</Filter>
+    </ClInclude>
+    <ClInclude Include="Elvenguard_Front_Background.h">
+      <Filter>Elvengurad_Front</Filter>
+    </ClInclude>
+    <ClInclude Include="Vilmark_0.h">
+      <Filter>Vilmark</Filter>
+    </ClInclude>
+    <ClInclude Include="Vilmark_0_Background.h">
+      <Filter>Vilmark</Filter>
+    </ClInclude>
+    <ClInclude Include="Bar.h">
+      <Filter>Bar</Filter>
+    </ClInclude>
+    <ClInclude Include="Bar_Background.h">
+      <Filter>Bar</Filter>
+    </ClInclude>
+    <ClInclude Include="Player_Main.h">
+      <Filter>Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -112,7 +145,7 @@
     <ClCompile Include="Elvenguard.cpp">
       <Filter>Elvenguard</Filter>
     </ClCompile>
-    <ClCompile Include="ElvenguardTileBackground.cpp">
+    <ClCompile Include="Elvenguard_Background.cpp">
       <Filter>Elvenguard</Filter>
     </ClCompile>
     <ClCompile Include="SeriaRoom.cpp">
@@ -123,6 +156,27 @@
     </ClCompile>
     <ClCompile Include="DNFRenderObject.cpp">
       <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Elvenguard_Front.cpp">
+      <Filter>Elvengurad_Front</Filter>
+    </ClCompile>
+    <ClCompile Include="Elvenguard_Front_Background.cpp">
+      <Filter>Elvengurad_Front</Filter>
+    </ClCompile>
+    <ClCompile Include="Vilmark_0.cpp">
+      <Filter>Vilmark</Filter>
+    </ClCompile>
+    <ClCompile Include="Vilmark_0_Background.cpp">
+      <Filter>Vilmark</Filter>
+    </ClCompile>
+    <ClCompile Include="Bar.cpp">
+      <Filter>Bar</Filter>
+    </ClCompile>
+    <ClCompile Include="Bar_Background.cpp">
+      <Filter>Bar</Filter>
+    </ClCompile>
+    <ClCompile Include="Player_Main.cpp">
+      <Filter>Player</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

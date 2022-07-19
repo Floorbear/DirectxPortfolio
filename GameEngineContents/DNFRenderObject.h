@@ -29,7 +29,8 @@ protected:
 	//1. MainRenderer 생성
 	void DNFStart();
 
-
+private:
+	bool IsStart_; //DnfStart 호출했냐
 
 };
 
