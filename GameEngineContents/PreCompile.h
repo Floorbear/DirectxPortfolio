@@ -24,5 +24,8 @@
 // base
 #include <GameEngineBase/GameEngineDebug.h>
 
+#include <GameEngineCore/GameEngineCameraActor.h>
+#include <GameEngineCore/GameEngineCamera.h>
+
 // core
 #include <GameEngineCore/CoreMinimal.h>

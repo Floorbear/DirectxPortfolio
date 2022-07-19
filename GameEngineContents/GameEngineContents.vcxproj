@@ -161,6 +161,22 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="DNFRenderObject.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="DNFLevel.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Elvenguard.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ElvenguardTileBackground.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Enums.h" />
     <ClInclude Include="GlobalContentsValue.h">
       <SubType>
@@ -186,17 +202,41 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="TitleLevel.h">
+    <ClInclude Include="LoginLevel.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="TitleLogo.h">
+    <ClInclude Include="LoginUI.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="SeriaBackground.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="SeriaRoom.h">
       <SubType>
       </SubType>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="DNFRenderObject.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="DNFLevel.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Elvenguard.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="ElvenguardTileBackground.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -226,11 +266,19 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="TitleLevel.cpp">
+    <ClCompile Include="LoginLevel.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="TitleLogo.cpp">
+    <ClCompile Include="LoginUI.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="SeriaBackground.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="SeriaRoom.cpp">
       <SubType>
       </SubType>
     </ClCompile>

@@ -24,6 +24,7 @@ public:
 		, CurFrame(-1)
 		, Start(-1)
 		, End(-1)
+		, FrameTime(0.0f)
 	{
 
 	}
@@ -35,6 +36,7 @@ public:
 		, CurFrame(_Start)
 		, Start(_Start)
 		, End(_End)
+		, FrameTime(0.0f)
 	{
 
 	}
@@ -46,6 +48,7 @@ public:
 		, CurFrame(0)
 		, Start(-1)
 		, End(-1)
+		, FrameTime(0.0f)
 	{
 
 	}
@@ -91,6 +94,9 @@ public:
 	GameEngineTextureRenderer& operator=(const GameEngineTextureRenderer& _Other) = delete;
 	GameEngineTextureRenderer& operator=(GameEngineTextureRenderer&& _Other) noexcept = delete;
 
+	void SetSamplingModePoint();
+	void SetSamplingModeLiner();
+
 	void SetTexture(GameEngineTexture* _Texture);
 
 	void SetTexture(const std::string& _Name);
@@ -114,6 +120,8 @@ public:
 	void AnimationBindFrame(const std::string& _AnimationName, std::function<void(const FrameAnimation_DESC&)> Function);
 	// Update
 	void AnimationBindTime(const std::string& _AnimationName, std::function<void(const FrameAnimation_DESC&, float)> Function);
+
+	void ScaleToTexture();
 
 protected:
 	void Start() override;

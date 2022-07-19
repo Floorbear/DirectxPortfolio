@@ -74,6 +74,8 @@ void FrameAnimation::Update(float _Delta)
 }
 
 GameEngineTextureRenderer::GameEngineTextureRenderer() 
+	: CurAni(nullptr)
+	, CurTex(nullptr)
 {
 }
 
@@ -92,6 +94,16 @@ void GameEngineTextureRenderer::Start()
 	FrameData.SizeY = 1.0f;
 
 	ShaderResources.SetConstantBufferLink("AtlasData", FrameData);
+}
+
+void GameEngineTextureRenderer::SetSamplingModePoint()
+{
+	ShaderResources.SetSampler("Smp", "EngineSamplerPoint");
+}
+
+void GameEngineTextureRenderer::SetSamplingModeLiner()
+{
+	ShaderResources.SetSampler("Smp", "EngineSamplerLinear");
 }
 
 void GameEngineTextureRenderer::SetTexture(GameEngineTexture* _Texture)
@@ -206,7 +218,7 @@ void GameEngineTextureRenderer::CreateFrameAnimationFolder(const std::string& _A
 
 	if (NewAni.Info.End == -1)
 	{
-		NewAni.Info.End = NewAni.FolderTexture->GetTextureCount() - 1;
+		NewAni.Info.End = static_cast<unsigned int>(NewAni.FolderTexture->GetTextureCount() - 1);
 	}
 }
 
@@ -241,8 +253,8 @@ void GameEngineTextureRenderer::ChangeFrameAnimation(const std::string& _Animati
 	{
 		CurAni = &FrameAni[Name];
 		CurAni->Reset();
+		SetTexture(CurAni->Texture, CurAni->Info.CurFrame);
 	}
-
 }
 
 void GameEngineTextureRenderer::FrameDataReset()
@@ -257,4 +269,11 @@ void GameEngineTextureRenderer::Update(float _Delta)
 	{
 		CurAni->Update(_Delta);
 	}
+}
+
+
+
+void GameEngineTextureRenderer::ScaleToTexture()
+{
+	GetTransform().SetLocalScale(CurTex->GetScale());
 }

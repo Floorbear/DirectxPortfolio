@@ -25,12 +25,18 @@
     <Filter Include="Actor\Play\Com">
       <UniqueIdentifier>{d376050c-9962-43e7-82bd-36fd5f2ad011}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Elvenguard">
+      <UniqueIdentifier>{90e1ea0c-f2b2-4ddf-a08c-dde18ffae164}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SeriaRoom">
+      <UniqueIdentifier>{0ff0206f-186d-4bc8-a278-1cec16b3e720}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ContentsCore.h">
       <Filter>Contents</Filter>
     </ClInclude>
-    <ClInclude Include="TitleLevel.h">
+    <ClInclude Include="LoginLevel.h">
       <Filter>Level</Filter>
     </ClInclude>
     <ClInclude Include="PlayLevel.h">
@@ -39,7 +45,7 @@
     <ClInclude Include="Player.h">
       <Filter>Actor\Play</Filter>
     </ClInclude>
-    <ClInclude Include="TitleLogo.h">
+    <ClInclude Include="LoginUI.h">
       <Filter>Actor\Title</Filter>
     </ClInclude>
     <ClInclude Include="Enums.h">
@@ -55,12 +61,30 @@
     <ClInclude Include="ScoreTestComponent.h">
       <Filter>Actor\Play\Com</Filter>
     </ClInclude>
+    <ClInclude Include="DNFLevel.h">
+      <Filter>Level</Filter>
+    </ClInclude>
+    <ClInclude Include="Elvenguard.h">
+      <Filter>Elvenguard</Filter>
+    </ClInclude>
+    <ClInclude Include="ElvenguardTileBackground.h">
+      <Filter>Elvenguard</Filter>
+    </ClInclude>
+    <ClInclude Include="SeriaRoom.h">
+      <Filter>SeriaRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="SeriaBackground.h">
+      <Filter>SeriaRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="DNFRenderObject.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
       <Filter>Contents</Filter>
     </ClCompile>
-    <ClCompile Include="TitleLevel.cpp">
+    <ClCompile Include="LoginLevel.cpp">
       <Filter>Level</Filter>
     </ClCompile>
     <ClCompile Include="PlayLevel.cpp">
@@ -69,7 +93,7 @@
     <ClCompile Include="Player.cpp">
       <Filter>Actor\Play</Filter>
     </ClCompile>
-    <ClCompile Include="TitleLogo.cpp">
+    <ClCompile Include="LoginUI.cpp">
       <Filter>Actor\Title</Filter>
     </ClCompile>
     <ClCompile Include="Monster.cpp">
@@ -81,6 +105,24 @@
     </ClCompile>
     <ClCompile Include="ScoreTestComponent.cpp">
       <Filter>Actor\Play\Com</Filter>
+    </ClCompile>
+    <ClCompile Include="DNFLevel.cpp">
+      <Filter>Level</Filter>
+    </ClCompile>
+    <ClCompile Include="Elvenguard.cpp">
+      <Filter>Elvenguard</Filter>
+    </ClCompile>
+    <ClCompile Include="ElvenguardTileBackground.cpp">
+      <Filter>Elvenguard</Filter>
+    </ClCompile>
+    <ClCompile Include="SeriaRoom.cpp">
+      <Filter>SeriaRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="SeriaBackground.cpp">
+      <Filter>SeriaRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="DNFRenderObject.cpp">
+      <Filter>Actor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
