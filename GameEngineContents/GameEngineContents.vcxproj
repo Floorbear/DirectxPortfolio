@@ -169,6 +169,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="DNFDefineList.h" />
     <ClInclude Include="DNFRenderObject.h">
       <SubType>
       </SubType>

@@ -43,6 +43,9 @@
     <Filter Include="Player">
       <UniqueIdentifier>{2aba7355-124a-4582-9e2d-3d6612746e4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Avator">
+      <UniqueIdentifier>{34cbbc75-6ee0-4b37-aeee-050cac866dbc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ContentsCore.h">
@@ -111,6 +114,9 @@
     </ClInclude>
     <ClInclude Include="Player_Main.h">
       <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="DNFDefineList.h">
+      <Filter>Global</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

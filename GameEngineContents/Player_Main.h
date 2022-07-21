@@ -19,8 +19,11 @@ protected:
 	void End() override;
 
 private:
-	GameEngineTextureRenderer* HairRenderer_;
+	GameEngineTextureRenderer* HairRenderer_a_;
+	GameEngineTextureRenderer* HairRenderer_d_;
 	GameEngineTextureRenderer* WeaponRenderer_b_;
 	GameEngineTextureRenderer* WeaponRenderer_c_;
+
+	bool OnAvator_;
 };
 
