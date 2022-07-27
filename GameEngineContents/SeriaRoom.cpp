@@ -15,7 +15,6 @@ SeriaRoom::~SeriaRoom()
 void SeriaRoom::Start()
 {
 	DNFStart();
-
 	SeriaBackground* Background = CreateActor<SeriaBackground>();
 }
 

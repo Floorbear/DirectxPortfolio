@@ -37,21 +37,7 @@ void FrameAnimation::Update(float _Delta)
 			Frame(Info);
 		}
 
-		if (nullptr != Texture)
-		{
-			ParentRenderer->SetTexture(Texture, Info.CurFrame);
-		}
-		else if(nullptr != FolderTexture)
-		{
-			ParentRenderer->FrameDataReset();
-			ParentRenderer->SetTexture(FolderTexture->GetTexture(Info.CurFrame));
-		}
-		else 
-		{
-			MsgBoxAssert("텍스처가 세팅되지 않은 애니메이션 입니다.");
-		}
-
-		if (Info.CurFrame >= Info.End)
+		if (Info.CurFrame > Info.End)
 		{
 			if (false == bOnceEnd && nullptr != End)
 			{
@@ -64,10 +50,30 @@ void FrameAnimation::Update(float _Delta)
 			{
 				Info.CurFrame = Info.Start;
 			}
-			else {
+			else 
+			{
 				Info.CurFrame = Info.End;
 			}
 		}
+
+		if (nullptr != Texture)
+		{
+			ParentRenderer->CurTex = Texture;
+			ParentRenderer->SetTexture(Texture, Info.CurFrame);
+			ParentRenderer->SetPivot();
+		}
+		else if (nullptr != FolderTexture)
+		{
+			ParentRenderer->FrameDataReset();
+			ParentRenderer->CurTex = FolderTexture->GetTexture(Info.CurFrame);
+			ParentRenderer->SetTexture(FolderTexture->GetTexture(Info.CurFrame));
+			ParentRenderer->SetPivot();
+		}
+		else
+		{
+			MsgBoxAssert("텍스처가 세팅되지 않은 애니메이션 입니다.");
+		}
+
 
 		Info.FrameTime -= Info.Inter;
 	}
@@ -76,6 +82,7 @@ void FrameAnimation::Update(float _Delta)
 GameEngineTextureRenderer::GameEngineTextureRenderer() 
 	: CurAni(nullptr)
 	, CurTex(nullptr)
+	, PivotMode(PIVOTMODE::CENTER)
 {
 }
 
@@ -106,6 +113,36 @@ void GameEngineTextureRenderer::SetSamplingModeLiner()
 	ShaderResources.SetSampler("Smp", "EngineSamplerLinear");
 }
 
+void GameEngineTextureRenderer::SetPivot()
+{
+	SetPivot(PivotMode);
+}
+
+void GameEngineTextureRenderer::SetPivot(PIVOTMODE _Mode)
+{
+	switch (_Mode)
+	{
+	case PIVOTMODE::CENTER:
+		SetPivotToVector(float4::ZERO);
+		break;
+	case PIVOTMODE::LEFTTOP:
+		SetPivotToVector(float4(GetTransform().GetWorldScale().hx(), -GetTransform().GetWorldScale().hy()));
+		break;
+	case PIVOTMODE::BOT:
+		SetPivotToVector(float4(0.0f, GetTransform().GetWorldScale().hy()));
+		break;
+	default:
+		break;
+	}
+
+	PivotMode = _Mode;
+}
+
+void GameEngineTextureRenderer::SetPivotToVector(const float4& _Value) 
+{
+	GetTransform().SetLocalPosition(_Value);
+}
+
 void GameEngineTextureRenderer::SetTexture(GameEngineTexture* _Texture)
 {
 	CurTex = _Texture;
@@ -122,6 +159,10 @@ void GameEngineTextureRenderer::SetFrame(UINT _Index)
 	FrameData = CurTex->GetFrameData(_Index);
 }
 
+GameEngineTexture* GameEngineTextureRenderer::GetCurTexture()
+{
+	return CurTex;
+}
 
 void GameEngineTextureRenderer::SetTexture(const std::string& _Name, UINT _Index)
 {
@@ -139,60 +180,6 @@ void GameEngineTextureRenderer::SetTexture(GameEngineTexture* _Texture, UINT _In
 
 	SetTexture(_Texture);
 	SetFrame(_Index);
-}
-
-// 시작 프레임에 들어온다.
-void GameEngineTextureRenderer::AnimationBindStart(const std::string& _AnimationName, std::function<void(const FrameAnimation_DESC&)> Function)
-{
-	std::string Name = GameEngineString::ToUpperReturn(_AnimationName);
-
-	if (FrameAni.end() == FrameAni.find(Name))
-	{
-		MsgBoxAssert("존재하지 않는 애니메이션으로 체인지 하려고 했습니다.");
-		return;
-	}
-
-	FrameAni[Name].Start = Function;
-}
-// 끝나는 프레임에 들어온다
-void GameEngineTextureRenderer::AnimationBindEnd(const std::string& _AnimationName, std::function<void(const FrameAnimation_DESC&)> Function)
-{
-	std::string Name = GameEngineString::ToUpperReturn(_AnimationName);
-
-	if (FrameAni.end() == FrameAni.find(Name))
-	{
-		MsgBoxAssert("존재하지 않는 애니메이션으로 체인지 하려고 했습니다.");
-		return;
-	}
-
-	FrameAni[Name].End = Function;
-}
-// 프레임이 바뀔때마다 들어온다
-void GameEngineTextureRenderer::AnimationBindFrame(const std::string& _AnimationName, std::function<void(const FrameAnimation_DESC&)> Function)
-{
-	std::string Name = GameEngineString::ToUpperReturn(_AnimationName);
-
-	if (FrameAni.end() == FrameAni.find(Name))
-	{
-		MsgBoxAssert("존재하지 않는 애니메이션으로 체인지 하려고 했습니다.");
-		return;
-	}
-
-	FrameAni[Name].Frame = Function;
-}
-
-// Update
-void GameEngineTextureRenderer::AnimationBindTime(const std::string& _AnimationName, std::function<void(const FrameAnimation_DESC& , float)> Function)
-{
-	std::string Name = GameEngineString::ToUpperReturn(_AnimationName);
-
-	if (FrameAni.end() == FrameAni.find(Name))
-	{
-		MsgBoxAssert("존재하지 않는 애니메이션으로 체인지 하려고 했습니다.");
-		return;
-	}
-
-	FrameAni[Name].Time = Function;
 }
 
 void GameEngineTextureRenderer::CreateFrameAnimationFolder(const std::string& _AnimationName, const FrameAnimation_DESC& _Desc)
@@ -253,7 +240,14 @@ void GameEngineTextureRenderer::ChangeFrameAnimation(const std::string& _Animati
 	{
 		CurAni = &FrameAni[Name];
 		CurAni->Reset();
-		//SetTexture(CurAni->Texture, CurAni->Info.CurFrame);
+		if (nullptr != CurAni->Texture)
+		{
+			SetTexture(CurAni->Texture, CurAni->Info.CurFrame);
+		}
+		else if(nullptr != CurAni->FolderTexture)
+		{
+			SetTexture(CurAni->FolderTexture->GetTexture(CurAni->Info.CurFrame));
+		}
 	}
 }
 
@@ -276,4 +270,15 @@ void GameEngineTextureRenderer::Update(float _Delta)
 void GameEngineTextureRenderer::ScaleToTexture()
 {
 	GetTransform().SetLocalScale(CurTex->GetScale());
+}
+
+void GameEngineTextureRenderer::CurAnimationReset()
+{
+	CurAnimationSetStartPivotFrame(CurAni->Info.Start);
+	// CurAni->Info.CurFrame = CurAni->Info.Start;
+}
+
+void GameEngineTextureRenderer::CurAnimationSetStartPivotFrame(int SetFrame)
+{
+	CurAni->Info.CurFrame += CurAni->Info.Start + SetFrame;
 }

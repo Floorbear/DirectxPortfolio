@@ -6,10 +6,14 @@
 
 #pragma comment(lib, "DirectXTex.lib")
 
-// 설명 : 
+
+// 설명 :
 class GameEngineTexture : public GameEngineRes<GameEngineTexture>
 {
+
+
 public:
+	// constrcuter destructer
 	GameEngineTexture();
 	~GameEngineTexture();
 
@@ -19,7 +23,7 @@ public:
 	GameEngineTexture& operator=(const GameEngineTexture& _Other) = delete;
 	GameEngineTexture& operator=(GameEngineTexture&& _Other) noexcept = delete;
 
-	static GameEngineTexture* Load(const std::string& _Path) 
+	static GameEngineTexture* Load(const std::string& _Path)
 	{
 		return Load(_Path, GameEnginePath::GetFileName(_Path));
 	}
@@ -30,16 +34,19 @@ public:
 	static GameEngineTexture* Create(const std::string& _Name, ID3D11Texture2D* _Texture);
 	static GameEngineTexture* Create(ID3D11Texture2D* _Texture);
 
+	static GameEngineTexture* Create(const D3D11_TEXTURE2D_DESC& _Desc);
+
 	// static void Cut("Boss_Left.bmp", 5, 7);
 	static void Cut(const std::string& _Name, UINT _X, UINT _Y);
 
 	// Member
 	ID3D11RenderTargetView* CreateRenderTargetView();
+	ID3D11DepthStencilView* CreateDepthStencilView();
 
 	void VSSetting(int _BindPoint);
 	void PSSetting(int _BindPoint);
 
-	float4 GetFrameData(UINT _Index) 
+	float4 GetFrameData(UINT _Index)
 	{
 		if (true == CutData.empty())
 		{
@@ -53,22 +60,25 @@ public:
 
 		return CutData[_Index];
 	}
-
+	
 	void TextureLoad(const std::string& _Path);
 
-	float4 GetScale() 
-	{
-		return { static_cast<float>(Metadata.width), static_cast<float>(Metadata.height) };
+	float4 GetScale()
+	{								//(Metadata.width),(Metadata.height)이거쓰면 0,0되서 텍스쳐 생성에 실패함 뜸
+		return { static_cast<float>(Desc.Width), static_cast<float>(Desc.Height) };
 	}
 
 	void TextureCreate(const D3D11_TEXTURE2D_DESC& _Desc);
+
+	float4 GetPixel(int _x, int _y);
 
 protected:
 
 private:
 	ID3D11Texture2D* Texture2D;
-	ID3D11RenderTargetView* RenderTargetView;
-	ID3D11ShaderResourceView* ShaderResourceView;
+	ID3D11RenderTargetView* RenderTargetView;  // 랜더타겟으로 사용할경우의 인터페이스
+	ID3D11ShaderResourceView* ShaderResourceView; // 쉐이더에 세팅해주기 인터페이스
+	ID3D11DepthStencilView* DepthStencilView; // 깊이 버퍼로 사용할 경우의 인터페이스
 
 	DirectX::TexMetadata Metadata;
 	DirectX::ScratchImage Image;
