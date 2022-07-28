@@ -1,8 +1,10 @@
 #pragma once
 #include "DNFRenderObject.h"
+#include "AvatarManager.h"
 
 class Player_Main : public DNFRenderObject
 {
+	friend AvatarManager;
 public:
 	Player_Main();
 	~Player_Main();
@@ -19,10 +21,15 @@ protected:
 	void End() override;
 
 private:
+	AvatarManager AvatarManager_;
+
 	GameEngineTextureRenderer* HairRenderer_a_;
 	GameEngineTextureRenderer* HairRenderer_d_;
 	GameEngineTextureRenderer* WeaponRenderer_b_;
 	GameEngineTextureRenderer* WeaponRenderer_c_;
+
+	GameEngineTextureRenderer* PantsRenderer_a_;
+	GameEngineTextureRenderer* PantsRenderer_b_;
 
 	bool OnAvator_;
 };

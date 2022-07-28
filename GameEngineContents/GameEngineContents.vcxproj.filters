@@ -118,6 +118,12 @@
     <ClInclude Include="DNFDefineList.h">
       <Filter>Global</Filter>
     </ClInclude>
+    <ClInclude Include="AvatarManager.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="DNFEnums.h">
+      <Filter>Global</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -182,6 +188,9 @@
       <Filter>Bar</Filter>
     </ClCompile>
     <ClCompile Include="Player_Main.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="AvatarManager.cpp">
       <Filter>Player</Filter>
     </ClCompile>
   </ItemGroup>
