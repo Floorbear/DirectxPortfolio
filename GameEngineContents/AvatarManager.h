@@ -24,7 +24,11 @@ public:
 	void LinkPlayerToAvatar(Player_Main* _Player);
 
 	//아바타 모션을 변경하는 함수
+	//RenderList에 있는 렌더러의 애니메이션을 변경한다
 	void ChangeMotion(PlayerAnimations _Animation);
+
+	//아바타 바꿀때는 RenderList와 CurAvatar의 해당부위를 Clear하고 진행해야함
+	void ChangeAvatar(AvatarType _Type, AvatarParts _Parts);
 
 protected:
 
@@ -36,6 +40,9 @@ private:
 
 	std::string EnumToString(PlayerAnimations _Ani);
 	std::string EnumToString(AvatarType _Type);
+
+	//아바타 종류 부위에 몇개의 렌더러가 있는지 확인하는 함수
+	std::vector<AvatarLayer> GetRendererLayer(AvatarParts _Parts, AvatarType _Type);
 
 
 	//렌더러를 선택하는 함수
@@ -51,6 +58,7 @@ private:
 
 	GameEngineTextureRenderer* PantsRenderer_a_;
 	GameEngineTextureRenderer* PantsRenderer_b_;
+	GameEngineTextureRenderer* PantsRenderer_d_;
 
 	//화면에 렌더링 되는 렌더러
 	std::multimap<AvatarParts, GameEngineTextureRenderer*> RenderList_;
