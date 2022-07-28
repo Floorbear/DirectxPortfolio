@@ -50,7 +50,7 @@ void GameEngineCamera::Render(float _DeltaTime)
 		Projection.PerspectiveFovLH(Fov, Size.x, Size.y, Near, Far);
 		break;
 	case CAMERAPROJECTIONMODE::Orthographic:
-		Projection.OrthographicLH(Size.x, Size.y, Near, Far);
+		Projection.OrthographicLH(Size.x*0.7f, Size.y*0.7f, Near, Far);
 		break;
 	default:
 		break;

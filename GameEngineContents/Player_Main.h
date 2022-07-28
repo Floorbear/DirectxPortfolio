@@ -41,5 +41,7 @@ private:
 
 	bool QToggle_;
 	bool WToggle_;
+	bool EToggle_;
+
 };
 

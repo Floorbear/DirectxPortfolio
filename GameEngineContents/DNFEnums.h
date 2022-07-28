@@ -34,5 +34,7 @@ enum class AvatarLayer
 enum class PlayerAnimations
 {
 	Idle,
-	AutoAttack_0
+	Move,
+	Buff,
+	AutoAttack_0,
 };

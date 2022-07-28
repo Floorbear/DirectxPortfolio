@@ -89,8 +89,11 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 
 
 
-	CreateAvatar("lswd3400b", AvatarParts::Weapon, AvatarType::None, AvatarLayer::B);
-	CreateAvatar("lswd3400c", AvatarParts::Weapon, AvatarType::None, AvatarLayer::C);
+	CreateAvatar("lswd3400b", AvatarParts::Weapon, AvatarType::Job, AvatarLayer::B);
+	CreateAvatar("lswd3400c", AvatarParts::Weapon, AvatarType::Job, AvatarLayer::C);
+	CreateAvatar("club0000b", AvatarParts::Weapon, AvatarType::Default, AvatarLayer::B);
+	CreateAvatar("club0000c", AvatarParts::Weapon, AvatarType::Default, AvatarLayer::C);
+
 
 	//·»´õ ¸®½ºÆ®¿¡ ³Ö¾îÁÜ
 	RenderList_.insert(std::make_pair(AvatarParts::Skin, SkinRenderer_));
@@ -104,7 +107,7 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	CurAvatar_.insert(std::make_pair(AvatarParts::Skin, AvatarType::None));
 	CurAvatar_.insert(std::make_pair(AvatarParts::Hair, AvatarType::Default));
 	CurAvatar_.insert(std::make_pair(AvatarParts::Pants, AvatarType::Default));
-	CurAvatar_.insert(std::make_pair(AvatarParts::Weapon, AvatarType::None));
+	CurAvatar_.insert(std::make_pair(AvatarParts::Weapon, AvatarType::Default));
 
 
 
@@ -232,7 +235,10 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 	float Attack_Iter = 0.08f;
 
 	CurRenderer->CreateFrameAnimationFolder("Idle"+Name, FrameAnimation_DESC(_AvatarFolderName, Idle_Start, Idle_End, Idle_Iter));
+	CurRenderer->CreateFrameAnimationFolder("Move" + Name, FrameAnimation_DESC(_AvatarFolderName, Move_Start, Move_End, Attack_Iter));
 	CurRenderer->CreateFrameAnimationFolder("AutoAttack_0"+ Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_0_Start, AutoAttack_0_End, Attack_Iter));
+	CurRenderer->CreateFrameAnimationFolder("Buff" + Name, FrameAnimation_DESC(_AvatarFolderName, BuffOn_Start, BuffOn_End, Attack_Iter,false));
+
 
 }
 
@@ -242,6 +248,12 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 	{
 	case PlayerAnimations::Idle:
 		return "Idle";
+		break;
+	case PlayerAnimations::Buff:
+		return "Buff";
+		break;
+	case PlayerAnimations::Move:
+		return "Move";
 		break;
 	case PlayerAnimations::AutoAttack_0:
 		return "AutoAttack_0";
@@ -345,6 +357,9 @@ std::vector<AvatarLayer> AvatarManager::GetRendererLayer(AvatarParts _Parts, Ava
 	case AvatarParts::Shoes:
 		break;
 	case AvatarParts::Weapon:
+		Vector.push_back(AvatarLayer::B);
+		Vector.push_back(AvatarLayer::C);
+		return Vector;
 		break;
 	default:
 		break;

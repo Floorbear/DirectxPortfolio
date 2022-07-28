@@ -2,9 +2,12 @@
 #include "DNFDefineList.h"
 #include "Player_Main.h"
 
+#include <GameEngineCore/GameEngineLevel.h>
+
 Player_Main::Player_Main():
 	QToggle_(false),
-	WToggle_(false)
+	WToggle_(false),
+	EToggle_(false)
 {
 }
 
@@ -24,9 +27,13 @@ void Player_Main::Start()
 	GameEngineInput::GetInst()->CreateKey("C", 'C');
 	GameEngineInput::GetInst()->CreateKey("Q", 'Q');
 	GameEngineInput::GetInst()->CreateKey("W", 'W');
+	GameEngineInput::GetInst()->CreateKey("E", 'E');
+
 
 
 	GameEngineInput::GetInst()->CreateKey("Left", VK_LEFT);
+	GameEngineInput::GetInst()->CreateKey("Right", VK_RIGHT);
+
 
 	//skin
 	AvatarManager_.LinkPlayerToAvatar(this);
@@ -71,52 +78,70 @@ void Player_Main::Update(float _DeltaTime)
 		}
 
 	}
+	//e를 누르면 무기 아바타의 변경이 일어남
+	if (GameEngineInput::GetInst()->IsDown("E") == true)
+	{
+		if (EToggle_ == false)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Job, AvatarParts::Weapon);
+			EToggle_ = true;
+		}
+		else
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Default, AvatarParts::Weapon);
+			EToggle_ = false;
+		}
+
+	}
+	//z를 누르면 모션의 변경이 일어남
+	if (GameEngineInput::GetInst()->IsDown("Z") == true)
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::Buff);
+	}
 	//x를 누르면 모션의 변경이 일어남
 	if (GameEngineInput::GetInst()->IsDown("X") == true)
 	{
 		AvatarManager_.ChangeMotion(PlayerAnimations::AutoAttack_0);
-	/*	if (OnAvator_ == true)
-		{
-			HairRenderer_d_->On();
-			HairRenderer_a_->ChangeFrameAnimation("AutoAttack_0_1");
-			HairRenderer_d_->ChangeFrameAnimation("AutoAttack_0_1");
-		}
-		else
-		{
-			HairRenderer_a_->ChangeFrameAnimation("AutoAttack_0");
-			HairRenderer_d_->Off();
-		}
-
-		WeaponRenderer_b_->ChangeFrameAnimation("AutoAttack_0");
-		WeaponRenderer_c_->ChangeFrameAnimation("AutoAttack_0");
-		MainRenderer_->ChangeFrameAnimation("AutoAttack_0");
-
-		PantsRenderer_a_->ChangeFrameAnimation("AutoAttack_0");
-		PantsRenderer_b_->ChangeFrameAnimation("AutoAttack_0");*/
 	}
 
 	//C를 누르면 모션의 변경이 일어남
 	if (GameEngineInput::GetInst()->IsDown("C") == true)
 	{
 		AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
-		//if (OnAvator_ == true)
-		//{
-		//	HairRenderer_a_->ChangeFrameAnimation("Idle_1");
-		//	HairRenderer_d_->ChangeFrameAnimation("Idle_1");
-		//}
-		//else
-		//{
-		//	HairRenderer_a_->ChangeFrameAnimation("Idle");
-		//	HairRenderer_d_->Off();
-		//}
 
-		//WeaponRenderer_b_->ChangeFrameAnimation("Idle");
-		//WeaponRenderer_c_->ChangeFrameAnimation("Idle");
-		//MainRenderer_->ChangeFrameAnimation("Idle");
-
-		//PantsRenderer_a_->ChangeFrameAnimation("Idle");
-		//PantsRenderer_b_->ChangeFrameAnimation("Idle");
 	}
+
+
+	//이동 flip할때 미세한 오차수정은 일정범위 이동할때 카메라 추적 로직 작성할때 같이하자
+	//if (GameEngineInput::GetInst()->IsDown("Right") == true)
+	//{
+	//	GetTransform().PixLocalPositiveX();
+	//	GetTransform().SetLocalMove(float4::RIGHT * 30);
+	//}
+	if (GameEngineInput::GetInst()->IsPress("Right") == true)
+	{
+		GetTransform().SetLocalMove(float4::RIGHT * _DeltaTime * 100.0f);
+		AvatarManager_.ChangeMotion(PlayerAnimations::Move);
+		GetTransform().PixLocalPositiveX();
+	}
+	//if (GameEngineInput::GetInst()->IsDown("Left") == true)
+	//{
+	//	GetTransform().PixLocalNegativeX();
+	//	GetTransform().SetLocalMove(float4::LEFT * 30);
+	//}
+	if (GameEngineInput::GetInst()->IsPress("Left") == true)
+	{
+		GetTransform().SetLocalMove(float4::LEFT * _DeltaTime * 100.0f);
+		AvatarManager_.ChangeMotion(PlayerAnimations::Move);
+		GetTransform().PixLocalNegativeX();
+
+	}
+	if (GameEngineInput::GetInst()->IsUp("Left") == true || GameEngineInput::GetInst()->IsUp("Right") == true)
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
+	}
+
+	GetLevel()->GetMainCameraActorTransform().SetWorldPosition(GetTransform().GetWorldPosition());
 
 }
 
