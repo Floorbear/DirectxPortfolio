@@ -14,6 +14,7 @@ class GameEngineActor :
 	public GameEngineTransformBase
 {
 	friend class GameEngineLevel;
+	friend class GameEngineCamera;
 
 public:
 	// constrcuter destructer
@@ -52,6 +53,12 @@ public:
 
 	void SetParent(GameEngineUpdateObject*) override;
 
+
+	void SetLevelOverOn() 
+	{
+		IsLevelOver = true;
+	}
+
 protected:
 	virtual void Start() override;
 	virtual void Update(float _DeltaTime) override;
@@ -60,11 +67,14 @@ protected:
 private:
 	void AllUpdate(float _ScaleDeltaTime, float _DeltaTime);
 
-	class GameEngineLevel* ParentLevel;
 
 	void SetLevel(GameEngineLevel* _ParentLevel)
 	{
 		ParentLevel = _ParentLevel;
 	}
+
+	bool IsLevelOver;
+
+	class GameEngineLevel* ParentLevel;
 };
 

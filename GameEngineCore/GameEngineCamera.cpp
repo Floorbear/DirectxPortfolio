@@ -50,7 +50,7 @@ void GameEngineCamera::Render(float _DeltaTime)
 		Projection.PerspectiveFovLH(Fov, Size.x, Size.y, Near, Far);
 		break;
 	case CAMERAPROJECTIONMODE::Orthographic:
-		Projection.OrthographicLH(Size.x*0.7f, Size.y*0.7f, Near, Far);
+		Projection.OrthographicLH(Size.x, Size.y, Near, Far);
 		break;
 	default:
 		break;
@@ -81,9 +81,14 @@ void GameEngineCamera::Render(float _DeltaTime)
 	}
 }
 
+void GameEngineCamera::SetCameraOrder(CAMERAORDER _Order)
+{
+	GetActor()->GetLevel()->PushCamera(this, _Order);
+}
+
 void GameEngineCamera::Start()
 {
-	GetActor()->GetLevel()->PushCamera(this);
+	// GetActor()->GetLevel()->PushCamera(this);
 }
 
 void GameEngineCamera::PushRenderer(GameEngineRenderer* _Renderer)
@@ -159,4 +164,39 @@ float4 GameEngineCamera::GetMouseWorldPosition()
 float4 GameEngineCamera::GetMouseWorldPositionToActor()
 {
 	return GetTransform().GetWorldPosition() + GetMouseWorldPosition();
+}
+
+void GameEngineCamera::OverRenderer(GameEngineCamera* _NextCamera) 
+{
+	if (nullptr == _NextCamera)
+	{
+		MsgBoxAssert("next camera is nullptr! fuck you");
+		return;
+	}
+
+	std::map<int, std::list<GameEngineRenderer*>>::iterator StartGroupIter = AllRenderer_.begin();
+	std::map<int, std::list<GameEngineRenderer*>>::iterator EndGroupIter = AllRenderer_.end();
+
+	for (; StartGroupIter != EndGroupIter; ++StartGroupIter)
+	{
+		std::list<GameEngineRenderer*>& Group = StartGroupIter->second;
+		std::list<GameEngineRenderer*>::iterator GroupStart = Group.begin();
+		std::list<GameEngineRenderer*>::iterator GroupEnd = Group.end();
+
+		for (; GroupStart != GroupEnd; )
+		{
+			GameEngineActor* Root = (*GroupStart)->GetRoot<GameEngineActor>();
+
+			if (true == Root->IsLevelOver)
+			{
+				_NextCamera->AllRenderer_[StartGroupIter->first].push_back(*GroupStart);
+				GroupStart = Group.erase(GroupStart);
+			}
+			else
+			{
+				++GroupStart;
+			}
+
+		}
+	}
 }

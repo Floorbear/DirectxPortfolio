@@ -5,12 +5,17 @@
 #include <GameEngineBase/GameEngineUpdateObject.h>
 #include <list>
 
-enum CollisionType
+enum class CollisionType
 {
+	CT_POINT2D,
+	CT_SPHERE2D, 
+	CT_AABB2D, 
+	CT_OBB2D, 
 	CT_POINT,
 	CT_SPHERE, // 정방원
 	CT_AABB, // 회전하지 않은 박스
 	CT_OBB, // 회전한 박스
+	CT_MAX
 };
 
 class CollisionData
@@ -84,19 +89,16 @@ public:
 	inline void SetLocalScale(const float4& _Value)
 	{
 		CalculateWorldScale(_Value);
-		CalculateWorld();
 	}
 
 	inline void SetLocalRotation(const float4& _Value)
 	{
 		CalculateWorldRotation(_Value);
-		CalculateWorld();
 	}
 
 	inline void SetLocalPosition(const float4& _Value)
 	{
 		CalculateWorldPosition(_Value);
-		CalculateWorld();
 	}
 
 	inline void SetWorldScale(const float4& _World)
@@ -108,7 +110,6 @@ public:
 		}
 
 		CalculateWorldScale(Local);
-		CalculateWorld();
 	}
 
 	inline void SetAddWorldRotation(const float4& _World)
@@ -125,7 +126,6 @@ public:
 		}
 
 		CalculateWorldRotation(Local);
-		CalculateWorld();
 	}
 
 	inline void SetWorldPosition(const float4& _World)
@@ -139,7 +139,6 @@ public:
 
 
 		CalculateWorldPosition(Local);
-		CalculateWorld();
 	}
 
 	inline void SetLocalRotate(const float4& _Value)
@@ -313,6 +312,7 @@ private:
 		CollisionScaleSetting();
 
 		Data.LocalScalingMatrix.Scale(Data.LocalScaling);
+		CalculateWorld();
 
 		for (GameEngineTransform* Child : Childs)
 		{
@@ -338,6 +338,7 @@ private:
 		CollisionRotationSetting();
 
 		Data.LocalRotationMatrix.RotationDegree(Data.LocalRotation);
+		CalculateWorld();
 
 		for (GameEngineTransform* Child : Childs)
 		{
@@ -363,6 +364,7 @@ private:
 		CollisionPositionSetting();
 
 		Data.LocalPositionMatrix.Position(Data.LocalPosition);
+		CalculateWorld();
 
 		for (GameEngineTransform* Child : Childs)
 		{
@@ -389,5 +391,11 @@ public:
 	static bool AABBToAABB(const GameEngineTransform& _Left, const GameEngineTransform& _Right);
 
 	static bool OBBToOBB(const GameEngineTransform& _Left, const GameEngineTransform& _Right);
+
+	static bool Sphere2DToSphere2D(const GameEngineTransform& _Left, const GameEngineTransform& _Right);
+
+	static bool AABB2DToAABB2D(const GameEngineTransform& _Left, const GameEngineTransform& _Right);
+
+	static bool OBB2DToOBB2D(const GameEngineTransform& _Left, const GameEngineTransform& _Right);
 };
 

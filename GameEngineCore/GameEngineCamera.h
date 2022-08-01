@@ -2,6 +2,7 @@
 #include "GameEngineTransformComponent.h"
 #include <GameEngineBase/GameEngineMath.h>
 #include <GameEngineBase/GameEngineWindow.h>
+#include <GameEngineCore/GameEngineLevel.h>
 
 enum class CAMERAPROJECTIONMODE
 {
@@ -31,6 +32,8 @@ public:
 	{
 		return Mode;
 	}
+
+	void SetCameraOrder(CAMERAORDER _Order);
 
 	void SetProjectionMode(CAMERAPROJECTIONMODE _Mode)
 	{
@@ -84,5 +87,7 @@ private:
 	void Release(float _DelataTime);
 
 	void Update(float _DeltaTime) override;
+
+	void OverRenderer(GameEngineCamera* _NextOver);
 };
 

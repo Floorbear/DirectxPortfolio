@@ -24,7 +24,7 @@ ContentsCore::~ContentsCore()
 
 void ContentsCore::Start()
 {
-
+	//윈도우 Pos, Sclae 지정
 	{
 		//GameEngineDirectory Dir;
 		//Dir.MoveParentToExitsChildDirectory("ConstantResources");

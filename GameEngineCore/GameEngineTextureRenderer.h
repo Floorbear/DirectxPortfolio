@@ -6,6 +6,13 @@ enum class PIVOTMODE
 	CENTER,
 	LEFTTOP,
 	BOT,
+	CUSTOM,
+};
+
+enum class SCALEMODE
+{
+	IMAGE,
+	CUSTOM,
 };
 
 class FrameAnimation_DESC 
@@ -104,6 +111,21 @@ public:
 	void SetSamplingModePoint();
 	void SetSamplingModeLiner();
 
+	void SetScaleModeImage()
+	{
+		ScaleMode = SCALEMODE::IMAGE;
+	}
+
+	void SetScaleRatio(float _Scale) 
+	{
+		ScaleRatio = _Scale;
+	}
+
+	float GetScaleRatio() 
+	{
+		return ScaleRatio;
+	}
+
 	void SetTexture(GameEngineTexture* _Texture);
 
 	void SetTexture(const std::string& _Name);
@@ -128,6 +150,8 @@ public:
 	void ChangeFrameAnimation(const std::string& _AnimationName);
 
 	void ScaleToTexture();
+
+	void ScaleToCutTexture(int _Index);
 
 	void CurAnimationReset();
 
@@ -248,10 +272,14 @@ public:
 protected:
 	void Start() override;
 
+	void SetTextureRendererSetting();
+
 	void Update(float _Delta) override;
 
 private:
 	PIVOTMODE PivotMode;
+	SCALEMODE ScaleMode;
+	float ScaleRatio;
 
 	GameEngineTexture* CurTex;
 	float4 FrameData;

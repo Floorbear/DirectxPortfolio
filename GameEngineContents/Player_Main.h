@@ -32,16 +32,31 @@ private:
 	GameEngineTextureRenderer* PantsRenderer_b_;
 	GameEngineTextureRenderer* PantsRenderer_d_;
 
+	GameEngineTextureRenderer* CoatRenderer_a_;
+	GameEngineTextureRenderer* CoatRenderer_b_;
+
+	GameEngineTextureRenderer* ShoesRenderer_a_;
+	GameEngineTextureRenderer* ShoesRenderer_b_;
+
+	GameEngineTextureRenderer* BeltRenderer_c_;
+	GameEngineTextureRenderer* BeltRenderer_d_;
+
+
+
 	//아바타 렌더러 추가하면 확인해야할 것
+	// 
 	//아바타매니저에 렌더러 추가
 	//아바타 매니저 LinkPlayerToAvatar 에서 렌더러의 조치
 	//ChangeMotion에서 해당 부위가 있는지 확인
 	//GetRenderer, SelectRenderer에 해랑 렌더러 추가
+	//디폴트 아바타일경우 렌더러 리스트랑 CurAvatar에 추가해주기
 
 
-	bool QToggle_;
-	bool WToggle_;
-	bool EToggle_;
+	int Toggle1_;
+	int Toggle2_;
+	int Toggle3_;
+	int Toggle4_;
+	int Toggle5_;
 
 };
 

@@ -5,9 +5,11 @@
 #include <GameEngineCore/GameEngineLevel.h>
 
 Player_Main::Player_Main():
-	QToggle_(false),
-	WToggle_(false),
-	EToggle_(false)
+	Toggle1_(0),
+	Toggle2_(0),
+	Toggle3_(0),
+	Toggle4_(0),
+	Toggle5_(0)
 {
 }
 
@@ -22,6 +24,13 @@ void Player_Main::Start()
 	float Attack_Iter = 0.08f;
 	 
 	//Key 초기화
+	GameEngineInput::GetInst()->CreateKey("1", 0x31);
+	GameEngineInput::GetInst()->CreateKey("2", 0x32);
+	GameEngineInput::GetInst()->CreateKey("3", 0x33);
+	GameEngineInput::GetInst()->CreateKey("4", 0x34);
+	GameEngineInput::GetInst()->CreateKey("5", 0x35);
+
+
 	GameEngineInput::GetInst()->CreateKey("Z", 'Z');
 	GameEngineInput::GetInst()->CreateKey("X", 'X');
 	GameEngineInput::GetInst()->CreateKey("C", 'C');
@@ -48,48 +57,130 @@ void Player_Main::Start()
 void Player_Main::Update(float _DeltaTime)
 {
 	DNFUpdate();
-	//z를 누르면 헤어 아바타의 변경이 일어남
-	if (GameEngineInput::GetInst()->IsDown("Q") == true)
+	//1를 누르면 헤어 아바타의 변경이 일어남
+	if (GameEngineInput::GetInst()->IsDown("1") == true)
 	{
-		if (QToggle_ == false)
+		if (Toggle1_ < 1)
 		{
-			AvatarManager_.ChangeAvatar(AvatarType::Job, AvatarParts::Hair);
-			QToggle_ = true;
+			Toggle1_++;
 		}
 		else
 		{
+			Toggle1_ = 0;
+		}
+
+		if (Toggle1_ == 0)
+		{
 			AvatarManager_.ChangeAvatar(AvatarType::Default, AvatarParts::Hair);
-			QToggle_ = false;
+
+		}
+		else if (Toggle1_ == 1)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Job, AvatarParts::Hair);
 		}
 
 	}
-	//w를 누르면 바지 아바타의 변경이 일어남
-	if (GameEngineInput::GetInst()->IsDown("W") == true)
+	//2를 누르면 바지 아바타의 변경이 일어남
+	if (GameEngineInput::GetInst()->IsDown("2") == true)
 	{
-		if (WToggle_ == false)
+		if (Toggle2_ < 1)
 		{
-			AvatarManager_.ChangeAvatar(AvatarType::Job, AvatarParts::Pants);
-			WToggle_ = true;
+			Toggle2_++;
 		}
 		else
 		{
-			AvatarManager_.ChangeAvatar(AvatarType::Default, AvatarParts::Pants);
-			WToggle_ = false;
+			Toggle2_ = 0;
 		}
 
+		if (Toggle2_ == 0)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Default, AvatarParts::Pants);
+
+		}
+		else if (Toggle2_ == 1)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Job, AvatarParts::Pants);
+		}
+
+	}
+	//3를 누르면 코트 아바타의 변경이 일어남
+	if (GameEngineInput::GetInst()->IsDown("3") == true)
+	{
+		if (Toggle3_ < 1)
+		{
+			Toggle3_++;
+		}
+		else
+		{
+			Toggle3_ = 0;
+		}
+
+		if (Toggle3_ == 0)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Default, AvatarParts::Coat);
+
+		}
+		else if (Toggle3_ == 1)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Job, AvatarParts::Coat);
+		}
+	}
+	//4를 누르면 신발 아바타의 변경이 일어남
+	if (GameEngineInput::GetInst()->IsDown("4") == true)
+	{
+		if (Toggle4_ < 1)
+		{
+			Toggle4_++;
+		}
+		else
+		{
+			Toggle4_ = 0;
+		}
+
+		if (Toggle4_ == 0)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Default, AvatarParts::Shoes);
+
+		}
+		else if (Toggle4_ == 1)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Job, AvatarParts::Shoes);
+		}
+	}
+	//5를 누르면 신발 아바타의 변경이 일어남
+	if (GameEngineInput::GetInst()->IsDown("5") == true)
+	{
+		if (Toggle5_ < 1)
+		{
+			Toggle5_++;
+		}
+		else
+		{
+			Toggle5_ = 0;
+		}
+
+		if (Toggle5_ == 0)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Default, AvatarParts::Belt);
+
+		}
+		else if (Toggle5_ == 1)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Job, AvatarParts::Belt);
+		}
 	}
 	//e를 누르면 무기 아바타의 변경이 일어남
 	if (GameEngineInput::GetInst()->IsDown("E") == true)
 	{
-		if (EToggle_ == false)
+		if (Toggle3_ == false)
 		{
 			AvatarManager_.ChangeAvatar(AvatarType::Job, AvatarParts::Weapon);
-			EToggle_ = true;
+			Toggle3_ = true;
 		}
 		else
 		{
 			AvatarManager_.ChangeAvatar(AvatarType::Default, AvatarParts::Weapon);
-			EToggle_ = false;
+			Toggle3_ = false;
 		}
 
 	}

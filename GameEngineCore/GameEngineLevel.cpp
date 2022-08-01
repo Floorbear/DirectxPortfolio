@@ -4,18 +4,25 @@
 #include "GameEngineRenderer.h"
 #include "GameEngineCamera.h"
 #include "GameEngineCameraActor.h"
+#include "GameEngineCollision.h"
 #include "GameEngineGUI.h"
 
 GameEngineLevel::GameEngineLevel() 
-	: MainCamera(nullptr)
-	, UIMainCamera(nullptr)
 {
-	for (size_t i = 0; i < 1280; i++)
-	{
-		for (size_t i = 0; i < 720; i++)
-		{
+	Cameras.resize(static_cast<unsigned int>(CAMERAORDER::UICAMERA));
 
-		}
+	{
+		GameEngineCameraActor* CameraActor = CreateActor<GameEngineCameraActor>();
+		CameraActor->GetTransform().SetLocalPosition({ 0.0f, 0.0f, -100.0f });
+		CameraActor->GetCameraComponent()->SetProjectionMode(CAMERAPROJECTIONMODE::Orthographic);
+		CameraActor->GetCameraComponent()->SetCameraOrder(CAMERAORDER::MAINCAMERA);
+	}
+
+	{
+		GameEngineCameraActor* CameraActor = CreateActor<GameEngineCameraActor>();
+		CameraActor->GetTransform().SetLocalPosition({ 0.0f, 0.0f, -100.0f });
+		CameraActor->GetCameraComponent()->SetProjectionMode(CAMERAPROJECTIONMODE::Orthographic);
+		CameraActor->GetCameraComponent()->SetCameraOrder(CAMERAORDER::UICAMERA);
 	}
 }
 
@@ -38,12 +45,6 @@ GameEngineLevel::~GameEngineLevel()
 
 void GameEngineLevel::ActorUpdate(float _DeltaTime)
 {
-	//if (true == GetMainCameraActor()->IsFreeCameraMode())
-	//{
-	//	GetMainCameraActor()->Update(_DeltaTime);
-	//	return;
-	//}
-
 	for (const std::pair<int, std::list<GameEngineActor*>>& Group : AllActors)
 	{
 		float ScaleTime = GameEngineTime::GetInst()->GetDeltaTime(Group.first);
@@ -60,27 +61,56 @@ void GameEngineLevel::ActorUpdate(float _DeltaTime)
 
 }
 
-void GameEngineLevel::PushRenderer(GameEngineRenderer* _Renderer)
+void GameEngineLevel::PushRenderer(GameEngineRenderer* _Renderer, int _CameraOrder)
 {
-	MainCamera->PushRenderer(_Renderer);
+	Cameras[_CameraOrder]->PushRenderer(_Renderer);
 }
 
-void GameEngineLevel::PushCamera(GameEngineCamera* _Camera)
+void GameEngineLevel::PushCamera(GameEngineCamera* _Camera, int _CameraOrder)
 {
-	MainCamera = _Camera;
+	Cameras.resize(_CameraOrder + 1);
+
+	Cameras[_CameraOrder] = _Camera;
 }
 
 GameEngineTransform& GameEngineLevel::GetMainCameraActorTransform()
 {
-	return MainCamera->GetActor()->GetTransform();
+	return Cameras[static_cast<int>(CAMERAORDER::MAINCAMERA)]->GetActor()->GetTransform();
 }
+
+
+GameEngineCameraActor* GameEngineLevel::GetMainCameraActor()
+{
+	return Cameras[static_cast<int>(CAMERAORDER::MAINCAMERA)]->GetActor<GameEngineCameraActor>();
+}
+
+GameEngineTransform& GameEngineLevel::GetUICameraActorTransform()
+{
+	return Cameras[static_cast<int>(CAMERAORDER::UICAMERA)]->GetActor()->GetTransform();
+}
+
+
+GameEngineCameraActor* GameEngineLevel::GetUICameraActor()
+{
+	return Cameras[static_cast<int>(CAMERAORDER::UICAMERA)]->GetActor<GameEngineCameraActor>();
+}
+
+
 
 void GameEngineLevel::Render(float _DelataTime)
 {
 	GameEngineDevice::RenderStart();
 
 	// 이 사이에서 무언가를 해야 합니다.
-	MainCamera->Render(_DelataTime);
+	for (size_t i = 0; i < Cameras.size(); i++)
+	{
+		if (nullptr == Cameras[i])
+		{
+			continue;
+		}
+
+		Cameras[i]->Render(_DelataTime);
+	}
 
 	GameEngineGUI::GUIRender(this, _DelataTime);
 
@@ -96,7 +126,15 @@ void GameEngineLevel::Release(float _DelataTime)
 
 	DeleteObject.clear();
 
-	MainCamera->Release(_DelataTime);
+	for (size_t i = 0; i < Cameras.size(); i++)
+	{
+		if (nullptr == Cameras[i])
+		{
+			continue;
+		}
+
+		Cameras[i]->Release(_DelataTime);
+	}
 
 	// std::list<GameEngineActor*> 루트 액터 부모가 없는 액터들만 여기에 들어올수 있다.
 	// a c
@@ -120,9 +158,6 @@ void GameEngineLevel::Release(float _DelataTime)
 
 			if (true == (*GroupStart)->IsDeath())
 			{
-				// AllActors[StartGroupIter->first].remove((*GroupStart));
-
-				// DeleteObject.push_back((*GroupStart));
 				GroupStart = Group.erase(GroupStart);
 			}
 			else 
@@ -133,11 +168,6 @@ void GameEngineLevel::Release(float _DelataTime)
 		}
 	}
 
-}
-
-GameEngineCameraActor* GameEngineLevel::GetMainCameraActor()
-{
-	return MainCamera->GetActor<GameEngineCameraActor>();
 }
 
 void GameEngineLevel::LevelUpdate(float _DeltaTime)
@@ -160,3 +190,106 @@ void GameEngineLevel::RemoveActor(GameEngineActor* _Actor)
 
 	AllActors[_Actor->GetOrder()].remove(_Actor);
 }
+
+void GameEngineLevel::PushCollision(GameEngineCollision* _Collision, int _Order)
+{
+	// 기존에 자신이 존재하는 그룹에서 삭제한다.
+	AllCollisions[_Collision->GetOrder()].remove(_Collision);
+
+	// 나의 오더를 바꾸고.
+	_Collision->SetOrder(_Order);
+
+	// 새로운 그룹에 편입된다.
+	AllCollisions[_Collision->GetOrder()].push_back(_Collision);
+}
+
+void GameEngineLevel::OverChildMove(GameEngineLevel* _NextLevel)
+{
+	// 플레이 레벨
+	
+	// 로그인 레벨
+	// _NextLevel
+	{
+		std::map<int, std::list<GameEngineActor*>>::iterator StartGroupIter = AllActors.begin();
+		std::map<int, std::list<GameEngineActor*>>::iterator EndGroupIter = AllActors.end();
+
+		std::list<GameEngineActor*> OverList;
+
+		for (; StartGroupIter != EndGroupIter; ++StartGroupIter)
+		{
+			std::list<GameEngineActor*>& Group = StartGroupIter->second;
+
+			std::list<GameEngineActor*>::iterator GroupStart = Group.begin();
+			std::list<GameEngineActor*>::iterator GroupEnd = Group.end();
+			for (; GroupStart != GroupEnd; )
+			{
+				if (true == (*GroupStart)->IsLevelOver)
+				{
+					// 내쪽에서는 삭제되고
+					OverList.push_back((*GroupStart));
+					GroupStart = Group.erase(GroupStart);
+				}
+				else
+				{
+					++GroupStart;
+				}
+
+			}
+		}
+
+		// 오브젝트를 넘기고
+		for (GameEngineActor* OverActor : OverList)
+		{
+			// 이녀석의 부모레벨은
+			OverActor->SetLevel(_NextLevel);
+			_NextLevel->AllActors[OverActor->GetOrder()].push_back(OverActor);
+		}
+	}
+
+	for (size_t i = 0; i < Cameras.size(); i++)
+	{
+		if (nullptr == Cameras[i])
+		{
+			continue;
+		}
+
+		Cameras[i]->OverRenderer(_NextLevel->Cameras[i]);
+	}
+
+	{
+		std::map<int, std::list<GameEngineCollision*>>::iterator StartGroupIter = AllCollisions.begin();
+		std::map<int, std::list<GameEngineCollision*>>::iterator EndGroupIter = AllCollisions.end();
+
+		std::list<GameEngineCollision*> OverList;
+
+		for (; StartGroupIter != EndGroupIter; ++StartGroupIter)
+		{
+			std::list<GameEngineCollision*>& Group = StartGroupIter->second;
+
+			std::list<GameEngineCollision*>::iterator GroupStart = Group.begin();
+			std::list<GameEngineCollision*>::iterator GroupEnd = Group.end();
+			for (; GroupStart != GroupEnd; )
+			{
+				if (true == (*GroupStart)->GetRoot<GameEngineActor>()->IsLevelOver)
+				{
+					// 내쪽에서는 삭제되고
+					OverList.push_back((*GroupStart));
+					GroupStart = Group.erase(GroupStart);
+				}
+				else
+				{
+					++GroupStart;
+				}
+
+			}
+		}
+
+		// 오브젝트를 넘기고
+		for (GameEngineCollision* OverActor : OverList)
+		{
+			_NextLevel->AllCollisions[OverActor->GetOrder()].push_back(OverActor);
+		}
+	}
+
+}
+
