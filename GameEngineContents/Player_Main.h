@@ -34,12 +34,21 @@ private:
 
 	GameEngineTextureRenderer* CoatRenderer_a_;
 	GameEngineTextureRenderer* CoatRenderer_b_;
+	GameEngineTextureRenderer* CoatRenderer_c_;
+	GameEngineTextureRenderer* CoatRenderer_d_;
+
 
 	GameEngineTextureRenderer* ShoesRenderer_a_;
 	GameEngineTextureRenderer* ShoesRenderer_b_;
 
 	GameEngineTextureRenderer* BeltRenderer_c_;
 	GameEngineTextureRenderer* BeltRenderer_d_;
+
+	GameEngineTextureRenderer* CapRenderer_a_;
+	GameEngineTextureRenderer* CapRenderer_b_;
+	GameEngineTextureRenderer* CapRenderer_c_;
+
+
 
 
 
@@ -57,6 +66,7 @@ private:
 	int Toggle3_;
 	int Toggle4_;
 	int Toggle5_;
+	int Toggle6_;
 
 };
 

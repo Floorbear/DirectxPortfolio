@@ -9,7 +9,8 @@ Player_Main::Player_Main():
 	Toggle2_(0),
 	Toggle3_(0),
 	Toggle4_(0),
-	Toggle5_(0)
+	Toggle5_(0),
+	Toggle6_(0)
 {
 }
 
@@ -29,6 +30,8 @@ void Player_Main::Start()
 	GameEngineInput::GetInst()->CreateKey("3", 0x33);
 	GameEngineInput::GetInst()->CreateKey("4", 0x34);
 	GameEngineInput::GetInst()->CreateKey("5", 0x35);
+	GameEngineInput::GetInst()->CreateKey("6", 0x36);
+
 
 
 	GameEngineInput::GetInst()->CreateKey("Z", 'Z');
@@ -106,7 +109,7 @@ void Player_Main::Update(float _DeltaTime)
 	//3를 누르면 코트 아바타의 변경이 일어남
 	if (GameEngineInput::GetInst()->IsDown("3") == true)
 	{
-		if (Toggle3_ < 1)
+		if (Toggle3_ < 2)
 		{
 			Toggle3_++;
 		}
@@ -124,11 +127,15 @@ void Player_Main::Update(float _DeltaTime)
 		{
 			AvatarManager_.ChangeAvatar(AvatarType::Job, AvatarParts::Coat);
 		}
+		else if (Toggle3_ == 2)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Dog, AvatarParts::Coat);
+		}
 	}
 	//4를 누르면 신발 아바타의 변경이 일어남
 	if (GameEngineInput::GetInst()->IsDown("4") == true)
 	{
-		if (Toggle4_ < 1)
+		if (Toggle4_ < 2)
 		{
 			Toggle4_++;
 		}
@@ -146,11 +153,15 @@ void Player_Main::Update(float _DeltaTime)
 		{
 			AvatarManager_.ChangeAvatar(AvatarType::Job, AvatarParts::Shoes);
 		}
+		else if (Toggle4_ == 2)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Dog, AvatarParts::Shoes);
+		}
 	}
-	//5를 누르면 신발 아바타의 변경이 일어남
+	//5를 누르면 벨트 아바타의 변경이 일어남
 	if (GameEngineInput::GetInst()->IsDown("5") == true)
 	{
-		if (Toggle5_ < 1)
+		if (Toggle5_ < 2)
 		{
 			Toggle5_++;
 		}
@@ -167,6 +178,36 @@ void Player_Main::Update(float _DeltaTime)
 		else if (Toggle5_ == 1)
 		{
 			AvatarManager_.ChangeAvatar(AvatarType::Job, AvatarParts::Belt);
+		}
+		else if (Toggle5_ == 2)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Dog, AvatarParts::Belt);
+		}
+	}
+	//6를 누르면 모자 아바타의 변경이 일어남
+	if (GameEngineInput::GetInst()->IsDown("6") == true)
+	{
+		if (Toggle6_ < 2)
+		{
+			Toggle6_++;
+		}
+		else
+		{
+			Toggle6_ = 0;
+		}
+
+		if (Toggle6_ == 0)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Default, AvatarParts::Cap);
+
+		}
+		else if (Toggle6_ == 1)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Danjin, AvatarParts::Cap);
+		}
+		else if (Toggle6_ == 2)
+		{
+			AvatarManager_.ChangeAvatar(AvatarType::Dog, AvatarParts::Cap);
 		}
 	}
 	//e를 누르면 무기 아바타의 변경이 일어남

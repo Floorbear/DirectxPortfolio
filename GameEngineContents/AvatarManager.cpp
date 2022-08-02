@@ -73,16 +73,28 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	CoatRenderer_b_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 7 });
 	CoatRenderer_b_->Off();
 
+	_Player->CoatRenderer_c_ = _Player->CreateComponent<GameEngineTextureRenderer>("CoatRenderer_c_");
+	CoatRenderer_c_ = _Player->CoatRenderer_c_;
+	CoatRenderer_c_->GetTransform().SetLocalScale({ 500,500,1 });
+	CoatRenderer_c_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 6 });
+	CoatRenderer_c_->Off();
+
+	_Player->CoatRenderer_d_ = _Player->CreateComponent<GameEngineTextureRenderer>("CoatRenderer_d_");
+	CoatRenderer_d_ = _Player->CoatRenderer_d_;
+	CoatRenderer_d_->GetTransform().SetLocalScale({ 500,500,1 });
+	CoatRenderer_d_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 5 });
+	CoatRenderer_d_->Off();
+
 	//Shoes
 	_Player->ShoesRenderer_a_ = _Player->CreateComponent<GameEngineTextureRenderer>("ShoesRenderer_a_");
 	ShoesRenderer_a_ = _Player->ShoesRenderer_a_;
 	ShoesRenderer_a_->GetTransform().SetLocalScale({ 500,500,1 });
-	ShoesRenderer_a_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 8 });
+	ShoesRenderer_a_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 4 });
 
 	_Player->ShoesRenderer_b_ = _Player->CreateComponent<GameEngineTextureRenderer>("ShoesRenderer_b_");
 	ShoesRenderer_b_ = _Player->ShoesRenderer_b_;
 	ShoesRenderer_b_->GetTransform().SetLocalScale({ 500,500,1 });
-	ShoesRenderer_b_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 7 });
+	ShoesRenderer_b_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 3 });
 
 	//벨트
 	_Player->BeltRenderer_c_ = _Player->CreateComponent<GameEngineTextureRenderer>("BeltRenderer_c_");
@@ -97,6 +109,24 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	BeltRenderer_d_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 5 });
 	BeltRenderer_d_->Off();
 
+	//모자
+	_Player->CapRenderer_a_ = _Player->CreateComponent<GameEngineTextureRenderer>("CapRenderer_a_");
+	CapRenderer_a_ = _Player->CapRenderer_a_;
+	CapRenderer_a_->GetTransform().SetLocalScale({ 500,500,1 });
+	CapRenderer_a_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 10 });
+	CapRenderer_a_->Off();
+
+	_Player->CapRenderer_b_ = _Player->CreateComponent<GameEngineTextureRenderer>("CapRenderer_b_");
+	CapRenderer_b_ = _Player->CapRenderer_b_;
+	CapRenderer_b_->GetTransform().SetLocalScale({ 500,500,1 });
+	CapRenderer_b_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 9 });
+	CapRenderer_b_->Off();
+
+	_Player->CapRenderer_c_ = _Player->CreateComponent<GameEngineTextureRenderer>("CapRenderer_c_");
+	CapRenderer_c_ = _Player->CapRenderer_c_;
+	CapRenderer_c_->GetTransform().SetLocalScale({ 500,500,1 });
+	CapRenderer_c_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 8 });
+	CapRenderer_c_->Off();
 
 	//무기
 	_Player->WeaponRenderer_b_ = _Player->CreateComponent<GameEngineTextureRenderer>("WeaponRenderer_b_");
@@ -136,12 +166,33 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	CreateAvatar("sm_shoes12800a", AvatarParts::Shoes, AvatarType::Job, AvatarLayer::A);
 	CreateAvatar("sm_shoes12800b", AvatarParts::Shoes, AvatarType::Job, AvatarLayer::B);
 
+	CreateAvatar("sm_shoes14500a", AvatarParts::Shoes, AvatarType::Dog, AvatarLayer::A);
+	CreateAvatar("sm_shoes14500b", AvatarParts::Shoes, AvatarType::Dog, AvatarLayer::B);
+
 	CreateAvatar("sm_coat0000a", AvatarParts::Coat, AvatarType::Default, AvatarLayer::A);
 
 	CreateAvatar("sm_coat14500b", AvatarParts::Coat, AvatarType::Job, AvatarLayer::B);
 
+	CreateAvatar("sm_coat16300a", AvatarParts::Coat, AvatarType::Dog, AvatarLayer::A);
+	CreateAvatar("sm_coat16300c", AvatarParts::Coat, AvatarType::Dog, AvatarLayer::C);
+	CreateAvatar("sm_coat16300d", AvatarParts::Coat, AvatarType::Dog, AvatarLayer::D);
+
+
+
+	CreateAvatar("sm_belt12100c", AvatarParts::Belt, AvatarType::Dog, AvatarLayer::C);
+	CreateAvatar("sm_belt12100d", AvatarParts::Belt, AvatarType::Dog, AvatarLayer::D);
+
 	CreateAvatar("sm_belt10700c", AvatarParts::Belt, AvatarType::Job, AvatarLayer::C);
 	CreateAvatar("sm_belt10700d", AvatarParts::Belt, AvatarType::Job, AvatarLayer::D);
+
+	CreateAvatar("sm_cap1500a", AvatarParts::Cap, AvatarType::Danjin, AvatarLayer::A);
+
+	CreateAvatar("sm_cap15100a", AvatarParts::Cap, AvatarType::Dog, AvatarLayer::A);
+	CreateAvatar("sm_cap15100b", AvatarParts::Cap, AvatarType::Dog, AvatarLayer::B);
+	CreateAvatar("sm_cap15100c", AvatarParts::Cap, AvatarType::Dog, AvatarLayer::C);
+
+
+
 
 	CreateAvatar("lswd3400b", AvatarParts::Weapon, AvatarType::Job, AvatarLayer::B);
 	CreateAvatar("lswd3400c", AvatarParts::Weapon, AvatarType::Job, AvatarLayer::C);
@@ -236,6 +287,16 @@ void AvatarManager::ChangeMotion(PlayerAnimations _Animation)
 			StartIter->second->ChangeFrameAnimation(AniName + PartName);
 		}
 	}
+	//모자
+	{
+		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Cap]);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Cap);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Cap);
+		for (; StartIter != EndIter; StartIter++)
+		{
+			StartIter->second->ChangeFrameAnimation(AniName + PartName);
+		}
+	}
 	//무기
 	{
 		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Weapon]);
@@ -272,7 +333,6 @@ void AvatarManager::ChangeAvatar(AvatarType _Type, AvatarParts _Parts)
 	}
 	RenderList_.clear();
 
-	//여기서 모자에 대한 예외처리
 
 
 	//모든 렌더러를 꺼버리고 필요한 렌더러만 킴
@@ -286,6 +346,16 @@ void AvatarManager::ChangeAvatar(AvatarType _Type, AvatarParts _Parts)
 		}
 	}
 	
+	//모자압이나 댕댕압같은 다른 렌더러를 꺼버리는 아바타의 예외처리
+	for (auto pair : CurAvatar_)
+	{
+		//예외처리 렌더러가 있으면 꺼준다.
+		for (GameEngineTextureRenderer* i : GetHideRendererList(pair.first, pair.second))
+		{
+			i->Off();
+		}
+	}
+
 
 	ChangeMotion(PlayerAnimations::Idle);
 }
@@ -394,6 +464,27 @@ std::vector<AvatarLayer> AvatarManager::GetRendererLayer(AvatarParts _Parts, Ava
 		}
 		break;
 	case AvatarParts::Cap:
+		switch (_Type)
+		{
+		case AvatarType::None:
+			break;
+		case AvatarType::Default:
+			break;
+		case AvatarType::Job:
+			break;
+		case AvatarType::Dog:
+			Vector.push_back(AvatarLayer::A);
+			Vector.push_back(AvatarLayer::B);
+			Vector.push_back(AvatarLayer::C);
+			return Vector;
+			break;
+		case AvatarType::Danjin:
+			Vector.push_back(AvatarLayer::A);
+			return Vector;
+			break;
+		default:
+			break;
+		}
 		break;
 	case AvatarParts::Face:
 		break;
@@ -413,6 +504,10 @@ std::vector<AvatarLayer> AvatarManager::GetRendererLayer(AvatarParts _Parts, Ava
 			return Vector;
 			break;
 		case AvatarType::Dog:
+			Vector.push_back(AvatarLayer::A);
+			Vector.push_back(AvatarLayer::C);
+			Vector.push_back(AvatarLayer::D);
+			return Vector;
 			break;
 		case AvatarType::Danjin:
 			break;
@@ -484,6 +579,9 @@ std::vector<AvatarLayer> AvatarManager::GetRendererLayer(AvatarParts _Parts, Ava
 			return Vector;
 			break;
 		case AvatarType::Dog:
+			Vector.push_back(AvatarLayer::A);
+			Vector.push_back(AvatarLayer::B);
+			return Vector;
 			break;
 		case AvatarType::Danjin:
 			break;
@@ -495,6 +593,77 @@ std::vector<AvatarLayer> AvatarManager::GetRendererLayer(AvatarParts _Parts, Ava
 		Vector.push_back(AvatarLayer::B);
 		Vector.push_back(AvatarLayer::C);
 		return Vector;
+		break;
+	default:
+		break;
+	}
+	return Vector;
+}
+
+std::vector<GameEngineTextureRenderer*> AvatarManager::GetHideRendererList(AvatarParts _Parts, AvatarType _Type)
+{
+	std::vector<GameEngineTextureRenderer*> Vector = {};
+	switch (_Parts)
+	{
+	case AvatarParts::Skin:
+		break;
+	case AvatarParts::Hair:
+		break;
+	case AvatarParts::Cap:
+		switch (_Type)
+		{
+		case AvatarType::None:
+			break;
+		case AvatarType::Default:
+			break;
+		case AvatarType::Job:
+			break;
+		case AvatarType::Dog:
+			Vector.push_back(HairRenderer_a_);
+			Vector.push_back(HairRenderer_d_);
+			return Vector;
+			break;
+		case AvatarType::Danjin:
+			Vector.push_back(HairRenderer_a_);
+			Vector.push_back(HairRenderer_d_);
+			return Vector;
+			break;
+		default:
+			break;
+		}
+		break;
+	case AvatarParts::Face:
+		break;
+	case AvatarParts::Neck:
+		break;
+	case AvatarParts::Coat:
+		switch (_Type)
+		{
+		case AvatarType::None:
+			break;
+		case AvatarType::Default:
+			break;
+		case AvatarType::Job:
+			break;
+		case AvatarType::Dog:
+			Vector.push_back(PantsRenderer_a_);
+			Vector.push_back(PantsRenderer_b_);
+			Vector.push_back(PantsRenderer_d_);
+			return Vector;
+			break;
+		case AvatarType::Danjin:
+			break;
+		default:
+			break;
+		}
+		break;
+	case AvatarParts::Pants:
+		break;
+	case AvatarParts::Belt:
+		break;
+	case AvatarParts::Shoes:
+		break;
+	case AvatarParts::Weapon:
 		break;
 	default:
 		break;
@@ -529,6 +698,22 @@ GameEngineTextureRenderer* AvatarManager::GetRenderer(AvatarParts _Parts, Avatar
 		break;
 
 	case AvatarParts::Cap:
+		switch (_Layer)
+		{
+		case AvatarLayer::A:
+			return CapRenderer_a_;
+			break;
+		case AvatarLayer::B:
+			return CapRenderer_b_;
+			break;
+		case AvatarLayer::C:
+			return CapRenderer_c_;
+			break;
+		case AvatarLayer::D:
+			break;
+		default:
+			break;
+		}
 		break;
 	case AvatarParts::Face:
 		break;
@@ -543,10 +728,11 @@ GameEngineTextureRenderer* AvatarManager::GetRenderer(AvatarParts _Parts, Avatar
 		case AvatarLayer::B:
 			return CoatRenderer_b_;
 			break;
-			break;
 		case AvatarLayer::C:
+			return CoatRenderer_c_;
 			break;
 		case AvatarLayer::D:
+			return CoatRenderer_d_;
 			break;
 		default:
 			break;

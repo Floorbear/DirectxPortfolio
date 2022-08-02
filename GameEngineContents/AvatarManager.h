@@ -46,6 +46,9 @@ private:
 
 	//어떤 아바타가 무슨 렌더러를 쓰는지 확인하는 함수
 	std::vector<AvatarLayer> GetRendererLayer(AvatarParts _Parts, AvatarType _Type);
+	//어떤 아바타가 무슨 렌더러를 가리는지(지우는지) 확인하는 함수
+	std::vector<GameEngineTextureRenderer*> GetHideRendererList(AvatarParts _Parts, AvatarType _Type);
+
 
 
 	//렌더러를 반환하는 함수
@@ -75,6 +78,8 @@ private:
 
 	GameEngineTextureRenderer* CoatRenderer_a_;
 	GameEngineTextureRenderer* CoatRenderer_b_;
+	GameEngineTextureRenderer* CoatRenderer_c_;
+	GameEngineTextureRenderer* CoatRenderer_d_;
 
 
 	GameEngineTextureRenderer* ShoesRenderer_a_;
@@ -83,6 +88,9 @@ private:
 	GameEngineTextureRenderer* BeltRenderer_c_;
 	GameEngineTextureRenderer* BeltRenderer_d_;
 
+	GameEngineTextureRenderer* CapRenderer_a_;
+	GameEngineTextureRenderer* CapRenderer_b_;
+	GameEngineTextureRenderer* CapRenderer_c_;
 
 	//이 아바타는 이 렌더러를 사용합니다를 보관하는 컨테이너
 	//여기에 넣어줘야 화면에 랜더링 된다
