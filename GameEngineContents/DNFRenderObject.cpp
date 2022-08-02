@@ -1,5 +1,6 @@
 #include "PreCompile.h"
 #include "DNFRenderObject.h"
+#include "DNFLevel.h"
 
 DNFRenderObject::DNFRenderObject():
 	MainRenderer_(nullptr),
@@ -9,6 +10,11 @@ DNFRenderObject::DNFRenderObject():
 
 DNFRenderObject::~DNFRenderObject()
 {
+}
+
+DNFLevel* DNFRenderObject::GetDNFLevel()
+{
+	return dynamic_cast<DNFLevel*>(GetLevel());
 }
 
 void DNFRenderObject::ErrorCheck()

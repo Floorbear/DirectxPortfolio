@@ -1,10 +1,13 @@
 #pragma once
 #include <GameEngineCore/GameEngineActor.h>
 
+
 //렌더러를 가지는 액터들은 이 클래스를 상속 받는다.
 //스프라이트 리소스를 좀 더 활용하기 용이하게 하기위한 클래스
+class DNFLevel;
 class DNFRenderObject : public GameEngineActor
 {
+	friend class DNFLevel;
 public:
 	DNFRenderObject();
 	~DNFRenderObject();
@@ -14,6 +17,9 @@ public:
 	DNFRenderObject(const DNFRenderObject&& _Other) noexcept = delete;
 	DNFRenderObject& operator=(const DNFRenderObject& _Ohter) = delete;
 	DNFRenderObject& operator=(const DNFRenderObject&& _Other) noexcept = delete;
+
+	DNFLevel* GetDNFLevel();
+
 
 protected:
 	GameEngineTextureRenderer* MainRenderer_;

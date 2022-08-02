@@ -1,6 +1,7 @@
 #include "PreCompile.h"
 #include "DNFDefineList.h"
 #include "Player_Main.h"
+#include "DNFLevel.h"
 
 #include <GameEngineCore/GameEngineLevel.h>
 
@@ -24,27 +25,7 @@ void Player_Main::Start()
 	float Idle_Iter = 0.2f;
 	float Attack_Iter = 0.08f;
 	 
-	//Key 초기화
-	GameEngineInput::GetInst()->CreateKey("1", 0x31);
-	GameEngineInput::GetInst()->CreateKey("2", 0x32);
-	GameEngineInput::GetInst()->CreateKey("3", 0x33);
-	GameEngineInput::GetInst()->CreateKey("4", 0x34);
-	GameEngineInput::GetInst()->CreateKey("5", 0x35);
-	GameEngineInput::GetInst()->CreateKey("6", 0x36);
 
-
-
-	GameEngineInput::GetInst()->CreateKey("Z", 'Z');
-	GameEngineInput::GetInst()->CreateKey("X", 'X');
-	GameEngineInput::GetInst()->CreateKey("C", 'C');
-	GameEngineInput::GetInst()->CreateKey("Q", 'Q');
-	GameEngineInput::GetInst()->CreateKey("W", 'W');
-	GameEngineInput::GetInst()->CreateKey("E", 'E');
-
-
-
-	GameEngineInput::GetInst()->CreateKey("Left", VK_LEFT);
-	GameEngineInput::GetInst()->CreateKey("Right", VK_RIGHT);
 
 
 	//skin
@@ -60,6 +41,98 @@ void Player_Main::Start()
 void Player_Main::Update(float _DeltaTime)
 {
 	DNFUpdate();
+	ChangeAvatar();
+	//z를 누르면 모션의 변경이 일어남
+	if (GameEngineInput::GetInst()->IsDown("Z") == true)
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::Buff);
+	}
+	//x를 누르면 모션의 변경이 일어남
+	if (GameEngineInput::GetInst()->IsDown("X") == true)
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::AutoAttack_0);
+	}
+
+	//C를 누르면 모션의 변경이 일어남
+	if (GameEngineInput::GetInst()->IsDown("C") == true)
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
+
+	}
+
+
+	if (GameEngineInput::GetInst()->IsPress("Right") == true)
+	{
+		GetTransform().SetLocalMove(float4::RIGHT * _DeltaTime * 200.0f);
+		AvatarManager_.ChangeMotion(PlayerAnimations::Move);
+		GetTransform().PixLocalPositiveX();
+	}
+
+	if (GameEngineInput::GetInst()->IsPress("Left") == true)
+	{
+		GetTransform().SetLocalMove(float4::LEFT * _DeltaTime * 200.0f);
+		AvatarManager_.ChangeMotion(PlayerAnimations::Move);
+		GetTransform().PixLocalNegativeX();
+	}
+	if (GameEngineInput::GetInst()->IsPress("Up") == true)
+	{
+		GetTransform().SetLocalMove(float4::UP * _DeltaTime * 100.0f);
+		AvatarManager_.ChangeMotion(PlayerAnimations::Move);
+	}
+	if (GameEngineInput::GetInst()->IsPress("Down") == true)
+	{
+		GetTransform().SetLocalMove(float4::DOWN * _DeltaTime * 100.0f);
+		AvatarManager_.ChangeMotion(PlayerAnimations::Move);
+	}
+
+	if (GameEngineInput::GetInst()->IsUp("Left") == true || GameEngineInput::GetInst()->IsUp("Right") == true
+		|| GameEngineInput::GetInst()->IsUp("Down") == true || GameEngineInput::GetInst()->IsUp("Up") == true)
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
+	}
+
+	//카메라 Pos관련
+	float4 CurPos = GetTransform().GetWorldPosition();
+	float4 MapScale = GetDNFLevel()->GetMapScale();
+	float Zoom = 0.6f;
+	float4 CameraPos;
+	CameraPos.z = -500;
+
+
+	CameraPos.x = GetTransform().GetWorldPosition().x;
+	//왼쪽
+	if (CurPos.x - 640 * Zoom < -MapScale.Half().x)
+	{
+		CameraPos.x = -MapScale.Half().x + 640 * Zoom;
+	}
+	//오른쪽
+	if (CurPos.x + 640 * Zoom > MapScale.Half().x)
+	{
+		CameraPos.x = MapScale.Half().x - 640 * Zoom;
+	}
+
+	CameraPos.y = GetTransform().GetWorldPosition().y;
+	//아래
+	if (CurPos.y - 360 * Zoom < -MapScale.Half().y)
+	{
+		CameraPos.y = -MapScale.Half().y + 360 * Zoom;
+	}
+	//위
+	if (CurPos.y + 360 * Zoom > MapScale.Half().y)
+	{
+		CameraPos.y = MapScale.Half().y - 360 * Zoom;
+	}
+
+
+	GetLevel()->GetMainCameraActorTransform().SetWorldPosition(CameraPos);
+}
+
+void Player_Main::End()
+{
+}
+
+void Player_Main::ChangeAvatar()
+{
 	//1를 누르면 헤어 아바타의 변경이 일어남
 	if (GameEngineInput::GetInst()->IsDown("1") == true)
 	{
@@ -225,58 +298,4 @@ void Player_Main::Update(float _DeltaTime)
 		}
 
 	}
-	//z를 누르면 모션의 변경이 일어남
-	if (GameEngineInput::GetInst()->IsDown("Z") == true)
-	{
-		AvatarManager_.ChangeMotion(PlayerAnimations::Buff);
-	}
-	//x를 누르면 모션의 변경이 일어남
-	if (GameEngineInput::GetInst()->IsDown("X") == true)
-	{
-		AvatarManager_.ChangeMotion(PlayerAnimations::AutoAttack_0);
-	}
-
-	//C를 누르면 모션의 변경이 일어남
-	if (GameEngineInput::GetInst()->IsDown("C") == true)
-	{
-		AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
-
-	}
-
-
-	//이동 flip할때 미세한 오차수정은 일정범위 이동할때 카메라 추적 로직 작성할때 같이하자
-	//if (GameEngineInput::GetInst()->IsDown("Right") == true)
-	//{
-	//	GetTransform().PixLocalPositiveX();
-	//	GetTransform().SetLocalMove(float4::RIGHT * 30);
-	//}
-	if (GameEngineInput::GetInst()->IsPress("Right") == true)
-	{
-		GetTransform().SetLocalMove(float4::RIGHT * _DeltaTime * 100.0f);
-		AvatarManager_.ChangeMotion(PlayerAnimations::Move);
-		GetTransform().PixLocalPositiveX();
-	}
-	//if (GameEngineInput::GetInst()->IsDown("Left") == true)
-	//{
-	//	GetTransform().PixLocalNegativeX();
-	//	GetTransform().SetLocalMove(float4::LEFT * 30);
-	//}
-	if (GameEngineInput::GetInst()->IsPress("Left") == true)
-	{
-		GetTransform().SetLocalMove(float4::LEFT * _DeltaTime * 100.0f);
-		AvatarManager_.ChangeMotion(PlayerAnimations::Move);
-		GetTransform().PixLocalNegativeX();
-
-	}
-	if (GameEngineInput::GetInst()->IsUp("Left") == true || GameEngineInput::GetInst()->IsUp("Right") == true)
-	{
-		AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
-	}
-
-	GetLevel()->GetMainCameraActorTransform().SetWorldPosition(GetTransform().GetWorldPosition());
-
-}
-
-void Player_Main::End()
-{
 }

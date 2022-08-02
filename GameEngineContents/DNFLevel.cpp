@@ -2,9 +2,11 @@
 #include "DNFLevel.h"
 
 #include "Player_Main.h"
+
 DNFLevel::DNFLevel():
-	Camera_(nullptr),
-	IsStart_(false)
+	MainCamera_(nullptr),
+	IsStart_(false),
+	MapScale_(float4::ZERO)
 {
 }
 
@@ -13,11 +15,20 @@ DNFLevel::~DNFLevel()
 }
 
 
+void DNFLevel::SetMapScale(const float4& _Scale)
+{
+	MapScale_ = _Scale;
+}
 
+const float4& DNFLevel::GetMapScale()
+{
+	return MapScale_;
+}
 
 void DNFLevel::DNFStart()
 {
-	CreateCamera({ 0,0,-500 }, 0.7f);
+	InitCamera({ 0,0,-500 }, 0.7f);
+	CreateActor<Player_Main>();
 	IsStart_ = true;
 }
 
@@ -28,7 +39,7 @@ void DNFLevel::DNFUpdate()
 
 void DNFLevel::ErrorCheck()
 {
-	if (Camera_ == nullptr)
+	if (MainCamera_ == nullptr)
 	{
 		MsgBoxAssert("Level에서 카메라를 만들지 않았습니다!");
 	}
@@ -36,13 +47,17 @@ void DNFLevel::ErrorCheck()
 	{
 		MsgBoxAssert("DnfStart를 호출하지 않았습니다.");
 	}
+	if (MapScale_.CompareInt2D(float4::ZERO) == true)
+	{
+		MsgBoxAssert("MapScale을 세팅하지 않았습니다.");
+	}
 }
 
-void DNFLevel::CreateCamera(float4 _Pos, float _ZoomRate)
+void DNFLevel::InitCamera(float4 _Pos, float _ZoomRate)
 {
 	{
-		Camera_ = CreateActor<GameEngineCameraActor>();
-		Camera_->GetCameraComponent()->SetProjectionMode(CAMERAPROJECTIONMODE::Orthographic);
-		Camera_->GetTransform().SetLocalPosition(_Pos);
+		MainCamera_ = GetMainCameraActor();
+		MainCamera_->GetCameraComponent()->SetProjectionMode(CAMERAPROJECTIONMODE::Orthographic);
+		MainCamera_->GetTransform().SetLocalPosition(_Pos);
 	}
 }

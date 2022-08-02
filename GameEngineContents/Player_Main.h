@@ -21,6 +21,7 @@ protected:
 	void End() override;
 
 private:
+	void ChangeAvatar();
 	AvatarManager AvatarManager_;
 
 	GameEngineTextureRenderer* HairRenderer_a_;

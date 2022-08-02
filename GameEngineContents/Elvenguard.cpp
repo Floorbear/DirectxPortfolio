@@ -16,7 +16,6 @@ void Elvenguard::Start()
 {
 	DNFStart();
 	Elvenguard_Background* TileBackground = CreateActor< Elvenguard_Background>();
-	CreateActor<Player_Main>();
 
 }
 
