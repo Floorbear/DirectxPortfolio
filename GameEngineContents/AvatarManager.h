@@ -30,6 +30,7 @@ public:
 
 	//아바타 바꿀때는 RenderList와 CurAvatar의 해당부위를 Clear하고 진행해야함
 	//여기서 사용할 렌더러가 켜지고 그외 렌더러가 꺼집니다.
+	//CurAvatar와 RenderList의 변경이 일어남
 	void ChangeAvatar(AvatarType _Type, AvatarParts _Parts);
 
 protected:

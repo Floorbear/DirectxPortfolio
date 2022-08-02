@@ -254,28 +254,38 @@ void AvatarManager::ChangeAvatar(AvatarType _Type, AvatarParts _Parts)
 	//CurAvatar와 RenderList 초기화
 	CurAvatar_[_Parts] = _Type;
 
-	//RenderList의 해당부위 렌더러를 Off후, 렌더리스트에서 비우고 렌더러 다시 넣어주기
+	////RenderList의 모든 렌더러를 Off후, 렌더리스트에서 비우고 렌더러 다시 넣어주기
+	//{
+	//	std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(_Parts);
+	//	std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(_Parts);
+	//	for (; StartIter != EndIter; StartIter++)
+	//	{
+	//		StartIter->second->Off();
+	//	}
+	//}
+	//RenderList_.erase(_Parts);
+
+	//모든 렌더러 끄기
+	for (auto i : RenderList_)
 	{
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(_Parts);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(_Parts);
-		for (; StartIter != EndIter; StartIter++)
-		{
-			StartIter->second->Off();
-		}
+		i.second->Off();
 	}
-	RenderList_.erase(_Parts);
+	RenderList_.clear();
 
 	//여기서 모자에 대한 예외처리
 
 
-	//GetRendererLayerer을 하면 해당 종류의 아바타에 필요한 렌더러 개수를 알 수 있음
-	//렌더러가 레이어가 0개가 아니라면 아래 반복문 진입
-	for (AvatarLayer i : GetRendererLayer(_Parts, _Type))
+	//모든 렌더러를 꺼버리고 필요한 렌더러만 킴
+	for (auto pair : CurAvatar_)
 	{
-		GameEngineTextureRenderer* Renderer = GetRenderer(_Parts, i);
-		RenderList_.insert(std::make_pair(_Parts, Renderer));
-		Renderer->On();
+		for (AvatarLayer i : GetRendererLayer(pair.first, pair.second))
+		{
+			GameEngineTextureRenderer* Renderer = GetRenderer(pair.first, i);
+			RenderList_.insert(std::make_pair(pair.first, Renderer));
+			Renderer->On();
+		}
 	}
+	
 
 	ChangeMotion(PlayerAnimations::Idle);
 }
@@ -356,6 +366,9 @@ std::vector<AvatarLayer> AvatarManager::GetRendererLayer(AvatarParts _Parts, Ava
 	switch (_Parts)
 	{
 	case AvatarParts::Skin:
+		//for에 들어가기 위해 더미 리턴
+		Vector.push_back(AvatarLayer::A);
+		return Vector;
 		break;
 
 	case AvatarParts::Hair:
