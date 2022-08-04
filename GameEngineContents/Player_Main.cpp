@@ -1,9 +1,13 @@
 #include "PreCompile.h"
-#include "DNFDefineList.h"
 #include "Player_Main.h"
+
+#include "DNFDefineList.h"
+#include "DNFGlobalValue.h"
+
 #include "DNFLevel.h"
 
 #include <GameEngineCore/GameEngineLevel.h>
+#include <GameEngineCore/GameEngineUIRenderer.h>
 
 Player_Main::Player_Main():
 	Toggle1_(0),
@@ -11,7 +15,8 @@ Player_Main::Player_Main():
 	Toggle3_(0),
 	Toggle4_(0),
 	Toggle5_(0),
-	Toggle6_(0)
+	Toggle6_(0),
+	UIRenderer_(nullptr)
 {
 }
 
@@ -28,14 +33,11 @@ void Player_Main::Start()
 
 
 
-	//skin
+	//아바타생성
 	AvatarManager_.LinkPlayerToAvatar(this);
 
 	AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
 	
-	//다른 아바타 Animation
-	//HairRenderer_->CreateFrameAnimationFolder("Idle_1", FrameAnimation_DESC("sm_hair0001a", 0, 10, 0.08f));
-	//HairRenderer_->CreateFrameAnimationFolder("Attack_1", FrameAnimation_DESC("sm_hair0000a", 11, 20, 0.08f));
 }
 
 void Player_Main::Update(float _DeltaTime)
@@ -61,6 +63,8 @@ void Player_Main::Update(float _DeltaTime)
 	}
 
 
+
+	//카메라 제한 관련
 	if (GameEngineInput::GetInst()->IsPress("Right") == true)
 	{
 		GetTransform().SetLocalMove(float4::RIGHT * _DeltaTime * 200.0f);
@@ -91,40 +95,9 @@ void Player_Main::Update(float _DeltaTime)
 		AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
 	}
 
-	//카메라 Pos관련
-	float4 CurPos = GetTransform().GetWorldPosition();
-	float4 MapScale = GetDNFLevel()->GetMapScale();
-	float Zoom = 0.6f;
-	float4 CameraPos;
-	CameraPos.z = -500;
 
 
-	CameraPos.x = GetTransform().GetWorldPosition().x;
-	//왼쪽
-	if (CurPos.x - 640 * Zoom < -MapScale.Half().x)
-	{
-		CameraPos.x = -MapScale.Half().x + 640 * Zoom;
-	}
-	//오른쪽
-	if (CurPos.x + 640 * Zoom > MapScale.Half().x)
-	{
-		CameraPos.x = MapScale.Half().x - 640 * Zoom;
-	}
-
-	CameraPos.y = GetTransform().GetWorldPosition().y;
-	//아래
-	if (CurPos.y - 360 * Zoom < -MapScale.Half().y)
-	{
-		CameraPos.y = -MapScale.Half().y + 360 * Zoom;
-	}
-	//위
-	if (CurPos.y + 360 * Zoom > MapScale.Half().y)
-	{
-		CameraPos.y = MapScale.Half().y - 360 * Zoom;
-	}
-
-
-	GetLevel()->GetMainCameraActorTransform().SetWorldPosition(CameraPos);
+	ChaseCamera();
 }
 
 void Player_Main::End()
@@ -298,4 +271,42 @@ void Player_Main::ChangeAvatar()
 		}
 
 	}
+}
+
+void Player_Main::ChaseCamera()
+{
+	//카메라 Pos관련
+	float4 CurPos = GetTransform().GetWorldPosition();
+	float4 MapScale = GetDNFLevel()->GetMapScale();
+	float Zoom = DNFGlobalValue::CurrentLevel->GetZoom();
+	float4 CameraPos;
+	CameraPos.z = -500;
+
+
+	CameraPos.x = GetTransform().GetWorldPosition().x;
+	//왼쪽
+	if (CurPos.x - 640 * Zoom < -MapScale.Half().x)
+	{
+		CameraPos.x = -MapScale.Half().x + 640 * Zoom;
+	}
+	//오른쪽
+	if (CurPos.x + 640 * Zoom > MapScale.Half().x)
+	{
+		CameraPos.x = MapScale.Half().x - 640 * Zoom;
+	}
+
+	CameraPos.y = GetTransform().GetWorldPosition().y;
+	//아래
+	if (CurPos.y - 360 * Zoom < -MapScale.Half().y)
+	{
+		CameraPos.y = -MapScale.Half().y + 360 * Zoom;
+	}
+	//위
+	if (CurPos.y + 360 * Zoom > MapScale.Half().y)
+	{
+		CameraPos.y = MapScale.Half().y - 360 * Zoom;
+	}
+
+
+	GetLevel()->GetMainCameraActorTransform().SetWorldPosition(CameraPos);
 }

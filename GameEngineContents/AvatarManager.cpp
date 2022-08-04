@@ -78,7 +78,7 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	CoatRenderer_c_->GetTransform().SetLocalScale({ 500,500,1 });
 	CoatRenderer_c_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 6 });
 	CoatRenderer_c_->Off();
-
+	
 	_Player->CoatRenderer_d_ = _Player->CreateComponent<GameEngineTextureRenderer>("CoatRenderer_d_");
 	CoatRenderer_d_ = _Player->CoatRenderer_d_;
 	CoatRenderer_d_->GetTransform().SetLocalScale({ 500,500,1 });

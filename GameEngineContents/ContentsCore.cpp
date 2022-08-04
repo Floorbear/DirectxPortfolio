@@ -1,15 +1,14 @@
 #include "PreCompile.h"
 #include "ContentsCore.h"
 
+#include "DNFDebugGUI.h"
+
 #include "GameEngineContents/SeriaRoom.h"
 #include "GameEngineContents/Elvenguard.h"
 #include "GameEngineContents/Elvenguard_Front.h"
 #include "Bar.h"
 
 #include "Vilmark_0.h"
-
-#include "GameEngineContents/LoginLevel.h"
-#include "GameEngineContents/PlayLevel.h"
 
 #pragma comment(lib, "GameEngineBase.lib")
 
@@ -24,6 +23,7 @@ ContentsCore::~ContentsCore()
 
 void ContentsCore::Start()
 {
+
 	{
 		//GameEngineDirectory Dir;
 		//Dir.MoveParentToExitsChildDirectory("ConstantResources");
@@ -125,6 +125,7 @@ void ContentsCore::Start()
 
 
 	GameEngineGUI::CreateGUIWindow<GameEngineStatusWindow>("EngineStatus", nullptr);
+	GameEngineGUI::CreateGUIWindow<DNFDebugGUI>("DNFDebug", nullptr);
 }
 
 void ContentsCore::Update(float _DeltaTime)

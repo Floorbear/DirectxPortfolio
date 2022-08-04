@@ -14,6 +14,7 @@ Vilmark_0::~Vilmark_0()
 void Vilmark_0::Start()
 {
 	DNFStart();
+	InitCamera({ 0,0,-500 }, 0.6f);
 	Vilmark_0_Background* TileBackground = CreateActor< Vilmark_0_Background>();
 }
 

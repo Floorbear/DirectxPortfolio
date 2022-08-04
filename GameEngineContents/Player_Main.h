@@ -22,6 +22,12 @@ protected:
 
 private:
 	void ChangeAvatar();
+	void ChaseCamera();
+
+	//UI
+	GameEngineUIRenderer* UIRenderer_;
+
+	//아바타 관련 변수들
 	AvatarManager AvatarManager_;
 
 	GameEngineTextureRenderer* HairRenderer_a_;

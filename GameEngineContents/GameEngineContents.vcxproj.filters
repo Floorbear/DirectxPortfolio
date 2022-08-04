@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Contents">
-      <UniqueIdentifier>{eee3c248-3814-48af-b1f4-f221fa7a0ee6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Level">
       <UniqueIdentifier>{5df23444-ca8f-40f8-8c39-0d7d75f58b7d}</UniqueIdentifier>
     </Filter>
@@ -46,10 +43,19 @@
     <Filter Include="Avator">
       <UniqueIdentifier>{34cbbc75-6ee0-4b37-aeee-050cac866dbc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ContentsCore">
+      <UniqueIdentifier>{eee3c248-3814-48af-b1f4-f221fa7a0ee6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{e9cd6ede-26ac-4678-a264-405bba9d95cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{b6e7f001-41a9-4c8d-854d-2cc09875b589}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ContentsCore.h">
-      <Filter>Contents</Filter>
+      <Filter>ContentsCore</Filter>
     </ClInclude>
     <ClInclude Include="LoginLevel.h">
       <Filter>Level</Filter>
@@ -124,10 +130,19 @@
     <ClInclude Include="DNFEnums.h">
       <Filter>Global</Filter>
     </ClInclude>
+    <ClInclude Include="DNFDebugGUI.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="DNFGlobalValue.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="DNFHUD.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
-      <Filter>Contents</Filter>
+      <Filter>ContentsCore</Filter>
     </ClCompile>
     <ClCompile Include="LoginLevel.cpp">
       <Filter>Level</Filter>
@@ -192,6 +207,15 @@
     </ClCompile>
     <ClCompile Include="AvatarManager.cpp">
       <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="DNFDebugGUI.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="DNFGlobalValue.cpp">
+      <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="DNFHUD.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

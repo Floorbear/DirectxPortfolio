@@ -22,6 +22,13 @@ public:
 		return "DnF";
 	}
 
+	//윈도우 위치 초기화
+	float4 StartWindowPosition() override
+	{
+		return { 0,0 };
+	}
+
+
 protected:
 	void Start() override;
 

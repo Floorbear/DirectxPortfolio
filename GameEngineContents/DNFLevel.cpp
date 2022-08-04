@@ -1,12 +1,15 @@
 #include "PreCompile.h"
 #include "DNFLevel.h"
+#include "DNFGlobalValue.h"
 
 #include "Player_Main.h"
+#include "DNFHUD.h"
 
 DNFLevel::DNFLevel():
 	MainCamera_(nullptr),
 	IsStart_(false),
-	MapScale_(float4::ZERO)
+	MapScale_(float4::ZERO),
+	Player_()
 {
 }
 
@@ -27,8 +30,8 @@ const float4& DNFLevel::GetMapScale()
 
 void DNFLevel::DNFStart()
 {
-	InitCamera({ 0,0,-500 }, 0.7f);
-	CreateActor<Player_Main>();
+	Player_ = CreateActor<Player_Main>();
+	CreateActor<DNFHUD>();
 	IsStart_ = true;
 }
 
@@ -58,6 +61,14 @@ void DNFLevel::InitCamera(float4 _Pos, float _ZoomRate)
 	{
 		MainCamera_ = GetMainCameraActor();
 		MainCamera_->GetCameraComponent()->SetProjectionMode(CAMERAPROJECTIONMODE::Orthographic);
+		float4 Size = float4(1280,720) * _ZoomRate;
+		Zoom_ = _ZoomRate;
+		MainCamera_->GetCameraComponent()->SetProjectionSize(Size);
 		MainCamera_->GetTransform().SetLocalPosition(_Pos);
 	}
+}
+
+void DNFLevel::OnEvent()
+{
+	DNFGlobalValue::CurrentLevel = this;
 }

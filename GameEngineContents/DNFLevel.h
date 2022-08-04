@@ -3,6 +3,7 @@
 
 //던파의 레벨에서 필요한 공통 기능을 담당할 클래스
 class GameEngineCameraActor;
+class Player_Main;
 class DNFLevel : public GameEngineLevel
 {
 public:
@@ -20,6 +21,16 @@ public:
 	void SetMapScale(const float4& _Scale);
 	const float4& GetMapScale();
 
+	inline Player_Main* GetPlayer()
+	{
+		return Player_;
+	}
+
+	inline float GetZoom()
+	{
+		return Zoom_;
+	}
+
 protected:
 	void DNFStart();
 	void DNFUpdate();
@@ -29,14 +40,22 @@ protected:
 
 	void InitCamera(float4 _Pos, float _ZoomRate);
 
+	void OnEvent() override;
+
 private:
 	//에러 체크용 Bool 함수
 	bool IsStart_;
 
+	//레벨에 있는 플레이어
+	Player_Main* Player_;
+
 	//맵 스케일
 	float4 MapScale_;
+
 	//움직일 수 있는 범위
 	float4 CanMovingScale_;
 
+	//레벨의 ZoomRate
+	float Zoom_;
 };
 
