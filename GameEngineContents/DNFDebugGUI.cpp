@@ -5,6 +5,7 @@
 
 #include "DNFGlobalValue.h"
 #include "Player_Main.h"
+#include "DNFBackground.h"
 
 std::map<std::string, float> DNFDebugGUI::DebugValue_float_;
 std::map<std::string, int> DNFDebugGUI::DebugValue_int_;
@@ -32,6 +33,13 @@ void DNFDebugGUI::OnGUI(GameEngineLevel* _Level, float _DeltaTime)
 	
 	if (DNFGlobalValue::CurrentLevel != nullptr)
 	{
+		//Col맵 끄기 보기
+		{
+			if (ImGui::Button("On/Off ColMap") == true)
+			{
+				DNFGlobalValue::CurrentLevel->GetBackground()->GetColRenderer()->OnOffSwitch();
+			}
+		}
 		//플레이어 위치 
 		{
 			ImGui::Text("PlayerPos");

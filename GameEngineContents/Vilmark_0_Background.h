@@ -20,5 +20,9 @@ protected:
 
 private:
 	GameEngineTextureRenderer* ColRenderer_;
+	GameEngineTextureRenderer* FarRenderer_;
+
+	float FarSpeed_;
+	float4 PrevCameraPos_;
 };
 

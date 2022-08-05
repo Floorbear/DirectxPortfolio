@@ -18,11 +18,13 @@ void DNFBackground::InitBackground(const std::string& _FileName)
 	std::string MapName = _FileName + ".png";
 	MainRenderer_->SetTexture(MapName);
 	MainRenderer_->ScaleToTexture();
+	MainRenderer_->SetPivot(PIVOTMODE::LEFTTOP);
 	GetDNFLevel()->SetMapScale(MainRenderer_->GetTransform().GetLocalScale());
 
 	ColRenderer = CreateComponent<GameEngineTextureRenderer>(GetNameCopy());
 	std::string ColMapName = _FileName + "_col.png";
 	ColRenderer->SetTexture(ColMapName);
 	ColRenderer->ScaleToTexture();
-	GetDNFLevel()->SetMapScale(ColRenderer->GetTransform().GetLocalScale());
+	ColRenderer->SetPivot(PIVOTMODE::LEFTTOP);
+	ColRenderer->Off();
 }

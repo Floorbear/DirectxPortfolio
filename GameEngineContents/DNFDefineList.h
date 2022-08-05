@@ -1,6 +1,7 @@
 #pragma once
 //캐릭터의 프레임 Define 리스트
 
+#define Magenta (255,0,255)
 #define AutoAttack_0_Start 0
 #define AutoAttack_0_End 9
 

@@ -5,6 +5,7 @@
 #include "DNFGlobalValue.h"
 
 #include "DNFLevel.h"
+#include "DNFBackground.h"
 #include "DNFDebugGUI.h"
 
 #include <GameEngineCore/GameEngineLevel.h>
@@ -19,7 +20,7 @@ Player_Main::Player_Main():
 	Toggle6_(0),
 	UIRenderer_(nullptr)
 {
-	Temp = 88.0f;
+
 }
 
 Player_Main::~Player_Main()
@@ -32,8 +33,14 @@ void Player_Main::Start()
 	float Idle_Iter = 0.2f;
 	float Attack_Iter = 0.08f;
 	 
+	//테스트용 위치 확인 렌더러
+	GameEngineTextureRenderer* tempRender = CreateComponent<GameEngineTextureRenderer>("Temp");
+	tempRender->GetTransform().SetLocalScale(float4(10, 10,-10));
+	tempRender->GetTransform().SetLocalMove(float4(0, -88.0f));
 
-
+	//이전 캐릭터 위치
+	GetTransform().SetWorldPosition({ 200,-400 });
+	PrevPos_ = GetTransform().GetWorldPosition();
 
 	//아바타생성
 	AvatarManager_.LinkPlayerToAvatar(this);
@@ -78,7 +85,6 @@ void Player_Main::Update(float _DeltaTime)
 		GetTransform().SetLocalMove(float4::LEFT * _DeltaTime * 200.0f);
 		AvatarManager_.ChangeMotion(PlayerAnimations::Move);
 		GetTransform().PixLocalNegativeX();
-		Temp += 1;
 	}
 	if (GameEngineInput::GetInst()->IsPress("Up") == true)
 	{
@@ -99,14 +105,23 @@ void Player_Main::Update(float _DeltaTime)
 
 	//제한된 범위 밖을 나가지 못하게
 	{
-		DNFDebugGUI::AddMutableValue("Pos", &Temp);
+
 		float4 MapScale = GetDNFLevel()->GetMapScale();
 		float4 PlayerPosBot = GetTransform().GetWorldPosition();
-		PlayerPosBot.x += MapScale.Half().x;
-		PlayerPosBot.y = -PlayerPosBot.y + MapScale.Half().y + Temp;
+		PlayerPosBot.y = -PlayerPosBot.y + 88.0f;
 		DNFDebugGUI::AddValue("PlayerBotPos", PlayerPosBot);
 
-		//왼쪽
+		GameEngineTexture* ColMap = DNFGlobalValue::CurrentLevel->GetBackground()->GetColRenderer()->GetCurTexture();
+		
+		
+		DNFDebugGUI::AddValue("PixelValue", ColMap->GetPixel(PlayerPosBot.x, PlayerPosBot.y));
+		if (ColMap->GetPixel(PlayerPosBot.x, PlayerPosBot.y).CompareInt3D(float4::MAGENTA) == false)
+		{
+			GetTransform().SetWorldPosition(PrevPos_);
+		}
+		
+		PrevPos_ = GetTransform().GetWorldPosition();
+
 		//TemValue += _DeltaTime;
 		//TemValue1 += _DeltaTime*2.0f;
 		//DNFDebugGUI::AddValue("BotPos", &TemValue);
@@ -303,26 +318,26 @@ void Player_Main::ChaseCamera()
 
 	CameraPos.x = GetTransform().GetWorldPosition().x;
 	//왼쪽
-	if (CurPos.x - 640 * Zoom < -MapScale.Half().x)
+	if (CurPos.x - 640 * Zoom < 0.0f)
 	{
-		CameraPos.x = -MapScale.Half().x + 640 * Zoom;
+		CameraPos.x =  640 * Zoom;
 	}
 	//오른쪽
-	if (CurPos.x + 640 * Zoom > MapScale.Half().x)
+	if (CurPos.x + 640 * Zoom > MapScale.x)
 	{
-		CameraPos.x = MapScale.Half().x - 640 * Zoom;
+		CameraPos.x = MapScale.x - 640 * Zoom;
 	}
 
 	CameraPos.y = GetTransform().GetWorldPosition().y;
 	//아래
-	if (CurPos.y - 360 * Zoom < -MapScale.Half().y)
+	if (CurPos.y - 360 * Zoom < -MapScale.y)
 	{
-		CameraPos.y = -MapScale.Half().y + 360 * Zoom;
+		CameraPos.y = -MapScale.y + 360 * Zoom;
 	}
 	//위
-	if (CurPos.y + 360 * Zoom > MapScale.Half().y)
+	if (CurPos.y + 360 * Zoom > 0.0f)
 	{
-		CameraPos.y = MapScale.Half().y - 360 * Zoom;
+		CameraPos.y =  - 360 * Zoom;
 	}
 
 

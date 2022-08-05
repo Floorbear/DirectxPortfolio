@@ -47,6 +47,15 @@ public:
 
 	float4 GetMouseWorldPositionToActor();
 
+	inline float4x4 GetView() 
+	{
+		return View;
+	}
+	inline float4x4 GetProjectionMatrix()
+	{
+		return Projection;
+	}
+
 	inline float4 GetMouseWorldDir()
 	{
 		return MouseDir;
@@ -55,6 +64,7 @@ public:
 	inline void SetProjectionSize(const float4& _Value) 
 	{
 		Size = _Value;
+		// return float4();
 	}
 
 	inline float4 GetProjectionSize()
@@ -71,8 +81,8 @@ protected:
 
 private:
 	float4x4 View; // 바라보는것
-	float4x4 ViewPort;
 	float4x4 Projection;
+	float4x4 ViewPort;
 	CAMERAPROJECTIONMODE Mode;
 
 	float4 PrevMouse;
