@@ -7,7 +7,9 @@
 
 Vilmark_0_Background::Vilmark_0_Background():
 	FarSpeed_(0.5f),
-	PrevCameraPos_()
+	PrevCameraPos_(),
+	FarRenderer_(),
+	ColRenderer_()
 {
 }
 
@@ -32,7 +34,6 @@ void Vilmark_0_Background::Start()
 
 void Vilmark_0_Background::Update(float _DeltaTime)
 {
-	DNFDebugGUI::AddMutableValue("speed", &FarSpeed_);
 	DNFUpdate();
 
 	//Far 

@@ -53,13 +53,14 @@ protected:
 	void InitCamera(float4 _Pos, float _ZoomRate);
 
 	void OnEvent() override;
+	virtual void DNFOnEvent();
+	Player_Main* Player_;
 
 private:
 	//에러 체크용 Bool 함수
 	bool IsStart_;
 
 	//레벨에 있는 플레이어
-	Player_Main* Player_;
 
 	//맵 스케일
 	float4 MapScale_;

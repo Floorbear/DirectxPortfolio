@@ -18,7 +18,25 @@ Player_Main::Player_Main():
 	Toggle4_(0),
 	Toggle5_(0),
 	Toggle6_(0),
-	UIRenderer_(nullptr)
+	UIRenderer_(nullptr),
+	WeaponRenderer_b_(),
+	WeaponRenderer_c_(),
+	CoatRenderer_a_(),
+	CoatRenderer_b_(),
+	CoatRenderer_c_(),
+	CoatRenderer_d_(),
+	PantsRenderer_a_(),
+	PantsRenderer_b_(),
+	PantsRenderer_d_(),
+	CapRenderer_a_(),
+	CapRenderer_b_(),
+	CapRenderer_c_(),
+	HairRenderer_a_(),
+	HairRenderer_d_(),
+	BeltRenderer_c_(),
+	BeltRenderer_d_(),
+	ShoesRenderer_a_(),
+	ShoesRenderer_b_()
 {
 
 }
@@ -39,7 +57,6 @@ void Player_Main::Start()
 	tempRender->GetTransform().SetLocalMove(float4(0, -88.0f));
 
 	//이전 캐릭터 위치
-	GetTransform().SetWorldPosition({ 200,-400 });
 	PrevPos_ = GetTransform().GetWorldPosition();
 
 	//아바타생성
@@ -104,6 +121,7 @@ void Player_Main::Update(float _DeltaTime)
 	}
 
 	//제한된 범위 밖을 나가지 못하게
+	if (DNFGlobalValue::CurrentLevel != nullptr)
 	{
 
 		float4 MapScale = GetDNFLevel()->GetMapScale();
@@ -114,8 +132,8 @@ void Player_Main::Update(float _DeltaTime)
 		GameEngineTexture* ColMap = DNFGlobalValue::CurrentLevel->GetBackground()->GetColRenderer()->GetCurTexture();
 		
 		
-		DNFDebugGUI::AddValue("PixelValue", ColMap->GetPixel(PlayerPosBot.x, PlayerPosBot.y));
-		if (ColMap->GetPixel(PlayerPosBot.x, PlayerPosBot.y).CompareInt3D(float4::MAGENTA) == false)
+		DNFDebugGUI::AddValue("PixelValue", ColMap->GetPixel(static_cast<int>(PlayerPosBot.x), static_cast<int>(PlayerPosBot.y)));
+		if (ColMap->GetPixel(static_cast<int>(PlayerPosBot.x), static_cast<int>(PlayerPosBot.y)).CompareInt3D(float4::MAGENTA) == false)
 		{
 			GetTransform().SetWorldPosition(PrevPos_);
 		}
@@ -126,11 +144,12 @@ void Player_Main::Update(float _DeltaTime)
 		//TemValue1 += _DeltaTime*2.0f;
 		//DNFDebugGUI::AddValue("BotPos", &TemValue);
 		//DNFDebugGUI::AddValue("2xValue", &TemValue1);
+		ChaseCamera();
 	}
 
 
 
-	ChaseCamera();
+	
 }
 
 void Player_Main::End()

@@ -13,3 +13,8 @@
 
 #define Move_Start 180
 #define Move_End 187
+
+
+//·ç°¡·ç
+#define Lugaru_Idle_Start 33
+#define Lugaru_Idle_End 36

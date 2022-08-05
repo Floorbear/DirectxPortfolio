@@ -49,6 +49,9 @@
     <Filter Include="UI">
       <UniqueIdentifier>{b6e7f001-41a9-4c8d-854d-2cc09875b589}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Monster">
+      <UniqueIdentifier>{d6649308-f3a2-4e66-9380-dd073a6a7f1f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ContentsCore.h">
@@ -139,6 +142,9 @@
     <ClInclude Include="DNFBackground.h">
       <Filter>Actor</Filter>
     </ClInclude>
+    <ClInclude Include="BloodLugaru.h">
+      <Filter>Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -219,6 +225,9 @@
     </ClCompile>
     <ClCompile Include="DNFBackground.cpp">
       <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="BloodLugaru.cpp">
+      <Filter>Monster</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

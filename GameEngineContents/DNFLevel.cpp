@@ -73,4 +73,9 @@ void DNFLevel::InitCamera(float4 _Pos, float _ZoomRate)
 void DNFLevel::OnEvent()
 {
 	DNFGlobalValue::CurrentLevel = this;
+	DNFOnEvent();
+}
+
+void DNFLevel::DNFOnEvent()
+{
 }

@@ -5,7 +5,25 @@
 #include "DNFDefineList.h"
 
 AvatarManager::AvatarManager():
-	LayerOffset_(-5.0f)
+	LayerOffset_(-5.0f),
+	WeaponRenderer_b_(),
+	WeaponRenderer_c_(),
+	CoatRenderer_a_(),
+	CoatRenderer_b_(),
+	CoatRenderer_c_(),
+	CoatRenderer_d_(),
+	PantsRenderer_a_(),
+	PantsRenderer_b_(),
+	PantsRenderer_d_(),
+	CapRenderer_a_(),
+	CapRenderer_b_(),
+	CapRenderer_c_(),
+	HairRenderer_a_(),
+	HairRenderer_d_(),
+	BeltRenderer_c_(),
+	BeltRenderer_d_(),
+	ShoesRenderer_a_(),
+	ShoesRenderer_b_()
 {
 }
 
