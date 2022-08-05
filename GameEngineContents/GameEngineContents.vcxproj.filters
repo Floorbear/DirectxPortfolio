@@ -139,6 +139,9 @@
     <ClInclude Include="DNFHUD.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="DNFBackground.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -216,6 +219,9 @@
     </ClCompile>
     <ClCompile Include="DNFHUD.cpp">
       <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="DNFBackground.cpp">
+      <Filter>Actor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

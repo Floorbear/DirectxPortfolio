@@ -27,16 +27,18 @@ protected:
 	//세팅이 안된것을 체크 해 주는 함수
 	void ErrorCheck();
 
+	//Update에서 호출
 	//하는 역할
 	//1. 에러 체크
 	void DNFUpdate();
 
+	//start에서 호출
 	//하는 역할
 	//1. MainRenderer 생성
-	void DNFStart();
+	virtual void DNFStart();
 
-private:
 	bool IsStart_; //DnfStart 호출했냐
+private:
 
 };
 

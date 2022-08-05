@@ -4,6 +4,7 @@
 //던파의 레벨에서 필요한 공통 기능을 담당할 클래스
 class GameEngineCameraActor;
 class Player_Main;
+class DNFBackground;
 class DNFLevel : public GameEngineLevel
 {
 public:
@@ -31,6 +32,17 @@ public:
 		return Zoom_;
 	}
 
+	inline DNFBackground* GetBackground()
+	{
+		return Background_;
+	}
+
+	template <typename BackgroundType>
+	void CreateBackground()
+	{
+		Background_ = CreateActor<BackgroundType>();
+	}
+
 protected:
 	void DNFStart();
 	void DNFUpdate();
@@ -52,8 +64,7 @@ private:
 	//맵 스케일
 	float4 MapScale_;
 
-	//움직일 수 있는 범위
-	float4 CanMovingScale_;
+	DNFBackground* Background_;
 
 	//레벨의 ZoomRate
 	float Zoom_;

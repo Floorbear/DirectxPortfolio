@@ -23,10 +23,12 @@ void DNFLevel::SetMapScale(const float4& _Scale)
 	MapScale_ = _Scale;
 }
 
+
 const float4& DNFLevel::GetMapScale()
 {
 	return MapScale_;
 }
+
 
 void DNFLevel::DNFStart()
 {

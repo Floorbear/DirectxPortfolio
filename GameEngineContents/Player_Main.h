@@ -15,6 +15,11 @@ public:
 	Player_Main& operator=(const Player_Main& _Ohter) = delete;
 	Player_Main& operator=(const Player_Main&& _Other) noexcept = delete;
 
+	float4 GetBotPos()
+	{
+		return GetTransform().GetWorldPosition() - float4(0, 250, 0, 0);
+	}
+
 protected:
 	void Start() override;
 	void Update(float _DeltaTime) override;
@@ -75,5 +80,6 @@ private:
 	int Toggle5_;
 	int Toggle6_;
 
+	float Temp;
 };
 

@@ -5,6 +5,7 @@
 #include "DNFGlobalValue.h"
 
 #include "DNFLevel.h"
+#include "DNFDebugGUI.h"
 
 #include <GameEngineCore/GameEngineLevel.h>
 #include <GameEngineCore/GameEngineUIRenderer.h>
@@ -18,6 +19,7 @@ Player_Main::Player_Main():
 	Toggle6_(0),
 	UIRenderer_(nullptr)
 {
+	Temp = 88.0f;
 }
 
 Player_Main::~Player_Main()
@@ -64,7 +66,6 @@ void Player_Main::Update(float _DeltaTime)
 
 
 
-	//카메라 제한 관련
 	if (GameEngineInput::GetInst()->IsPress("Right") == true)
 	{
 		GetTransform().SetLocalMove(float4::RIGHT * _DeltaTime * 200.0f);
@@ -77,6 +78,7 @@ void Player_Main::Update(float _DeltaTime)
 		GetTransform().SetLocalMove(float4::LEFT * _DeltaTime * 200.0f);
 		AvatarManager_.ChangeMotion(PlayerAnimations::Move);
 		GetTransform().PixLocalNegativeX();
+		Temp += 1;
 	}
 	if (GameEngineInput::GetInst()->IsPress("Up") == true)
 	{
@@ -93,6 +95,22 @@ void Player_Main::Update(float _DeltaTime)
 		|| GameEngineInput::GetInst()->IsUp("Down") == true || GameEngineInput::GetInst()->IsUp("Up") == true)
 	{
 		AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
+	}
+
+	//제한된 범위 밖을 나가지 못하게
+	{
+		DNFDebugGUI::AddMutableValue("Pos", &Temp);
+		float4 MapScale = GetDNFLevel()->GetMapScale();
+		float4 PlayerPosBot = GetTransform().GetWorldPosition();
+		PlayerPosBot.x += MapScale.Half().x;
+		PlayerPosBot.y = -PlayerPosBot.y + MapScale.Half().y + Temp;
+		DNFDebugGUI::AddValue("PlayerBotPos", PlayerPosBot);
+
+		//왼쪽
+		//TemValue += _DeltaTime;
+		//TemValue1 += _DeltaTime*2.0f;
+		//DNFDebugGUI::AddValue("BotPos", &TemValue);
+		//DNFDebugGUI::AddValue("2xValue", &TemValue1);
 	}
 
 
