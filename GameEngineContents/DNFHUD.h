@@ -1,6 +1,6 @@
 #pragma once
-#include "DNFRenderObject.h"
-class DNFHUD : public DNFRenderObject
+#include <GameEngineCore/GameEngineActor.h>
+class DNFHUD : public GameEngineActor
 {
 public:
 	DNFHUD();
@@ -17,6 +17,7 @@ protected:
 	void Update(float _DeltaTime) override;
 
 private:
+	GameEngineUIRenderer* MainRenderer_;
 	GameEngineUIRenderer* HPRenderer_;
 	GameEngineUIRenderer* MPRenderer_;
 

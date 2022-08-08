@@ -18,3 +18,7 @@
 //·ç°¡·ç
 #define Lugaru_Idle_Start 33
 #define Lugaru_Idle_End 36
+#define Lugaru_Move_Start 21
+#define Lugaru_Move_End 25
+
+

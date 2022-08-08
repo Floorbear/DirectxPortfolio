@@ -1,10 +1,10 @@
 #pragma once
-#include "DNFRenderObject.h"
+#include <GameEngineCore/GameEngineActor.h>
 
-class DNFRenderObject;
+class GameEngineActor;
 class GameEngineTextureRenderer;
 //Background의 이름은 중요하다! 꼭 Map이름에 확장자 뗀것과 동일하게 하자
-class DNFBackground : public DNFRenderObject
+class DNFBackground : public GameEngineActor
 {
 public:
 	DNFBackground();
@@ -24,7 +24,7 @@ public:
 protected:
 	void InitBackground(const std::string& _FileName);
 
-	
+	GameEngineTextureRenderer* MainRenderer_;
 	GameEngineTextureRenderer* ColRenderer;
 
 private:

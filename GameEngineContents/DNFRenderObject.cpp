@@ -37,10 +37,18 @@ void DNFRenderObject::ErrorCheck()
 void DNFRenderObject::DNFUpdate()
 {
 	ErrorCheck();
+	ZSort();
 }
 
 void DNFRenderObject::DNFStart()
 {
 	MainRenderer_ = CreateComponent<GameEngineTextureRenderer>(GetNameCopy());
 	IsStart_ = true;
+}
+
+void DNFRenderObject::ZSort()
+{
+	float4 CurPos = GetTransform().GetWorldPosition();
+	CurPos.z = CurPos.y;
+	GetTransform().SetWorldPosition(CurPos);
 }

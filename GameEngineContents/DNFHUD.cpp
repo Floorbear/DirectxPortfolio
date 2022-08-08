@@ -15,8 +15,7 @@ DNFHUD::~DNFHUD()
 
 void DNFHUD::Start()
 {
-	DNFStart();
-
+	GetTransform().SetLocalMove(float4(0, 0, -1000));
 	//UI·»´õ·¯
 	MainRenderer_ = CreateComponent<GameEngineUIRenderer>(GetNameCopy());
 	MainRenderer_->SetTexture("hud_frame.png");
@@ -39,5 +38,4 @@ void DNFHUD::Start()
 
 void DNFHUD::Update(float _DeltaTime)
 {
-	DNFUpdate();
 }

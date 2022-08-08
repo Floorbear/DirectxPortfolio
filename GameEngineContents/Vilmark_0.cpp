@@ -18,7 +18,7 @@ void Vilmark_0::Start()
 	DNFStart();
 	Player_->GetTransform().SetWorldPosition({ 200,-400 });
 
-	InitCamera({ 0,0,-500 }, 0.6f);
+	InitCamera({ 0,0,-2000 }, 0.6f);
 	CreateBackground<Vilmark_0_Background>();
 }
 

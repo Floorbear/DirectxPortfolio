@@ -132,7 +132,6 @@ void Player_Main::Update(float _DeltaTime)
 		GameEngineTexture* ColMap = DNFGlobalValue::CurrentLevel->GetBackground()->GetColRenderer()->GetCurTexture();
 		
 		
-		DNFDebugGUI::AddValue("PixelValue", ColMap->GetPixel(static_cast<int>(PlayerPosBot.x), static_cast<int>(PlayerPosBot.y)));
 		if (ColMap->GetPixel(static_cast<int>(PlayerPosBot.x), static_cast<int>(PlayerPosBot.y)).CompareInt3D(float4::MAGENTA) == false)
 		{
 			GetTransform().SetWorldPosition(PrevPos_);

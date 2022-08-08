@@ -37,6 +37,10 @@ protected:
 	//1. MainRenderer 생성
 	virtual void DNFStart();
 
+
+	//Update에서 돌려줘야함
+	void ZSort();
+
 	bool IsStart_; //DnfStart 호출했냐
 private:
 

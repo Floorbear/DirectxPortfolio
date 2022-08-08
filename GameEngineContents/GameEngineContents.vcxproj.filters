@@ -145,6 +145,12 @@
     <ClInclude Include="BloodLugaru.h">
       <Filter>Monster</Filter>
     </ClInclude>
+    <ClInclude Include="DNFMath.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="DNFContentsMinimal.h">
+      <Filter>Global</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -228,6 +234,9 @@
     </ClCompile>
     <ClCompile Include="BloodLugaru.cpp">
       <Filter>Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="DNFMath.cpp">
+      <Filter>Global</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

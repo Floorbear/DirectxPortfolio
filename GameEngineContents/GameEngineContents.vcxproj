@@ -181,6 +181,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="DNFContentsMinimal.h" />
     <ClInclude Include="DNFDebugGUI.h">
       <SubType>
       </SubType>
@@ -189,6 +190,10 @@
     <ClInclude Include="DNFEnums.h" />
     <ClInclude Include="DNFGlobalValue.h" />
     <ClInclude Include="DNFHUD.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="DNFMath.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -301,6 +306,10 @@
     </ClCompile>
     <ClCompile Include="DNFGlobalValue.cpp" />
     <ClCompile Include="DNFHUD.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="DNFMath.cpp">
       <SubType>
       </SubType>
     </ClCompile>

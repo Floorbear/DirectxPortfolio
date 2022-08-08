@@ -19,7 +19,6 @@ Vilmark_0_Background::~Vilmark_0_Background()
 
 void Vilmark_0_Background::Start()
 {
-	DNFStart();
 	InitBackground("Vilmark_Background_00");
 
 
@@ -34,8 +33,6 @@ void Vilmark_0_Background::Start()
 
 void Vilmark_0_Background::Update(float _DeltaTime)
 {
-	DNFUpdate();
-
 	//Far 
 
 	float4 CameraPos = GetLevel()->GetMainCamera()->GetTransform().GetWorldPosition();
