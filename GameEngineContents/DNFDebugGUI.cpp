@@ -12,6 +12,8 @@ std::map<std::string, int> DNFDebugGUI::DebugValue_int_;
 std::map<std::string, float4> DNFDebugGUI::DebugValue_float4_;
 std::map<std::string, std::string> DNFDebugGUI::DebugValue_string_;
 std::map<std::string, float*> DNFDebugGUI::MutableValue_float_;
+std::map<std::string, float4*> DNFDebugGUI::MutableValue_float4_;
+
 
 
 DNFDebugGUI::DNFDebugGUI()
@@ -140,6 +142,20 @@ void DNFDebugGUI::OnGUI(GameEngineLevel* _Level, float _DeltaTime)
 				{
 					ImGui::InputFloat(i.first.c_str(), i.second);
 
+
+				}
+				ImGui::TreePop();
+			}
+		}
+
+		//MutableValue_float4
+		if (MutableValue_float4_.empty() == false)
+		{
+			if (ImGui::TreeNodeEx("MutableValue_float4_", 0) == true)
+			{
+				for (auto i : MutableValue_float4_)
+				{
+					ImGui::InputFloat4(i.first.c_str(), i.second->Arr1D);
 
 				}
 				ImGui::TreePop();

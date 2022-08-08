@@ -44,5 +44,5 @@ void Vilmark_0::DNFOnEvent()
 	}
 
 	BloodLugaru* Monster = CreateActor<BloodLugaru>();
-	Monster->GetTransform().SetWorldPosition({ 600,-400 });
+	Monster->GetTransform().SetWorldPosition({ 700,-400 });
 }

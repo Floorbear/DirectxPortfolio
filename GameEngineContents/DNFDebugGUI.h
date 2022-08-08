@@ -1,5 +1,6 @@
 #pragma once
 #include <GameEngineCore/GameEngineGUI.h>
+#include <GameEngineBase/GameEngineMath.h>
 
 class DNFDebugGUI : public GameEngineGUIWindow
 {
@@ -33,6 +34,10 @@ public:
 	{
 		MutableValue_float_.insert(std::make_pair(_Name, _Value));
 	}
+	static void AddMutableValue(const std::string _Name, float4* _Value)
+	{
+		MutableValue_float4_.insert(std::make_pair(_Name, _Value));
+	}
 
 
 private:
@@ -45,6 +50,8 @@ private:
 	static std::map<std::string, std::string> DebugValue_string_;
 
 	static std::map<std::string, float*> MutableValue_float_;
+	static std::map<std::string, float4*> MutableValue_float4_;
+
 
 };
 

@@ -10,6 +10,8 @@
 
 #include <GameEngineCore/GameEngineLevel.h>
 #include <GameEngineCore/GameEngineUIRenderer.h>
+#include <GameEngineCore/GameEngineCollision.h>
+
 
 Player_Main::Player_Main():
 	Toggle1_(0),
@@ -55,6 +57,13 @@ void Player_Main::Start()
 	GameEngineTextureRenderer* tempRender = CreateComponent<GameEngineTextureRenderer>("Temp");
 	tempRender->GetTransform().SetLocalScale(float4(10, 10,-10));
 	tempRender->GetTransform().SetLocalMove(float4(0, -88.0f));
+
+	//테스트용 콜라이더
+	GameEngineCollision* Col = CreateComponent<GameEngineCollision>("Col");
+	Col->SetDebugSetting(CollisionType::CT_OBB2D, float4(0,1.0f,0,0.5f));
+	Col->GetTransform().SetLocalScale(float4(100, 100, 1));
+	Col->GetTransform().SetLocalMove(float4(0, 0, -500));
+	Col->ChangeOrder(ColOrder::Player);
 
 	//이전 캐릭터 위치
 	PrevPos_ = GetTransform().GetWorldPosition();
