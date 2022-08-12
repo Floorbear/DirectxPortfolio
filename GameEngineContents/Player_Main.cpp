@@ -141,7 +141,7 @@ void Player_Main::Update(float _DeltaTime)
 		GameEngineTexture* ColMap = DNFGlobalValue::CurrentLevel->GetBackground()->GetColRenderer()->GetCurTexture();
 		
 		
-		if (ColMap->GetPixel(static_cast<int>(PlayerPosBot.x), static_cast<int>(PlayerPosBot.y)).CompareInt3D(float4::MAGENTA) == false)
+		if (ColMap->GetPixelToFloat4(static_cast<int>(PlayerPosBot.x), static_cast<int>(PlayerPosBot.y)).CompareInt3D(float4::MAGENTA) == false)
 		{
 			GetTransform().SetWorldPosition(PrevPos_);
 		}

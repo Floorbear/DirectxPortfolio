@@ -58,7 +58,7 @@ void DNFDebugGUI::OnGUI(GameEngineLevel* _Level, float _DeltaTime)
 		if (ImGui::TreeNodeEx("MousePos", 0) == true)
 		{
 			ImGui::Text("MousePos");
-			float4 Pos = DNFGlobalValue::CurrentLevel->GetMainCamera()->GetScreenPosition();
+			float4 Pos = DNFGlobalValue::CurrentLevel->GetMainCamera()->GetMouseScreenPosition();
 			std::string PosX = "X : " + std::to_string(Pos.x - 640);
 			std::string PosY = "Y : " + std::to_string(-Pos.y + 360);
 			ImGui::Text(PosX.c_str());
