@@ -18,7 +18,8 @@ BloodLugaru::BloodLugaru() :
 	Attack_1_Scale_(),
 	Attack_1_Pos_(),
 	IsAttack_1_End_(false),
-	Attack_1_Time_(0.0f)
+	Attack_1_Time_(0.0f),
+	Temp_()
 {
 }
 
@@ -34,7 +35,6 @@ void BloodLugaru::Start()
 	//애니메이션 추가
 	MainRenderer_->GetTransform().SetLocalScale(float4(315, 315, 1));
 	ShadowRenderer_->GetTransform().SetLocalScale(float4(315, 315, 1));
-	ShadowPos_.z = 200.0f;
 
 	CreateDNFAnimation("Idle", FrameAnimation_DESC("bloodlugaru", Lugaru_Idle_Start, Lugaru_Idle_End, AniSpeed_));
 	CreateDNFAnimation("Move", FrameAnimation_DESC("bloodlugaru", Lugaru_Move_Start, Lugaru_Move_End, AniSpeed_));
@@ -57,11 +57,15 @@ void BloodLugaru::Start()
 	StateManager_.CreateStateMember("Chase", std::bind(&BloodLugaru::ChaseUpdate, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&BloodLugaru::ChaseStart, this, std::placeholders::_1));
 
+	StateManager_.CreateStateMember("Back", std::bind(&BloodLugaru::BackUpdate, this, std::placeholders::_1, std::placeholders::_2)
+		, std::bind(&BloodLugaru::BackStart, this, std::placeholders::_1));
+
 	StateManager_.CreateStateMember("Attack_1", std::bind(&BloodLugaru::Attack_1_Update, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&BloodLugaru::Attack_1_Start, this, std::placeholders::_1),
 		 std::bind(&BloodLugaru::Attack_1_End, this, std::placeholders::_1));
 
 	StateManager_.ChangeState("Idle");
+
 
 
 	//콜라이더 추가
@@ -92,7 +96,7 @@ void BloodLugaru::Update(float _DeltaTime)
 	}
 	StateManager_.Update(_DeltaTime);
 
-	
+	MainRenderer_->GetTransform().SetLocalPosition(float4(0, 0, Temp_));
 
 }
 
@@ -115,7 +119,7 @@ void BloodLugaru::IdleUpdate(float _DeltaTime,const StateInfo _Info )
 
 	if (length < FindRange_)
 	{
-		StateManager_.ChangeState("Chase");
+		//StateManager_.ChangeState("Back");
 		return;
 	}
 
@@ -177,6 +181,50 @@ void BloodLugaru::Attack_1_Update(float _DeltaTime, const StateInfo _Info)
 void BloodLugaru::Attack_1_End(const StateInfo _Info)
 {
 	IsAttack_1_End_ = false;
+}
+
+void BloodLugaru::BackStart(const StateInfo _Info)
+{
+	ChangeDNFAnimation("Move");
+}
+
+void BloodLugaru::BackUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	float4 PlayerPos = Player_->GetTransform().GetWorldPosition();
+	float4 thisPos = GetTransform().GetWorldPosition();
+
+	float length = DNFMath::Length(PlayerPos, thisPos);
+
+	if (length > FindRange_)
+	{
+		StateManager_.ChangeState("Idle");
+		return;
+	}
+
+	if (AttackRangeCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::Player, CollisionType::CT_OBB2D)
+		== true && Attack_1_Time_ < 0.01f)
+	{
+		StateManager_.ChangeState("Attack_1");
+		return;
+	}
+
+	//Flip
+	float4 MoveDir = PlayerPos - thisPos;
+	MoveDir.z = 0;
+	MoveDir.Normalize();
+	if (MoveDir.x > 0)
+	{
+		GetTransform().PixLocalPositiveX();
+	}
+	else
+	{
+		GetTransform().PixLocalNegativeX();
+	}
+
+	MoveDir.x = -MoveDir.x;
+	MoveDir.y = -MoveDir.y;
+
+	GetTransform().SetWorldMove(MoveDir * 100.0f * _DeltaTime);
 }
 
 bool BloodLugaru::AttackColCheck(GameEngineCollision* _this, GameEngineCollision* _Other)

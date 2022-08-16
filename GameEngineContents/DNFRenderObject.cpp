@@ -2,6 +2,8 @@
 #include "DNFRenderObject.h"
 #include "DNFLevel.h"
 
+#include "DNFDebugGUI.h"
+
 DNFRenderObject::DNFRenderObject():
 	MainRenderer_(nullptr),
 	ShadowRenderer_(),
@@ -34,6 +36,8 @@ void DNFRenderObject::ChangeDNFAnimation(const std::string& _Name)
 
 void DNFRenderObject::ShadowUpdate()
 {
+	//ShadowRenderer_->GetTransform().SetLocalPosition(ShadowPos_);
+	//ShadowRenderer_->GetTransform().SetLocalRotation(ShadowRot_);
 	//x가 양수면
 	if (ShadowRenderer_->GetTransform().GetWorldScale().x > 0)
 	{
@@ -45,8 +49,7 @@ void DNFRenderObject::ShadowUpdate()
 		float4 ShadowPos = ShadowPos_;
 		ShadowPos.x = -ShadowPos.x;
 		float4 ShadowRot = ShadowRot_;
-		ShadowRot.x = -ShadowRot_.x;
-		ShadowRot.y = -ShadowRot_.y;
+		ShadowRot.x = ShadowRot_.x;
 		ShadowRot.z = -ShadowRot_.z;
 		ShadowRenderer_->GetTransform().SetLocalPosition(ShadowPos);
 		ShadowRenderer_->GetTransform().SetLocalRotation(ShadowRot);
@@ -79,10 +82,10 @@ void DNFRenderObject::DNFUpdate()
 
 void DNFRenderObject::DNFStart()
 {
-	MainRenderer_ = CreateComponent<GameEngineTextureRenderer>(GetNameCopy());
 	ShadowRenderer_ = CreateComponent<GameEngineTextureRenderer>(GetNameCopy());
+	MainRenderer_ = CreateComponent<GameEngineTextureRenderer>(GetNameCopy());
 	ShadowRenderer_->GetColorData().MulColor = float4(0, 0, 0, 0.6f);
-	ShadowPos_ = { -10,-45,150 };
+	ShadowPos_ = { -10,-45,500};
 	ShadowRot_ = { -60,0,5 };
 	IsStart_ = true;
 }

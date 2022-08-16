@@ -41,6 +41,9 @@ private:
 	void Attack_1_Update(float _DeltaTime, const StateInfo _Info);
 	void Attack_1_End(const StateInfo _Info);
 
+	void BackStart(const StateInfo _Info);
+	void BackUpdate(float _DeltaTime, const StateInfo _Info);
+
 	bool AttackColCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
 
 	//Attack_1 관련 변수들
@@ -48,5 +51,10 @@ private:
 	float4	Attack_1_Pos_;
 	bool IsAttack_1_End_;
 	float Attack_1_Time_;
+
+
+
+	//임시 Value
+	float Temp_;
 };
 
