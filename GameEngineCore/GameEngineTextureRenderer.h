@@ -28,7 +28,7 @@ struct ColorData
 	}
 };
 
-class FrameAnimation_DESC 
+class  FrameAnimation_DESC
 {
 public:
 	std::string TextureName;

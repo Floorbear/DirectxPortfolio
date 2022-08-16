@@ -111,6 +111,7 @@ void Player_Main::Update(float _DeltaTime)
 		GetTransform().SetLocalMove(float4::LEFT * _DeltaTime * 200.0f);
 		AvatarManager_.ChangeMotion(PlayerAnimations::Move);
 		GetTransform().PixLocalNegativeX();
+		ShadowUpdate();
 	}
 	if (GameEngineInput::GetInst()->IsPress("Up") == true)
 	{

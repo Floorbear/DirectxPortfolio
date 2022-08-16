@@ -2,6 +2,7 @@
 
 enum class AvatarParts
 {
+	Shadow,
 	Skin,
 	Hair,
 	Cap,

@@ -92,6 +92,9 @@ private:
 	GameEngineTextureRenderer* CapRenderer_b_;
 	GameEngineTextureRenderer* CapRenderer_c_;
 
+	GameEngineTextureRenderer* ShadowRenderer_;
+
+
 	//이 아바타는 이 렌더러를 사용합니다를 보관하는 컨테이너
 	//여기에 넣어줘야 화면에 랜더링 된다
 	//Renderer_b등을 안쓰는 아바타 부위가 존재해

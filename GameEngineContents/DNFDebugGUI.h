@@ -39,6 +39,10 @@ public:
 		MutableValue_float4_.insert(std::make_pair(_Name, _Value));
 	}
 
+	static void AddTransform(const std::string _Name, GameEngineTransform* _Value)
+	{
+		Transform_.insert(std::make_pair(_Name, _Value));
+	}
 
 private:
 	void Initialize(class GameEngineLevel* _Level) override;
@@ -51,6 +55,9 @@ private:
 
 	static std::map<std::string, float*> MutableValue_float_;
 	static std::map<std::string, float4*> MutableValue_float4_;
+
+	static std::map<std::string, GameEngineTransform*> Transform_;
+
 
 
 };

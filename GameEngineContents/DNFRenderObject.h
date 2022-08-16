@@ -23,6 +23,15 @@ public:
 
 protected:
 	GameEngineTextureRenderer* MainRenderer_;
+	GameEngineTextureRenderer* ShadowRenderer_;
+
+	//shadow관련 함수& 변수
+	void CreateDNFAnimation(const std::string& _AnimationName, const FrameAnimation_DESC& _Desc);
+	void ChangeDNFAnimation(const std::string& _Name);
+	void ShadowUpdate();
+
+	float4 ShadowPos_;
+	float4 ShadowRot_;
 	
 	//세팅이 안된것을 체크 해 주는 함수
 	void ErrorCheck();
@@ -30,6 +39,7 @@ protected:
 	//Update에서 호출
 	//하는 역할
 	//1. 에러 체크
+	//2. Shadow업데이트
 	void DNFUpdate();
 
 	//start에서 호출
@@ -42,6 +52,7 @@ protected:
 	void ZSort();
 
 	bool IsStart_; //DnfStart 호출했냐
+
 private:
 
 };

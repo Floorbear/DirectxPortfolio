@@ -3,6 +3,7 @@
 
 #include "Player_Main.h"
 #include "DNFDefineList.h"
+#include "DNFDebugGUI.h"
 
 AvatarManager::AvatarManager():
 	LayerOffset_(-5.0f),
@@ -23,7 +24,8 @@ AvatarManager::AvatarManager():
 	BeltRenderer_c_(),
 	BeltRenderer_d_(),
 	ShoesRenderer_a_(),
-	ShoesRenderer_b_()
+	ShoesRenderer_b_(),
+	ShadowRenderer_()
 {
 }
 
@@ -43,10 +45,20 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	float Idle_Iter = 0.2f;
 	float Attack_Iter = 0.08f;
 
-	SkinRenderer_ = _Player->MainRenderer_; 
+
+
+	//Shadow
+	//_Player->ShadowRenderer_ = _Player->CreateComponent<GameEngineTextureRenderer>("ShadowRenderer_");
+	ShadowRenderer_ = _Player->ShadowRenderer_;
+	ShadowRenderer_->GetTransform().SetLocalScale({ 500,500,1 });
+	//ShadowRenderer_->GetTransform().SetLocalPosition({-10,-45,150 });
+	//ShadowRenderer_->GetTransform().SetLocalRotation({ -60,0,5 });
+	//ShadowRenderer_->GetColorData().MulColor = float4(0, 0, 0,0.6f);
+	//DNFDebugGUI::AddTransform("Shadow", &ShadowRenderer_->GetTransform());
+	//skin
+	SkinRenderer_ = _Player->MainRenderer_;
 	SkinRenderer_->GetTransform().SetLocalScale({ 500,500,1 });
 	SkinRenderer_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ });
-
 
 	//Hair
 	_Player->HairRenderer_a_ = _Player->CreateComponent<GameEngineTextureRenderer>("HairRenderer_a_");
@@ -164,6 +176,8 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	//아바타 생성 부분
 
 	CreateAvatar("sm_body0000", AvatarParts::Skin, AvatarType::None, AvatarLayer::A);
+	CreateAvatar("sm_body0000", AvatarParts::Shadow, AvatarType::None, AvatarLayer::A);
+
 
 	CreateAvatar("sm_hair0000a", AvatarParts::Hair, AvatarType::Default, AvatarLayer::A);
 
@@ -219,6 +233,7 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 
 
 	//렌더 리스트에 넣어줌
+	RenderList_.insert(std::make_pair(AvatarParts::Shadow, ShadowRenderer_));
 	RenderList_.insert(std::make_pair(AvatarParts::Skin, SkinRenderer_));
 	RenderList_.insert(std::make_pair(AvatarParts::Hair, HairRenderer_a_));
 	RenderList_.insert(std::make_pair(AvatarParts::Pants, PantsRenderer_a_));
@@ -230,6 +245,7 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	RenderList_.insert(std::make_pair(AvatarParts::Weapon, WeaponRenderer_c_));
 
 	//현재 아바타로 세팅
+	CurAvatar_.insert(std::make_pair(AvatarParts::Shadow, AvatarType::None));
 	CurAvatar_.insert(std::make_pair(AvatarParts::Skin, AvatarType::None));
 	CurAvatar_.insert(std::make_pair(AvatarParts::Hair, AvatarType::Default));
 	CurAvatar_.insert(std::make_pair(AvatarParts::Pants, AvatarType::Default));
@@ -260,6 +276,16 @@ void AvatarManager::ChangeMotion(PlayerAnimations _Animation)
 		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Skin]);
 		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Skin);
 		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Skin);
+		for (; StartIter != EndIter; StartIter++)
+		{
+			StartIter->second->ChangeFrameAnimation(AniName + PartName);
+		}
+	}
+	//그림자
+	{
+		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Shadow]);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Shadow);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Shadow);
 		for (; StartIter != EndIter; StartIter++)
 		{
 			StartIter->second->ChangeFrameAnimation(AniName + PartName);
@@ -354,6 +380,7 @@ void AvatarManager::ChangeAvatar(AvatarType _Type, AvatarParts _Parts)
 
 
 	//모든 렌더러를 꺼버리고 필요한 렌더러만 킴
+	//피부, 그림자 등도 켜야하니 피부, 그림자에 더미 레이어를 추가해서 GetRendererLayer에 들어가게 하자
 	for (auto pair : CurAvatar_)
 	{
 		for (AvatarLayer i : GetRendererLayer(pair.first, pair.second))
@@ -453,6 +480,11 @@ std::vector<AvatarLayer> AvatarManager::GetRendererLayer(AvatarParts _Parts, Ava
 	std::vector<AvatarLayer> Vector = {};
 	switch (_Parts)
 	{
+	case AvatarParts::Shadow:
+		//for에 들어가기 위해 더미 리턴
+		Vector.push_back(AvatarLayer::A);
+		return Vector;
+		break;
 	case AvatarParts::Skin:
 		//for에 들어가기 위해 더미 리턴
 		Vector.push_back(AvatarLayer::A);
@@ -693,6 +725,9 @@ GameEngineTextureRenderer* AvatarManager::GetRenderer(AvatarParts _Parts, Avatar
 {
 	switch (_Parts)
 	{
+	case AvatarParts::Shadow:
+		return ShadowRenderer_;
+		break;
 	case AvatarParts::Skin:
 		return SkinRenderer_;
 		break;
