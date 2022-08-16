@@ -36,8 +36,8 @@ void Vilmark_0::DNFOnEvent()
 	//루가루 텍스처 로드
 	{
 		GameEngineDirectory Dir;
-		Dir.MoveParentToExitsChildDirectory("ConstantResources");
-		Dir.Move("ConstantResources");
+		Dir.MoveParentToExitsChildDirectory("ContentsResources");
+		Dir.Move("ContentsResources");
 		Dir.Move("MonsterTexture");
 		Dir.Move("bloodlugaru");
 		GameEngineFolderTexture::Load(Dir.GetFullPath());

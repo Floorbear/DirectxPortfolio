@@ -31,6 +31,7 @@ private:
 	//플레이어를 발견하는 거리
 	float FindRange_;
 
+
 	void IdleStart(const StateInfo _Info);
 	void IdleUpdate(float _DeltaTime,const StateInfo _Info);
 
@@ -46,12 +47,22 @@ private:
 
 	bool AttackColCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
 
+	//Idle 관련 변수들
+	bool IsIdleFirst_;
+
 	//Attack_1 관련 변수들
 	float4 Attack_1_Scale_;
 	float4	Attack_1_Pos_;
 	bool IsAttack_1_End_;
 	float Attack_1_Time_;
 
+	//Back 관련 변수들
+	float4 BackMoveDir_;
+
+	//시간관련 컨테이너
+	std::map<std::string, float> CurTime_; //누적된 DeltaTime을 보관하는 컨테이너
+	std::map<std::string, float> DefaultTime_; //처음 Set된 Time을 보관하는 컨테이너 , 상태판단 Time은 Random의 최댓값 기준
+	std::map<std::string, float> FloatValue_; //이동속도, 사거리 등을 보관할 컨테이너
 
 
 	//임시 Value

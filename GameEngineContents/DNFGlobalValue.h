@@ -6,7 +6,8 @@ enum class ColOrder
 {
 	None,
 	Player,
-	Monster
+	Monster,
+	Debug
 };
 
 class DNFGlobalValue

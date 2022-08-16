@@ -1,4 +1,7 @@
 #include "PreCompile.h"
+#include "GameEngineCore/GameEngineCollision.h"
+
+#include "DNFContentsMinimal.h"
 #include "DNFRenderObject.h"
 #include "DNFLevel.h"
 
@@ -9,7 +12,10 @@ DNFRenderObject::DNFRenderObject():
 	ShadowRenderer_(),
 	IsStart_(false),
 	ShadowPos_(),
-	ShadowRot_()
+	ShadowRot_(),
+	BotCol_(),
+	BotPos_({0,-88.0f}),
+	PrevPos_()
 {
 }
 
@@ -78,12 +84,25 @@ void DNFRenderObject::DNFUpdate()
 	ShadowUpdate();
 	ErrorCheck();
 	ZSort();
+	//BotCol 업데이트
+	BotCol_->GetTransform().SetLocalPosition(float4(BotPos_.x, BotPos_.y, -500));
 }
 
 void DNFRenderObject::DNFStart()
 {
 	ShadowRenderer_ = CreateComponent<GameEngineTextureRenderer>(GetNameCopy());
 	MainRenderer_ = CreateComponent<GameEngineTextureRenderer>(GetNameCopy());
+
+	//BotCol
+	BotCol_ = CreateComponent<GameEngineCollision>("Col");
+	BotCol_->SetDebugSetting(CollisionType::CT_OBB2D, float4(1.0f, 0.0f, 1.0f, 0.5f));
+	BotCol_->GetTransform().SetLocalScale(float4(5, 5, 1));
+	BotCol_->GetTransform().SetLocalMove(float4(0, 0, -500));
+	BotCol_->ChangeOrder(ColOrder::Debug);
+
+	//이전 액터 위치
+	PrevPos_ = GetTransform().GetWorldPosition();
+
 	ShadowRenderer_->GetColorData().MulColor = float4(0, 0, 0, 0.6f);
 	ShadowPos_ = { -10,-45,500};
 	ShadowRot_ = { -60,0,5 };

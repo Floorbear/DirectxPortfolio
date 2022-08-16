@@ -53,10 +53,7 @@ void Player_Main::Start()
 	float Idle_Iter = 0.2f;
 	float Attack_Iter = 0.08f;
 	 
-	//테스트용 위치 확인 렌더러
-	GameEngineTextureRenderer* tempRender = CreateComponent<GameEngineTextureRenderer>("Temp");
-	tempRender->GetTransform().SetLocalScale(float4(10, 10,-10));
-	tempRender->GetTransform().SetLocalMove(float4(0, -88.0f));
+	BotPos_ = { 0,-88.0f };
 
 	//테스트용 콜라이더
 	GameEngineCollision* Col = CreateComponent<GameEngineCollision>("Col");
@@ -65,8 +62,7 @@ void Player_Main::Start()
 	Col->GetTransform().SetLocalMove(float4(0, 0, -500));
 	Col->ChangeOrder(ColOrder::Player);
 
-	//이전 캐릭터 위치
-	PrevPos_ = GetTransform().GetWorldPosition();
+
 
 	//아바타생성
 	AvatarManager_.LinkPlayerToAvatar(this);
@@ -137,7 +133,6 @@ void Player_Main::Update(float _DeltaTime)
 		float4 MapScale = GetDNFLevel()->GetMapScale();
 		float4 PlayerPosBot = GetTransform().GetWorldPosition();
 		PlayerPosBot.y = -PlayerPosBot.y + 88.0f;
-		DNFDebugGUI::AddValue("PlayerBotPos", PlayerPosBot);
 
 		GameEngineTexture* ColMap = DNFGlobalValue::CurrentLevel->GetBackground()->GetColRenderer()->GetCurTexture();
 		
@@ -149,10 +144,7 @@ void Player_Main::Update(float _DeltaTime)
 		
 		PrevPos_ = GetTransform().GetWorldPosition();
 
-		//TemValue += _DeltaTime;
-		//TemValue1 += _DeltaTime*2.0f;
-		//DNFDebugGUI::AddValue("BotPos", &TemValue);
-		//DNFDebugGUI::AddValue("2xValue", &TemValue1);
+
 		ChaseCamera();
 	}
 

@@ -67,8 +67,8 @@ void ContentsCore::Start()
 	//노말 텍스처 로드
 	{
 		GameEngineDirectory Dir;
-		Dir.MoveParentToExitsChildDirectory("ConstantResources");
-		Dir.Move("ConstantResources");
+		Dir.MoveParentToExitsChildDirectory("ContentsResources");
+		Dir.Move("ContentsResources");
 		Dir.Move("NormalTexture");
 
 		std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
@@ -86,8 +86,8 @@ void ContentsCore::Start()
 	//폴더 텍스처 로드
 	{
 		GameEngineDirectory Dir;
-		Dir.MoveParentToExitsChildDirectory("ConstantResources");
-		Dir.Move("ConstantResources");
+		Dir.MoveParentToExitsChildDirectory("ContentsResources");
+		Dir.Move("ContentsResources");
 		Dir.Move("FolderTexture");
 
 		std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();

@@ -32,6 +32,11 @@ protected:
 
 	float4 ShadowPos_;
 	float4 ShadowRot_;
+
+	float4 PrevPos_;
+
+	GameEngineCollision* BotCol_;
+	float4 BotPos_;
 	
 	//세팅이 안된것을 체크 해 주는 함수
 	void ErrorCheck();

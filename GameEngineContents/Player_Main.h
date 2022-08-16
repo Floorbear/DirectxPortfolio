@@ -82,6 +82,5 @@ private:
 	int Toggle5_;
 	int Toggle6_;
 
-	float4 PrevPos_;
 };
 
