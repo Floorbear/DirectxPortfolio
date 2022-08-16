@@ -23,12 +23,16 @@ BloodLugaru::BloodLugaru() :
 	Attack_1_Time_(0.0f),
 	Temp_(),
 	BackMoveDir_(),
-	IsIdleFirst_(true)
+	IsIdleFirst_(true),
+	HitMiddle_(),
+	PrevHitCount_()
 {
 	CurTime_.insert(std::make_pair("Attack_1", 0.0f));
 	CurTime_.insert(std::make_pair("IdleIter", 0.0f));
 	CurTime_.insert(std::make_pair("ChaseIter", 0.0f));
 	CurTime_.insert(std::make_pair("BackIter", 0.0f));
+	CurTime_.insert(std::make_pair("HitIter", 0.0f));
+
 
 
 
@@ -36,6 +40,7 @@ BloodLugaru::BloodLugaru() :
 	DefaultTime_.insert(std::make_pair("IdleIter", 3.0f));
 	DefaultTime_.insert(std::make_pair("ChaseIter", 5.0f));
 	DefaultTime_.insert(std::make_pair("BackIter", 3.0f));
+	DefaultTime_.insert(std::make_pair("HitIter", 1.0f));
 
 
 
@@ -49,7 +54,6 @@ BloodLugaru::~BloodLugaru()
 void BloodLugaru::Start()
 {
 	DNFStart();
-
 	//애니메이션 추가
 	MainRenderer_->GetTransform().SetLocalScale(float4(315, 315, 1));
 	ShadowRenderer_->GetTransform().SetLocalScale(float4(315, 315, 1));
@@ -57,6 +61,8 @@ void BloodLugaru::Start()
 	CreateDNFAnimation("Idle", FrameAnimation_DESC("bloodlugaru", Lugaru_Idle_Start, Lugaru_Idle_End, AniSpeed_));
 	CreateDNFAnimation("Move", FrameAnimation_DESC("bloodlugaru", Lugaru_Move_Start, Lugaru_Move_End, AniSpeed_));
 	CreateDNFAnimation("Attack_1", FrameAnimation_DESC("bloodlugaru", Lugaru_Attack_1_Start, Lugaru_Attack_1_End, AniSpeed_, false));
+	CreateDNFAnimation("Hit", FrameAnimation_DESC("bloodlugaru", Lugaru_Hit_Start, Lugaru_Hit_End, AniSpeed_, false));
+
 
 	//애니메이션 바인드
 	MainRenderer_->AnimationBindEnd("Attack_1",
@@ -78,6 +84,9 @@ void BloodLugaru::Start()
 	StateManager_.CreateStateMember("Back", std::bind(&BloodLugaru::BackUpdate, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&BloodLugaru::BackStart, this, std::placeholders::_1));
 
+	StateManager_.CreateStateMember("Hit", std::bind(&BloodLugaru::HitUpdate, this, std::placeholders::_1, std::placeholders::_2)
+		, std::bind(&BloodLugaru::HitStart, this, std::placeholders::_1));
+
 	StateManager_.CreateStateMember("Attack_1", std::bind(&BloodLugaru::Attack_1_Update, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&BloodLugaru::Attack_1_Start, this, std::placeholders::_1),
 		 std::bind(&BloodLugaru::Attack_1_End, this, std::placeholders::_1));
@@ -95,13 +104,20 @@ void BloodLugaru::Start()
 	AttackRangeCol_->GetTransform().SetLocalPosition(Attack_1_Pos_);
 	AttackRangeCol_->ChangeOrder(ColOrder::Monster);
 
+	//MiddleHit
+	HitMiddle_ = CreateComponent<GameEngineCollision>("Middle");
+	HitMiddle_->SetDebugSetting(CollisionType::CT_OBB2D, float4(1.0f, 0.0f, 0.0f, 0.5f));
+	HitMiddle_->GetTransform().SetLocalPosition({ 0,-50.0f,-500.0f });
+	HitMiddle_->GetTransform().SetLocalScale({ 100.0f,30.0f,1.0f });
+	HitMiddle_->ChangeOrder(ColOrder::MonsterHitMiddle);
+
 
 }
 
 void BloodLugaru::Update(float _DeltaTime)
 {
 	DNFUpdate();
-
+	DNFDebugGUI::AddValue("PrevCount", PrevHitCount_);
 	//공격 쿨타임 카운트
 	if (CurTime_["Attack_1"] > 0.0f)
 	{
@@ -111,7 +127,21 @@ void BloodLugaru::Update(float _DeltaTime)
 	if (DNFGlobalValue::CurrentLevel != nullptr)
 	{
 		Player_ = DNFGlobalValue::CurrentLevel->GetPlayer();
+		//Hit감지
+		HitMiddle_->IsCollision(CollisionType::CT_OBB2D, ColOrder::PlayerAttackMiddle, CollisionType::CT_OBB2D,
+			[&](GameEngineCollision* _This, GameEngineCollision* _Other)
+			{
+				Player_Main* Player = DNFGlobalValue::CurrentLevel->GetPlayer();
+				int HitCount = Player->GetAttackCount();
+				if (HitCount != PrevHitCount_)
+				{
+					StateManager_.ChangeState("Hit");
+					PrevHitCount_ = HitCount;
+				}	
+				return true;
+			});
 	}
+
 	StateManager_.Update(_DeltaTime);
 
 	//제한된 범위 밖을 나가지 못하게
@@ -131,9 +161,6 @@ void BloodLugaru::Update(float _DeltaTime)
 		}
 
 		PrevPos_ = GetTransform().GetWorldPosition();
-		 
-		//TemValue += _DeltaTime;
-		//TemValue1 += _DeltaTime*2.0f;
 	}
 
 }
@@ -186,6 +213,15 @@ void BloodLugaru::IdleUpdate(float _DeltaTime,const StateInfo _Info )
 	}
 
 	//상태 판단
+
+	//공격범위 내에 접근하면 바로 공격
+	if (AttackRangeCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::Player, CollisionType::CT_OBB2D)
+		== true && CurTime_["Attack_1"] < 0.01f)
+	{
+		StateManager_.ChangeState("Attack_1");
+		return;
+	}
+
 	if (CurTime_["IdleIter"] > 0.0f)
 	{
 		CurTime_["IdleIter"] -= _DeltaTime;
@@ -233,10 +269,10 @@ void BloodLugaru::ChaseUpdate(float _DeltaTime, const StateInfo _Info)
 		return;
 	}
 
-	//플레이어와 너무 가까우면 후퇴
+	//플레이어와 너무 가까우면 Idle
 	if (length < 20.0f)
 	{
-		StateManager_.ChangeState("Back");
+		StateManager_.ChangeState("Idle");
 		return;
 	}
 
@@ -389,6 +425,27 @@ void BloodLugaru::BackUpdate(float _DeltaTime, const StateInfo _Info)
 	
 
 	GetTransform().SetWorldMove(BackMoveDir_ * FloatValue_["MoveSpeed"] * _DeltaTime);
+}
+
+void BloodLugaru::HitStart(const StateInfo _Info)
+{
+	ChangeDNFAnimation("Hit");
+	CurTime_["HitIter"] = DefaultTime_["HitIter"];
+}
+
+void BloodLugaru::HitUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	DNFDebugGUI::AddValue("IterTime", CurTime_["HitIter"]);
+	if (CurTime_["HitIter"] > 0.0f)
+	{
+		CurTime_["HitIter"] -= _DeltaTime;
+	}
+	else
+	{
+		StateManager_.ChangeState("Idle");
+		PrevHitCount_ = 0;
+		return;
+	}
 }
 
 bool BloodLugaru::AttackColCheck(GameEngineCollision* _this, GameEngineCollision* _Other)

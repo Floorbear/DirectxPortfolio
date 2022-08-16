@@ -45,6 +45,10 @@ private:
 	void BackStart(const StateInfo _Info);
 	void BackUpdate(float _DeltaTime, const StateInfo _Info);
 
+	void HitStart(const StateInfo _Info);
+	void HitUpdate(float _DeltaTime, const StateInfo _Info);
+
+
 	bool AttackColCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
 
 	//Idle 관련 변수들
@@ -58,6 +62,10 @@ private:
 
 	//Back 관련 변수들
 	float4 BackMoveDir_;
+
+	//Hit 관련 변수들
+	GameEngineCollision* HitMiddle_;
+	int PrevHitCount_;
 
 	//시간관련 컨테이너
 	std::map<std::string, float> CurTime_; //누적된 DeltaTime을 보관하는 컨테이너

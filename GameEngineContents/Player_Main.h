@@ -15,9 +15,9 @@ public:
 	Player_Main& operator=(const Player_Main& _Ohter) = delete;
 	Player_Main& operator=(const Player_Main&& _Other) noexcept = delete;
 
-	float4 GetBotPos()
+	int GetAttackCount()
 	{
-		return GetTransform().GetWorldPosition() - float4(0, 250, 0, 0);
+		return AttackCount_;
 	}
 
 protected:
@@ -28,6 +28,11 @@ protected:
 private:
 	void ChangeAvatar();
 	void ChaseCamera();
+	void InitCol();
+
+	//공격관련
+	GameEngineCollision* MiddleAttackCol_;
+	int AttackCount_;
 
 	//UI
 	GameEngineUIRenderer* UIRenderer_;

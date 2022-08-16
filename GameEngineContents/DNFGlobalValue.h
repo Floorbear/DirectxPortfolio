@@ -7,6 +7,8 @@ enum class ColOrder
 	None,
 	Player,
 	Monster,
+	MonsterHitMiddle,
+	PlayerAttackMiddle,
 	Debug
 };
 

@@ -13,7 +13,7 @@
 #include <GameEngineCore/GameEngineCollision.h>
 
 
-Player_Main::Player_Main():
+Player_Main::Player_Main() :
 	Toggle1_(0),
 	Toggle2_(0),
 	Toggle3_(0),
@@ -38,7 +38,9 @@ Player_Main::Player_Main():
 	BeltRenderer_c_(),
 	BeltRenderer_d_(),
 	ShoesRenderer_a_(),
-	ShoesRenderer_b_()
+	ShoesRenderer_b_(),
+	MiddleAttackCol_(),
+	AttackCount_()
 {
 
 }
@@ -52,16 +54,8 @@ void Player_Main::Start()
 	DNFStart();
 	float Idle_Iter = 0.2f;
 	float Attack_Iter = 0.08f;
-	 
 	BotPos_ = { 0,-88.0f };
-
-	//테스트용 콜라이더
-	GameEngineCollision* Col = CreateComponent<GameEngineCollision>("Col");
-	Col->SetDebugSetting(CollisionType::CT_OBB2D, float4(0,1.0f,0,0.5f));
-	Col->GetTransform().SetLocalScale(float4(100, 100, 1));
-	Col->GetTransform().SetLocalMove(float4(0, 0, -500));
-	Col->ChangeOrder(ColOrder::Player);
-
+	InitCol();
 
 
 	//아바타생성
@@ -69,6 +63,23 @@ void Player_Main::Start()
 
 	AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
 	
+	//애니메이션 함수 초기화
+	MainRenderer_->AnimationBindFrame("AutoAttack_0", 
+		[&](const FrameAnimation_DESC& _Desc) 
+		{
+			if (_Desc.CurFrame == AutoAttack_0_Start + 3)
+			{
+				MiddleAttackCol_->On();
+				MiddleAttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
+				MiddleAttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
+				AttackCount_++;
+			}
+			else if (_Desc.CurFrame == AutoAttack_0_Start + 7)
+			{
+				MiddleAttackCol_->Off();
+				AttackCount_ = 0;
+			}
+		});
 }
 
 void Player_Main::Update(float _DeltaTime)
@@ -90,7 +101,6 @@ void Player_Main::Update(float _DeltaTime)
 	if (GameEngineInput::GetInst()->IsDown("C") == true)
 	{
 		AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
-
 	}
 
 
@@ -362,4 +372,20 @@ void Player_Main::ChaseCamera()
 
 
 	GetLevel()->GetMainCameraActorTransform().SetWorldPosition(CameraPos);
+}
+
+void Player_Main::InitCol()
+{
+	//테스트용 콜라이더
+	GameEngineCollision* Col = CreateComponent<GameEngineCollision>("Col");
+	Col->SetDebugSetting(CollisionType::CT_OBB2D, float4(0, 1.0f, 0, 0.5f));
+	Col->GetTransform().SetLocalScale(float4(100, 100, 1));
+	Col->GetTransform().SetLocalMove(float4(0, 0, -500));
+	Col->ChangeOrder(ColOrder::Player);
+
+	//MiddleAttack 콜라이더
+	MiddleAttackCol_ = CreateComponent<GameEngineCollision>("MiddleAttack");
+	MiddleAttackCol_->SetDebugSetting(CollisionType::CT_OBB2D, float4(0, 1.0f, 0, 0.5f));
+	MiddleAttackCol_->ChangeOrder(ColOrder::PlayerAttackMiddle);
+	MiddleAttackCol_->Off();
 }

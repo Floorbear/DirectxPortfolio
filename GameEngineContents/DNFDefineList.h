@@ -22,5 +22,8 @@
 #define Lugaru_Idle_End 36
 #define Lugaru_Move_Start 21
 #define Lugaru_Move_End 25
+#define Lugaru_Hit_Start 15
+#define Lugaru_Hit_End 16
+
 
 
