@@ -15,19 +15,22 @@ public:
 	Player_Main& operator=(const Player_Main& _Ohter) = delete;
 	Player_Main& operator=(const Player_Main&& _Other) noexcept = delete;
 
+	//내 공격카운트 << 몬스터가 같은 공격을 여러번 맞는 것을 방지
 	int GetAttackCount()
 	{
 		return AttackCount_;
 	}
-
+	//아바타 관련 변수들
+	AvatarManager AvatarManager_;
 protected:
 	void Start() override;
 	void Update(float _DeltaTime) override;
 	void End() override;
 
 private:
-	void ChangeAvatar();
+	//카메라 추적
 	void ChaseCamera();
+	//캐릭터의 충돌체 초기화
 	void InitCol();
 
 	//공격관련
@@ -37,8 +40,6 @@ private:
 	//UI
 	GameEngineUIRenderer* UIRenderer_;
 
-	//아바타 관련 변수들
-	AvatarManager AvatarManager_;
 
 	GameEngineTextureRenderer* HairRenderer_a_;
 	GameEngineTextureRenderer* HairRenderer_d_;
@@ -66,26 +67,18 @@ private:
 	GameEngineTextureRenderer* CapRenderer_c_;
 
 
+	//FSM
+	// 아무키도 누르지 않으면 float4::zero리턴
+	float4 GetMoveDir();
+	GameEngineStateManager StateManager_;
+
+	void IdleStart(const StateInfo _Info);
+	void IdleUpdate(float _DeltaTime, const StateInfo _Info);
+
+	void MoveStart(const StateInfo _Info);
+	void MoveUpdate(float _DeltaTime, const StateInfo _Info);
 
 
-
-
-
-	//아바타 렌더러 추가하면 확인해야할 것
-	// 
-	//아바타매니저에 렌더러 추가
-	//아바타 매니저 LinkPlayerToAvatar 에서 렌더러의 조치
-	//ChangeMotion에서 해당 부위가 있는지 확인
-	//GetRenderer, SelectRenderer에 해랑 렌더러 추가
-	//디폴트 아바타일경우 렌더러 리스트랑 CurAvatar에 추가해주기
-
-
-	int Toggle1_;
-	int Toggle2_;
-	int Toggle3_;
-	int Toggle4_;
-	int Toggle5_;
-	int Toggle6_;
 
 };
 

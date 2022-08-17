@@ -2,6 +2,7 @@
 #include "ContentsCore.h"
 
 #include "DNFDebugGUI.h"
+#include "DNFAvatarGUI.h"
 
 #include "GameEngineContents/SeriaRoom.h"
 #include "GameEngineContents/Elvenguard.h"
@@ -126,6 +127,8 @@ void ContentsCore::Start()
 
 	GameEngineGUI::CreateGUIWindow<GameEngineStatusWindow>("EngineStatus", nullptr);
 	GameEngineGUI::CreateGUIWindow<DNFDebugGUI>("DNFDebug", nullptr);
+	GameEngineGUI::CreateGUIWindow<DNFAvatarGUI>("DNFAvatar", nullptr);
+
 }
 
 void ContentsCore::Update(float _DeltaTime)

@@ -34,6 +34,7 @@ enum class AvatarLayer
 
 enum class PlayerAnimations
 {
+	ChangeAvatar,
 	Idle,
 	Move,
 	Buff,

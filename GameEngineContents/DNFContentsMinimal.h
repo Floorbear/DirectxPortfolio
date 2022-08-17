@@ -5,3 +5,4 @@
 #include "DNFDebugGUI.h"
 #include "DNFLevel.h"
 #include "DNFMath.h"
+#include "DNFDebugGUI.h"

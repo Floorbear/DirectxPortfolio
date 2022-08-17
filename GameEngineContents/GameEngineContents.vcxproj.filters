@@ -151,6 +151,9 @@
     <ClInclude Include="DNFContentsMinimal.h">
       <Filter>Global</Filter>
     </ClInclude>
+    <ClInclude Include="DNFAvatarGUI.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -237,6 +240,12 @@
     </ClCompile>
     <ClCompile Include="DNFMath.cpp">
       <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="DNFAvatarGUI.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Player_FSM.cpp">
+      <Filter>Player</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

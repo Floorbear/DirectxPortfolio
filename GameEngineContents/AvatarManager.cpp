@@ -402,7 +402,7 @@ void AvatarManager::ChangeAvatar(AvatarType _Type, AvatarParts _Parts)
 	}
 
 
-	ChangeMotion(PlayerAnimations::Idle);
+	ChangeMotion(PlayerAnimations::ChangeAvatar);
 }
 
 void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarParts _Parts, AvatarType _Type, AvatarLayer _Layer)
@@ -419,7 +419,17 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 	float Attack_Iter = 0.08f;
 
 	//아바타 애니메이션 생성
-	CurRenderer->CreateFrameAnimationFolder("Idle"+Name, FrameAnimation_DESC(_AvatarFolderName, Idle_Start, Idle_End, Idle_Iter));
+	CurRenderer->CreateFrameAnimationFolder("Idle" + Name, FrameAnimation_DESC(_AvatarFolderName, Idle_Start, Idle_End, Idle_Iter));
+	CurRenderer->CreateFrameAnimationFolder("ChangeAvatar" + Name, FrameAnimation_DESC(_AvatarFolderName, Idle_Start, Idle_End, Idle_Iter,false));
+	//ChangeAvatar 애니상태면 다음프레임에 Idle로 이동한다.
+	CurRenderer->AnimationBindFrame("ChangeAvatar" + Name, [&](const FrameAnimation_DESC& _Desc) 
+		{
+			if (_Desc.Frames[_Desc.CurFrame] == Idle_Start + 1)
+			{
+				ChangeMotion(PlayerAnimations::Idle);
+			}
+		});
+	
 	CurRenderer->CreateFrameAnimationFolder("Move" + Name, FrameAnimation_DESC(_AvatarFolderName, Move_Start, Move_End, Attack_Iter));
 	CurRenderer->CreateFrameAnimationFolder("AutoAttack_0"+ Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_0_Start, AutoAttack_0_End, Attack_Iter,false));
 	CurRenderer->CreateFrameAnimationFolder("Buff" + Name, FrameAnimation_DESC(_AvatarFolderName, BuffOn_Start, BuffOn_End, Attack_Iter,false));
@@ -431,6 +441,9 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 {
 	switch (_Ani)
 	{
+	case PlayerAnimations::ChangeAvatar:
+		return "ChangeAvatar";
+		break;
 	case PlayerAnimations::Idle:
 		return "Idle";
 		break;

@@ -177,6 +177,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="DNFAvatarGUI.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="DNFBackground.h">
       <SubType>
       </SubType>
@@ -296,6 +300,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="DNFAvatarGUI.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="DNFBackground.cpp">
       <SubType>
       </SubType>
@@ -349,6 +357,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Player_FSM.cpp" />
     <ClCompile Include="Player_Main.cpp">
       <SubType>
       </SubType>
