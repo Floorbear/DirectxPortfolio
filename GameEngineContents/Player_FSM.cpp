@@ -1,43 +1,11 @@
 #include "PreCompile.h"
 
+#include <GameEngineCore/GameEngineCollision.h>
+
 #include "DNFContentsMinimal.h"
 #include "Player_Main.h"
 
-float4 Player_Main::GetMoveDir()
-{
-	float4 MoveDir = float4::ZERO;
 
-	if (GameEngineInput::GetInst()->IsPress("Right") == true)
-	{
-		MoveDir += float4::RIGHT;
-	}
-
-	if (GameEngineInput::GetInst()->IsPress("Left") == true)
-	{
-		MoveDir += float4::LEFT;
-	}
-	if (GameEngineInput::GetInst()->IsPress("Up") == true)
-	{
-		MoveDir += float4::UP;
-
-	}
-	if (GameEngineInput::GetInst()->IsPress("Down") == true)
-	{
-		MoveDir += float4::DOWN;
-	}
-	DNFDebugGUI::AddValue("MoveDir", MoveDir);
-
-	if (MoveDir.CompareInt3D(float4::ZERO) == true)
-	{
-		return MoveDir;
-	}
-	else
-	{
-		MoveDir.y *= 0.5f;
-		MoveDir.Normalize();
-		return MoveDir;
-	}
-}
 
 void Player_Main::IdleStart(const StateInfo _Info)
 {
@@ -47,9 +15,14 @@ void Player_Main::IdleStart(const StateInfo _Info)
 void Player_Main::IdleUpdate(float _DeltaTime, const StateInfo _Info)
 {
 	//방향키 조작이 감지 되면
-	if (GetMoveDir().Length() > 0.0f)
+	if (IsPressMoveKey() == true)
 	{
 		StateManager_.ChangeState("Move");
+		return;
+	}
+	if (GameEngineInput::GetInst()->IsDown("X") == true)
+	{
+		StateManager_.ChangeState("AutoAttack");
 		return;
 	}
 }
@@ -61,23 +34,48 @@ void Player_Main::MoveStart(const StateInfo _Info)
 
 void Player_Main::MoveUpdate(float _DeltaTime, const StateInfo _Info)
 {
-	float4 MoveDir = GetMoveDir();
-
-	if (MoveDir.Length() < 0.01f)
+	if (IsPressMoveKey() == false)
 	{
 		StateManager_.ChangeState("Idle");
 		return;
 	}
+	if (GameEngineInput::GetInst()->IsDown("X") == true)
+	{
+		StateManager_.ChangeState("AutoAttack");
+		return;
+	}
 
-	if (MoveDir.x > 0.0f)
-	{
-		GetTransform().PixLocalPositiveX();
-	}
-	else
-	{
-		GetTransform().PixLocalNegativeX();
-	}
-	GetTransform().SetLocalMove(MoveDir * _DeltaTime * FloatValue_["MoveSpeed"]);
+	FlipXToScale(GetMoveDir());
+	GetTransform().SetLocalMove(GetMoveDir() * _DeltaTime * 200.0f);
 	ShadowUpdate();
+}
 
+void Player_Main::AutoAttackStart(const StateInfo _Info)
+{
+	AvatarManager_.ChangeMotion(PlayerAnimations::AutoAttack_0);
+}
+
+void Player_Main::AutoAttackUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	//평소에는 False
+	if (IsAutoAttack_0_End_ == true)
+	{
+		if (IsPressMoveKey() == false)
+		{
+			StateManager_.ChangeState("Idle");
+			return;
+		}
+		else
+		{
+			StateManager_.ChangeState("Move");
+			return;
+		}
+	}
+}
+
+void Player_Main::AutoAttackEnd(const StateInfo _Info)
+{
+	MiddleAttackCol_->Off();
+	AttackCount_ = 0;
+	IsAutoAttack_0_End_ = false;
 }

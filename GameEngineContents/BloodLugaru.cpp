@@ -20,31 +20,17 @@ BloodLugaru::BloodLugaru() :
 	Attack_1_Scale_(),
 	Attack_1_Pos_(),
 	IsAttack_1_End_(false),
-	Attack_1_Time_(0.0f),
 	Temp_(),
 	BackMoveDir_(),
 	IsIdleFirst_(true),
 	HitMiddle_(),
-	PrevHitCount_()
+	PrevHitCount_(),
+	Attack_1_Timer_(4.0f),
+	Idle_Timer_(3.0f),
+	Back_Timer_(3.0f),
+	Chase_Timer_(5.0f),
+	Hit_Timer_(1.0f)
 {
-	CurTime_.insert(std::make_pair("Attack_1", 0.0f));
-	CurTime_.insert(std::make_pair("IdleIter", 0.0f));
-	CurTime_.insert(std::make_pair("ChaseIter", 0.0f));
-	CurTime_.insert(std::make_pair("BackIter", 0.0f));
-	CurTime_.insert(std::make_pair("HitIter", 0.0f));
-
-
-
-
-	DefaultTime_.insert(std::make_pair("Attack_1", 4.0f));
-	DefaultTime_.insert(std::make_pair("IdleIter", 3.0f));
-	DefaultTime_.insert(std::make_pair("ChaseIter", 5.0f));
-	DefaultTime_.insert(std::make_pair("BackIter", 3.0f));
-	DefaultTime_.insert(std::make_pair("HitIter", 1.0f));
-
-
-
-	FloatValue_.insert(std::make_pair("MoveSpeed", 100.0f));
 }
 
 BloodLugaru::~BloodLugaru()
@@ -70,7 +56,7 @@ void BloodLugaru::Start()
 		{
 			//공격이 끝난 직후 로직
 			IsAttack_1_End_ = true;
-			CurTime_["Attack_1"] = 4.0f;
+			Attack_1_Timer_.StartTimer();
 		}
 	);
 
@@ -119,9 +105,9 @@ void BloodLugaru::Update(float _DeltaTime)
 	DNFUpdate();
 	DNFDebugGUI::AddValue("PrevCount", PrevHitCount_);
 	//공격 쿨타임 카운트
-	if (CurTime_["Attack_1"] > 0.0f)
+	if (Attack_1_Timer_.IsTimerOn() == true)
 	{
-		CurTime_["Attack_1"] -= _DeltaTime;
+		Attack_1_Timer_ -= _DeltaTime;
 	}
 
 	if (DNFGlobalValue::CurrentLevel != nullptr)
@@ -173,7 +159,8 @@ void BloodLugaru::IdleStart(const StateInfo _Info)
 {
 	ChangeDNFAnimation("Idle");
 
-	CurTime_["IdleIter"] = GameEngineRandom::MainRandom.RandomFloat(DefaultTime_["IdleIter"]-2.0f, DefaultTime_["IdleIter"]);
+	Idle_Timer_ = GameEngineRandom::MainRandom.RandomFloat(1.0f, 3.0f);
+	Idle_Timer_.StartTimer();
 
 }
 
@@ -216,15 +203,15 @@ void BloodLugaru::IdleUpdate(float _DeltaTime,const StateInfo _Info )
 
 	//공격범위 내에 접근하면 바로 공격
 	if (AttackRangeCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::Player, CollisionType::CT_OBB2D)
-		== true && CurTime_["Attack_1"] < 0.01f)
+		== true && Attack_1_Timer_.IsTimerOn() == false)
 	{
 		StateManager_.ChangeState("Attack_1");
 		return;
 	}
 
-	if (CurTime_["IdleIter"] > 0.0f)
+	if (Idle_Timer_.IsTimerOn() == true)
 	{
-		CurTime_["IdleIter"] -= _DeltaTime;
+		Idle_Timer_ -= _DeltaTime;
 	}
 	else
 	{
@@ -250,7 +237,8 @@ void BloodLugaru::IdleUpdate(float _DeltaTime,const StateInfo _Info )
 void BloodLugaru::ChaseStart(const StateInfo _Info)
 {
 	ChangeDNFAnimation("Move");
-	CurTime_["ChaseIter"] = GameEngineRandom::MainRandom.RandomFloat(DefaultTime_["ChaseIter"] - 3.0f, DefaultTime_["ChaseIter"]);
+	Chase_Timer_ = GameEngineRandom::MainRandom.RandomFloat(2.0f, 5.0f);
+	Chase_Timer_.StartTimer();
 }
 
 void BloodLugaru::ChaseUpdate(float _DeltaTime, const StateInfo _Info)
@@ -263,7 +251,7 @@ void BloodLugaru::ChaseUpdate(float _DeltaTime, const StateInfo _Info)
 
 	//공격범위 내에 접근하면 바로 공격
 	if (AttackRangeCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::Player, CollisionType::CT_OBB2D)
-		== true && CurTime_["Attack_1"] < 0.01f)
+		== true && Attack_1_Timer_.IsTimerOn() == false)
 	{
 		StateManager_.ChangeState("Attack_1");
 		return;
@@ -277,9 +265,9 @@ void BloodLugaru::ChaseUpdate(float _DeltaTime, const StateInfo _Info)
 	}
 
 	//상태 판단
-	if (CurTime_["ChaseIter"] > 0.0f)
+	if (Chase_Timer_.IsTimerOn() == true)
 	{
-		CurTime_["ChaseIter"] -= _DeltaTime;
+		Chase_Timer_ -= _DeltaTime;
 	}
 	else
 	{
@@ -314,7 +302,7 @@ void BloodLugaru::ChaseUpdate(float _DeltaTime, const StateInfo _Info)
 	{
 		GetTransform().PixLocalNegativeX();
 	}
-	GetTransform().SetWorldMove(MoveDir * FloatValue_["MoveSpeed"] * _DeltaTime);
+	GetTransform().SetWorldMove(MoveDir * 100.0f * _DeltaTime);
 }
 
 void BloodLugaru::Attack_1_Start(const StateInfo _Info)
@@ -355,7 +343,8 @@ void BloodLugaru::BackStart(const StateInfo _Info)
 
 	ChangeDNFAnimation("Move");
 
-	CurTime_["BackIter"] = GameEngineRandom::MainRandom.RandomFloat(DefaultTime_["BackIter"] - 2.0f, DefaultTime_["BackIter"]);
+	Back_Timer_ = GameEngineRandom::MainRandom.RandomFloat(1.0f,3.0f);
+	Back_Timer_.StartTimer();
 
 	//후퇴 방향 정하기
 	float4 PlayerPos = Player_->GetTransform().GetWorldPosition();
@@ -392,15 +381,15 @@ void BloodLugaru::BackUpdate(float _DeltaTime, const StateInfo _Info)
 
 	//상태 판단
 	if (AttackRangeCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::Player, CollisionType::CT_OBB2D)
-		== true && CurTime_["Attack_1"] < 0.01f)
+		== true && Attack_1_Timer_.IsTimerOn() == false)
 	{
 		StateManager_.ChangeState("Attack_1");
 		return;
 	}
 
-	if (CurTime_["BackIter"] > 0.0f)
+	if (Back_Timer_.IsTimerOn() == true)
 	{
-		CurTime_["BackIter"] -= _DeltaTime;
+		Back_Timer_ -= _DeltaTime;
 	}
 	else
 	{
@@ -424,21 +413,20 @@ void BloodLugaru::BackUpdate(float _DeltaTime, const StateInfo _Info)
 
 	
 
-	GetTransform().SetWorldMove(BackMoveDir_ * FloatValue_["MoveSpeed"] * _DeltaTime);
+	GetTransform().SetWorldMove(BackMoveDir_ * 100.0f * _DeltaTime);
 }
 
 void BloodLugaru::HitStart(const StateInfo _Info)
 {
 	ChangeDNFAnimation("Hit");
-	CurTime_["HitIter"] = DefaultTime_["HitIter"];
+	Hit_Timer_.StartTimer();
 }
 
 void BloodLugaru::HitUpdate(float _DeltaTime, const StateInfo _Info)
 {
-	DNFDebugGUI::AddValue("IterTime", CurTime_["HitIter"]);
-	if (CurTime_["HitIter"] > 0.0f)
+	if (Hit_Timer_.IsTimerOn() == true)
 	{
-		CurTime_["HitIter"] -= _DeltaTime;
+		Hit_Timer_ -= _DeltaTime;
 	}
 	else
 	{

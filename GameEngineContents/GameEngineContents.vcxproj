@@ -357,6 +357,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Player_AniFunc.cpp" />
     <ClCompile Include="Player_FSM.cpp" />
     <ClCompile Include="Player_Main.cpp">
       <SubType>

@@ -34,9 +34,9 @@ Player_Main::Player_Main() :
 	ShoesRenderer_a_(),
 	ShoesRenderer_b_(),
 	MiddleAttackCol_(),
-	AttackCount_()
+	AttackCount_(),
+	IsAutoAttack_0_End_(false)
 {
-	FloatValue_.insert(std::make_pair("MoveSpeed", 200.0f));
 }
 
 Player_Main::~Player_Main()
@@ -46,42 +46,19 @@ Player_Main::~Player_Main()
 void Player_Main::Start()
 {
 	DNFStart();
-	BotPos_ = { 0,-88.0f };
-	
 
 	InitCol();
 
+	DNFDebugGUI::AddTransform("PlayerTrans", &GetTransform());
 	//아바타생성
 	AvatarManager_.LinkPlayerToAvatar(this);
 	AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
 
 	//스테이트 초기화
-	StateManager_.CreateStateMember("Idle", std::bind(&Player_Main::IdleUpdate, this, std::placeholders::_1, std::placeholders::_2),
-		std::bind(&Player_Main::IdleStart, this, std::placeholders::_1));
-
-	StateManager_.CreateStateMember("Move", std::bind(&Player_Main::MoveUpdate, this, std::placeholders::_1, std::placeholders::_2),
-		std::bind(&Player_Main::MoveStart, this, std::placeholders::_1));
-	
-
+	InitState();
 	StateManager_.ChangeState("Idle");
 
-	//애니메이션 함수 초기화
-	MainRenderer_->AnimationBindFrame("AutoAttack_0", 
-		[&](const FrameAnimation_DESC& _Desc) 
-		{
-			if (_Desc.CurFrame == AutoAttack_0_Start + 3)
-			{
-				MiddleAttackCol_->On();
-				MiddleAttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
-				MiddleAttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
-				AttackCount_++;
-			}
-			else if (_Desc.CurFrame == AutoAttack_0_Start + 7)
-			{
-				MiddleAttackCol_->Off();
-				AttackCount_ = 0;
-			}
-		});
+	InitAniFunc();
 }
 
 void Player_Main::Update(float _DeltaTime)
@@ -94,11 +71,7 @@ void Player_Main::Update(float _DeltaTime)
 	{
 		AvatarManager_.ChangeMotion(PlayerAnimations::Buff);
 	}
-	//x를 누르면 모션의 변경이 일어남
-	if (GameEngineInput::GetInst()->IsDown("X") == true)
-	{
-		AvatarManager_.ChangeMotion(PlayerAnimations::AutoAttack_0);
-	}
+
 
 	//C를 누르면 모션의 변경이 일어남
 	if (GameEngineInput::GetInst()->IsDown("C") == true)
@@ -106,39 +79,12 @@ void Player_Main::Update(float _DeltaTime)
 		AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
 	}
 
-
-
-	if (GameEngineInput::GetInst()->IsUp("Left") == true || GameEngineInput::GetInst()->IsUp("Right") == true
-		|| GameEngineInput::GetInst()->IsUp("Down") == true || GameEngineInput::GetInst()->IsUp("Up") == true)
-	{
-		
-	}
-
-	//제한된 범위 밖을 나가지 못하게
+	//제한된 범위 밖으로 못나가는 카메라& 캐릭터
 	if (DNFGlobalValue::CurrentLevel != nullptr)
 	{
-
-		float4 MapScale = GetDNFLevel()->GetMapScale();
-		float4 PlayerPosBot = GetTransform().GetWorldPosition();
-		PlayerPosBot.y = -PlayerPosBot.y + 88.0f;
-
-		GameEngineTexture* ColMap = DNFGlobalValue::CurrentLevel->GetBackground()->GetColRenderer()->GetCurTexture();
-		
-		
-		if (ColMap->GetPixelToFloat4(static_cast<int>(PlayerPosBot.x), static_cast<int>(PlayerPosBot.y)).CompareInt3D(float4::MAGENTA) == false)
-		{
-			GetTransform().SetWorldPosition(PrevPos_);
-		}
-		
-		PrevPos_ = GetTransform().GetWorldPosition();
-
-
+		CheckColMap();
 		ChaseCamera();
 	}
-
-
-
-	
 }
 
 void Player_Main::End()
@@ -184,6 +130,23 @@ void Player_Main::ChaseCamera()
 	GetLevel()->GetMainCameraActorTransform().SetWorldPosition(CameraPos);
 }
 
+void Player_Main::CheckColMap()
+{
+	float4 MapScale = GetDNFLevel()->GetMapScale();
+	float4 PlayerPosBot = GetTransform().GetWorldPosition();
+	PlayerPosBot.y = -PlayerPosBot.y + 88.0f;
+
+	GameEngineTexture* ColMap = DNFGlobalValue::CurrentLevel->GetBackground()->GetColRenderer()->GetCurTexture();
+
+
+	if (ColMap->GetPixelToFloat4(static_cast<int>(PlayerPosBot.x), static_cast<int>(PlayerPosBot.y)).CompareInt3D(float4::MAGENTA) == false)
+	{
+		GetTransform().SetWorldPosition(PrevPos_);
+	}
+
+	PrevPos_ = GetTransform().GetWorldPosition();
+}
+
 void Player_Main::InitCol()
 {
 	//테스트용 콜라이더
@@ -198,6 +161,91 @@ void Player_Main::InitCol()
 	MiddleAttackCol_->SetDebugSetting(CollisionType::CT_OBB2D, float4(0, 1.0f, 0, 0.5f));
 	MiddleAttackCol_->ChangeOrder(ColOrder::PlayerAttackMiddle);
 	MiddleAttackCol_->Off();
+}
+
+void Player_Main::InitState()
+{
+	//스테이트 초기화
+	StateManager_.CreateStateMember("Idle", std::bind(&Player_Main::IdleUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::IdleStart, this, std::placeholders::_1));
+
+	StateManager_.CreateStateMember("Move", std::bind(&Player_Main::MoveUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::MoveStart, this, std::placeholders::_1));
+	StateManager_.CreateStateMember("AutoAttack", std::bind(&Player_Main::AutoAttackUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::AutoAttackStart, this, std::placeholders::_1),
+		std::bind(&Player_Main::AutoAttackEnd, this, std::placeholders::_1));
+}
+
+float4 Player_Main::GetMoveDir()
+{
+	float4 MoveDir = float4::ZERO;
+
+	if (GameEngineInput::GetInst()->IsPress("Right") == true)
+	{
+		MoveDir += float4::RIGHT;
+	}
+
+	if (GameEngineInput::GetInst()->IsPress("Left") == true)
+	{
+		MoveDir += float4::LEFT;
+	}
+	if (GameEngineInput::GetInst()->IsPress("Up") == true)
+	{
+		MoveDir += float4::UP;
+
+	}
+	if (GameEngineInput::GetInst()->IsPress("Down") == true)
+	{
+		MoveDir += float4::DOWN;
+	}
+	DNFDebugGUI::AddValue("MoveDir", MoveDir);
+
+	if (MoveDir.CompareInt3D(float4::ZERO) == true)
+	{
+		return MoveDir;
+	}
+	else
+	{
+		MoveDir.y *= 0.5f;
+		MoveDir.Normalize();
+		return MoveDir;
+	}
+}
+
+void Player_Main::FlipXToScale(const float4& _Dir)
+{
+	if (_Dir.x > 0.0f)
+	{
+		GetTransform().PixLocalPositiveX();
+	}
+	else if (_Dir.x < 0.0f)
+	{
+		GetTransform().PixLocalNegativeX();
+	}
+}
+
+bool Player_Main::IsDirXPositive()
+{
+	if (GetTransform().GetLocalScale().x > 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool Player_Main::IsPressMoveKey()
+{
+	if (GetMoveDir().Length() > 0.01f)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 

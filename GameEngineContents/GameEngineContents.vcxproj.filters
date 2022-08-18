@@ -247,5 +247,8 @@
     <ClCompile Include="Player_FSM.cpp">
       <Filter>Player</Filter>
     </ClCompile>
+    <ClCompile Include="Player_AniFunc.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

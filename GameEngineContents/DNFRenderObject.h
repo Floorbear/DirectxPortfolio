@@ -22,12 +22,6 @@ public:
 
 
 protected:
-
-	//시간관련 컨테이너
-	std::map<std::string, float> CurTime_; //누적된 DeltaTime을 보관하는 컨테이너
-	std::map<std::string, float> DefaultTime_; //처음 Set된 Time을 보관하는 컨테이너 , 상태판단 Time은 Random의 최댓값 기준
-	std::map<std::string, float> FloatValue_; //이동속도, 사거리 등을 보관할 컨테이너
-
 	GameEngineTextureRenderer* MainRenderer_;
 	GameEngineTextureRenderer* ShadowRenderer_;
 

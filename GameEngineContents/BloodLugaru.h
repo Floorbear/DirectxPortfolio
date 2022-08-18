@@ -1,5 +1,6 @@
 #pragma once
 #include "DNFRenderObject.h"
+#include "DNFMath.h"
 #include <GameEngineCore/GameEngineStateManager.h>
 
 class Player_Main;
@@ -58,7 +59,6 @@ private:
 	float4 Attack_1_Scale_;
 	float4	Attack_1_Pos_;
 	bool IsAttack_1_End_;
-	float Attack_1_Time_;
 
 	//Back 관련 변수들
 	float4 BackMoveDir_;
@@ -68,7 +68,12 @@ private:
 	int PrevHitCount_;
 
 
-
+	//타이머 
+	Timer Attack_1_Timer_;
+	Timer Idle_Timer_;
+	Timer Back_Timer_;
+	Timer Chase_Timer_;
+	Timer Hit_Timer_;
 
 	//임시 Value
 	float Temp_;

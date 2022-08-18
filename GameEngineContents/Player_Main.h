@@ -30,8 +30,18 @@ protected:
 private:
 	//카메라 추적
 	void ChaseCamera();
+
+	//픽셀충돌 체크
+	void CheckColMap();
+
 	//캐릭터의 충돌체 초기화
 	void InitCol();
+
+	//캐릭터의 스테이트 초기화
+	void InitState();
+
+	//캐릭터의 애니메이션 함수 초기화
+	void InitAniFunc();
 
 	//공격관련
 	GameEngineCollision* MiddleAttackCol_;
@@ -67,9 +77,20 @@ private:
 	GameEngineTextureRenderer* CapRenderer_c_;
 
 
-	//FSM
-	// 아무키도 누르지 않으면 float4::zero리턴
+
+	//내가 누른 방향키의 값을 리턴 아무키도 누르지 않으면 float4::zero리턴
 	float4 GetMoveDir();
+	//_Dir의 X값으로 Flip
+	void FlipXToScale(const float4& _Dir);
+
+	//Flip이 된상태냐 아니냐
+	bool IsDirXPositive();
+
+	bool IsPressMoveKey();
+
+
+
+	//FSM
 	GameEngineStateManager StateManager_;
 
 	void IdleStart(const StateInfo _Info);
@@ -77,6 +98,13 @@ private:
 
 	void MoveStart(const StateInfo _Info);
 	void MoveUpdate(float _DeltaTime, const StateInfo _Info);
+
+	void AutoAttackStart(const StateInfo _Info);
+	void AutoAttackUpdate(float _DeltaTime, const StateInfo _Info);
+	void AutoAttackEnd(const StateInfo _Info);
+
+	bool  IsAutoAttack_0_End_;
+
 
 
 
