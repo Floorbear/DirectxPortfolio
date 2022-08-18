@@ -20,6 +20,33 @@ public:
 
 	DNFLevel* GetDNFLevel();
 
+	//_Dir의 X값으로 Flip
+	void FlipX(const float4& _Dir)
+	{
+		if (_Dir.x > 0.0f)
+		{
+			GetTransform().PixLocalPositiveX();
+		}
+		else if (_Dir.x < 0.0f)
+		{
+			GetTransform().PixLocalNegativeX();
+		}
+	}
+
+	inline float4 GetDirX()
+	{
+		if (GetTransform().GetLocalScale().x > 0)
+		{
+			return float4::RIGHT;
+		}
+		else if (GetTransform().GetLocalScale().x < 0)
+		{
+			return float4::LEFT;
+		}
+
+		return float4::ZERO;
+	}
+
 
 protected:
 	GameEngineTextureRenderer* MainRenderer_;

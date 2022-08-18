@@ -142,3 +142,49 @@ public:
 			}
 		}
 };
+
+class Force
+{
+public:
+	Force();
+	~Force();
+
+	void Update(float _DeltaTime);
+	bool IsForceX()
+	{
+		if (abs(ForceX_) > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	inline void SetTransfrom(GameEngineTransform* _Trans)
+	{
+		Transform_ = _Trans;
+	}
+
+	inline float4 GetDirX()
+	{
+		if (Transform_->GetLocalScale().x > 0)
+		{
+			return float4::RIGHT;
+		}
+		else if (Transform_->GetLocalScale().x < 0)
+		{
+			return float4::LEFT;
+		}
+
+		return float4::ZERO;
+	}
+
+	float ForceX_;
+	float FrictionX_;
+
+private:
+	GameEngineTransform* Transform_;
+
+};

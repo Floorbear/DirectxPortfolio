@@ -1,5 +1,6 @@
 #pragma once
 #include "DNFRenderObject.h"
+#include "DNFMath.h"
 #include "AvatarManager.h"
 
 class Player_Main : public DNFRenderObject
@@ -80,15 +81,15 @@ private:
 
 	//내가 누른 방향키의 값을 리턴 아무키도 누르지 않으면 float4::zero리턴
 	float4 GetMoveDir();
-	//_Dir의 X값으로 Flip
-	void FlipXToScale(const float4& _Dir);
+
 
 	//Flip이 된상태냐 아니냐
 	bool IsDirXPositive();
 
 	bool IsPressMoveKey();
 
-
+	//Force관련
+	Force Force_;
 
 	//FSM
 	GameEngineStateManager StateManager_;
@@ -103,7 +104,9 @@ private:
 	void AutoAttackUpdate(float _DeltaTime, const StateInfo _Info);
 	void AutoAttackEnd(const StateInfo _Info);
 
-	bool  IsAutoAttack_0_End_;
+	bool  IsAutoAttack_End_;
+	bool IsReadyNextAttack_;
+	PlayerAnimations NextAutoAttackAni_;
 
 
 

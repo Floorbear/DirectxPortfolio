@@ -39,4 +39,7 @@ enum class PlayerAnimations
 	Move,
 	Buff,
 	AutoAttack_0,
+	AutoAttack_1,
+	AutoAttack_2,
+
 };

@@ -4,6 +4,11 @@
 #define Magenta (255,0,255)
 #define AutoAttack_0_Start 0
 #define AutoAttack_0_End 9
+#define AutoAttack_1_Start 10
+#define AutoAttack_1_End 20
+#define AutoAttack_2_Start 33
+#define AutoAttack_2_End 41
+
 
 #define Idle_Start 176
 #define Idle_End 179

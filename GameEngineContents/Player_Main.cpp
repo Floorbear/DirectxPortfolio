@@ -35,7 +35,10 @@ Player_Main::Player_Main() :
 	ShoesRenderer_b_(),
 	MiddleAttackCol_(),
 	AttackCount_(),
-	IsAutoAttack_0_End_(false)
+	IsAutoAttack_End_(false),
+	IsReadyNextAttack_(false),
+	NextAutoAttackAni_(),
+	Force_()
 {
 }
 
@@ -49,7 +52,9 @@ void Player_Main::Start()
 
 	InitCol();
 
-	DNFDebugGUI::AddTransform("PlayerTrans", &GetTransform());
+	DNFDebugGUI::AddTransform("MiddleCol", &MiddleAttackCol_->GetTransform());
+
+
 	//아바타생성
 	AvatarManager_.LinkPlayerToAvatar(this);
 	AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
@@ -59,6 +64,9 @@ void Player_Main::Start()
 	StateManager_.ChangeState("Idle");
 
 	InitAniFunc();
+
+	Force_.FrictionX_ = 700.0f;
+	Force_.SetTransfrom(&GetTransform());
 }
 
 void Player_Main::Update(float _DeltaTime)
@@ -66,6 +74,9 @@ void Player_Main::Update(float _DeltaTime)
 	DNFUpdate();
 	DNFDebugGUI::AddValue("PlayerState", StateManager_.GetCurStateStateName());
 	StateManager_.Update(_DeltaTime);
+	//ForceUpdae
+	Force_.Update(_DeltaTime);
+
 	//z를 누르면 모션의 변경이 일어남
 	if (GameEngineInput::GetInst()->IsDown("Z") == true)
 	{
@@ -212,18 +223,6 @@ float4 Player_Main::GetMoveDir()
 	}
 }
 
-void Player_Main::FlipXToScale(const float4& _Dir)
-{
-	if (_Dir.x > 0.0f)
-	{
-		GetTransform().PixLocalPositiveX();
-	}
-	else if (_Dir.x < 0.0f)
-	{
-		GetTransform().PixLocalNegativeX();
-	}
-}
-
 bool Player_Main::IsDirXPositive()
 {
 	if (GetTransform().GetLocalScale().x > 0)
@@ -235,6 +234,7 @@ bool Player_Main::IsDirXPositive()
 		return false;
 	}
 }
+
 
 bool Player_Main::IsPressMoveKey()
 {

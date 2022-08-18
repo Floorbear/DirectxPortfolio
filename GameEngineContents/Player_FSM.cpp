@@ -45,7 +45,7 @@ void Player_Main::MoveUpdate(float _DeltaTime, const StateInfo _Info)
 		return;
 	}
 
-	FlipXToScale(GetMoveDir());
+	FlipX(GetMoveDir());
 	GetTransform().SetLocalMove(GetMoveDir() * _DeltaTime * 200.0f);
 	ShadowUpdate();
 }
@@ -57,9 +57,19 @@ void Player_Main::AutoAttackStart(const StateInfo _Info)
 
 void Player_Main::AutoAttackUpdate(float _DeltaTime, const StateInfo _Info)
 {
+
+
 	//평소에는 False
-	if (IsAutoAttack_0_End_ == true)
+	if (IsAutoAttack_End_ == true)
 	{
+		if (IsReadyNextAttack_ == true)
+		{
+			AvatarManager_.ChangeMotion(NextAutoAttackAni_);
+			IsAutoAttack_End_ = false;
+			IsReadyNextAttack_ = false;
+			return;
+		}
+
 		if (IsPressMoveKey() == false)
 		{
 			StateManager_.ChangeState("Idle");
@@ -77,5 +87,5 @@ void Player_Main::AutoAttackEnd(const StateInfo _Info)
 {
 	MiddleAttackCol_->Off();
 	AttackCount_ = 0;
-	IsAutoAttack_0_End_ = false;
+	IsAutoAttack_End_ = false;
 }

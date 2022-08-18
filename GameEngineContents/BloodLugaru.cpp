@@ -97,6 +97,9 @@ void BloodLugaru::Start()
 	HitMiddle_->GetTransform().SetLocalScale({ 100.0f,30.0f,1.0f });
 	HitMiddle_->ChangeOrder(ColOrder::MonsterHitMiddle);
 
+	//Force
+	Force_.SetTransfrom(&GetTransform());
+	Force_.FrictionX_ = 700.0f;
 
 }
 
@@ -104,6 +107,7 @@ void BloodLugaru::Update(float _DeltaTime)
 {
 	DNFUpdate();
 	DNFDebugGUI::AddValue("PrevCount", PrevHitCount_);
+	Force_.Update(_DeltaTime);
 	//공격 쿨타임 카운트
 	if (Attack_1_Timer_.IsTimerOn() == true)
 	{
@@ -119,7 +123,7 @@ void BloodLugaru::Update(float _DeltaTime)
 			{
 				Player_Main* Player = DNFGlobalValue::CurrentLevel->GetPlayer();
 				int HitCount = Player->GetAttackCount();
-				if (HitCount != PrevHitCount_)
+				if (HitCount > PrevHitCount_ || PrevHitCount_ == 0)
 				{
 					StateManager_.ChangeState("Hit");
 					PrevHitCount_ = HitCount;
@@ -420,6 +424,10 @@ void BloodLugaru::HitStart(const StateInfo _Info)
 {
 	ChangeDNFAnimation("Hit");
 	Hit_Timer_.StartTimer();
+	
+	//플레이어를 마주보는 방향으로 Flip
+	FlipX(-Player_->GetDirX());
+	Force_.ForceX_ -= 140.0f;
 }
 
 void BloodLugaru::HitUpdate(float _DeltaTime, const StateInfo _Info)

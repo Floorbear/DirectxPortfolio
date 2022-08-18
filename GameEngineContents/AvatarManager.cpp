@@ -415,12 +415,14 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 	std::string Name = EnumToString(_Type);
 
 
-	float Idle_Iter = 0.2f;
-	float Attack_Iter = 0.08f;
+	float Iter_0 = 0.2f;
+	float Iter_1 = 0.08f;
+	float Iter_2 = 0.05f;
+
 
 	//아바타 애니메이션 생성
-	CurRenderer->CreateFrameAnimationFolder("Idle" + Name, FrameAnimation_DESC(_AvatarFolderName, Idle_Start, Idle_End, Idle_Iter));
-	CurRenderer->CreateFrameAnimationFolder("ChangeAvatar" + Name, FrameAnimation_DESC(_AvatarFolderName, Idle_Start, Idle_End, Idle_Iter,false));
+	CurRenderer->CreateFrameAnimationFolder("Idle" + Name, FrameAnimation_DESC(_AvatarFolderName, Idle_Start, Idle_End, Iter_0));
+	CurRenderer->CreateFrameAnimationFolder("ChangeAvatar" + Name, FrameAnimation_DESC(_AvatarFolderName, Idle_Start, Idle_End, Iter_0,false));
 	//ChangeAvatar 애니상태면 다음프레임에 Idle로 이동한다.
 	CurRenderer->AnimationBindFrame("ChangeAvatar" + Name, [&](const FrameAnimation_DESC& _Desc) 
 		{
@@ -430,9 +432,11 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 			}
 		});
 	
-	CurRenderer->CreateFrameAnimationFolder("Move" + Name, FrameAnimation_DESC(_AvatarFolderName, Move_Start, Move_End, Attack_Iter));
-	CurRenderer->CreateFrameAnimationFolder("AutoAttack_0"+ Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_0_Start, AutoAttack_0_End, Attack_Iter,false));
-	CurRenderer->CreateFrameAnimationFolder("Buff" + Name, FrameAnimation_DESC(_AvatarFolderName, BuffOn_Start, BuffOn_End, Attack_Iter,false));
+	CurRenderer->CreateFrameAnimationFolder("Move" + Name, FrameAnimation_DESC(_AvatarFolderName, Move_Start, Move_End, Iter_1));
+	CurRenderer->CreateFrameAnimationFolder("AutoAttack_0"+ Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_0_Start, AutoAttack_0_End, Iter_2,false));
+	CurRenderer->CreateFrameAnimationFolder("AutoAttack_1" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_1_Start, AutoAttack_1_End, Iter_2, false));
+	CurRenderer->CreateFrameAnimationFolder("AutoAttack_2" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_2_Start, AutoAttack_2_End, Iter_2, false));
+	CurRenderer->CreateFrameAnimationFolder("Buff" + Name, FrameAnimation_DESC(_AvatarFolderName, BuffOn_Start, BuffOn_End, Iter_1,false));
 
 
 }
@@ -455,6 +459,12 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 		break;
 	case PlayerAnimations::AutoAttack_0:
 		return "AutoAttack_0";
+		break;
+	case PlayerAnimations::AutoAttack_1:
+		return "AutoAttack_1";
+		break;
+	case PlayerAnimations::AutoAttack_2:
+		return "AutoAttack_2";
 		break;
 	default:
 		break;

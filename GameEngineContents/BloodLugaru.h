@@ -75,6 +75,8 @@ private:
 	Timer Chase_Timer_;
 	Timer Hit_Timer_;
 
+	Force Force_;
+
 	//юс╫ц Value
 	float Temp_;
 };
