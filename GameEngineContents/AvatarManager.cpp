@@ -437,12 +437,13 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 	CurRenderer->CreateFrameAnimationFolder("AutoAttack_1" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_1_Start, AutoAttack_1_End, Iter_2, false));
 	CurRenderer->CreateFrameAnimationFolder("AutoAttack_2" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_2_Start, AutoAttack_2_End, Iter_2, false));
 	CurRenderer->CreateFrameAnimationFolder("Buff" + Name, FrameAnimation_DESC(_AvatarFolderName, BuffOn_Start, BuffOn_End, Iter_1,false));
-
-
+	CurRenderer->CreateFrameAnimationFolder("Jump_Start" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Start, Jump_Motion_Middle, Iter_1, false));
+	CurRenderer->CreateFrameAnimationFolder("Jump_End" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Middle+1, Jump_Motion_End, Iter_1, false));
 }
 
 std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 {
+	//스킬명이된다. Why > 이 이름으로 애니메이션이 만들어진다. > 스킬이 같은 모션을 공유할 수 있는데 만약 애니메이션을 공유하면 FrameAnimion 함수를 사용하기 힘들다.
 	switch (_Ani)
 	{
 	case PlayerAnimations::ChangeAvatar:
@@ -465,6 +466,12 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 		break;
 	case PlayerAnimations::AutoAttack_2:
 		return "AutoAttack_2";
+		break;
+	case PlayerAnimations::Jump_Start:
+		return "Jump_Start";
+		break;
+	case PlayerAnimations::Jump_End:
+		return "Jump_End";
 		break;
 	default:
 		break;

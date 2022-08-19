@@ -93,4 +93,13 @@ void Player_Main::InitAniFunc()
 				IsAutoAttack_End_ = true;
 			}
 		});
+
+	//Jump
+	MainRenderer_->AnimationBindFrame("Jump_End",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.Frames[_Desc.CurFrame - 1] == Jump_Motion_End)
+			{
+			}
+		});
 }

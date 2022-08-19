@@ -66,6 +66,7 @@ void Player_Main::Start()
 	InitAniFunc();
 
 	Force_.FrictionX_ = 700.0f;
+	Force_.Gravity_ = 700.0f;
 	Force_.SetTransfrom(&GetTransform());
 }
 
@@ -84,18 +85,14 @@ void Player_Main::Update(float _DeltaTime)
 	}
 
 
-	//C를 누르면 모션의 변경이 일어남
-	if (GameEngineInput::GetInst()->IsDown("C") == true)
-	{
-		AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
-	}
-
 	//제한된 범위 밖으로 못나가는 카메라& 캐릭터
 	if (DNFGlobalValue::CurrentLevel != nullptr)
 	{
 		CheckColMap();
 		ChaseCamera();
 	}
+	ShadowUpdate();
+
 }
 
 void Player_Main::End()
@@ -145,17 +142,35 @@ void Player_Main::CheckColMap()
 {
 	float4 MapScale = GetDNFLevel()->GetMapScale();
 	float4 PlayerPosBot = GetTransform().GetWorldPosition();
-	PlayerPosBot.y = -PlayerPosBot.y + 88.0f;
+	PlayerPosBot.y = -PlayerPosBot.y - BotPos_.y;
 
 	GameEngineTexture* ColMap = DNFGlobalValue::CurrentLevel->GetBackground()->GetColRenderer()->GetCurTexture();
 
-
-	if (ColMap->GetPixelToFloat4(static_cast<int>(PlayerPosBot.x), static_cast<int>(PlayerPosBot.y)).CompareInt3D(float4::MAGENTA) == false)
+	//픽셀충돌범위를 넘어가면 이전 위치로 고정시킨다.
+	if (OnAir_ == false)
 	{
-		GetTransform().SetWorldPosition(PrevPos_);
+		if (ColMap->GetPixelToFloat4(static_cast<int>(PlayerPosBot.x), static_cast<int>(PlayerPosBot.y)).CompareInt3D(float4::MAGENTA) == false)
+		{
+			GetTransform().SetWorldPosition(PrevPos_);
+		}
+	}
+	else
+	{
+		float4 DownPos = GetTransform().GetWorldPosition();
+		DownPos.y = -GroundYPos_ - BotPos_.y;
+		if (ColMap->GetPixelToFloat4(static_cast<int>(PlayerPosBot.x), static_cast<int>(DownPos.y)).CompareInt3D(float4::MAGENTA) == false)
+		{
+			GetTransform().SetWorldPosition(PrevPos_);
+		}
+	}
+	
+
+	//이전위치와 차이가 있으면 PrevPos를 갱신한다.
+	if (DNFMath::Length(PrevPos_, GetTransform().GetWorldPosition()) >= 0.5f)
+	{
+		PrevPos_ = GetTransform().GetWorldPosition();
 	}
 
-	PrevPos_ = GetTransform().GetWorldPosition();
 }
 
 void Player_Main::InitCol()
@@ -213,7 +228,6 @@ float4 Player_Main::GetMoveDir()
 	{
 		MoveDir += float4::DOWN;
 	}
-	DNFDebugGUI::AddValue("MoveDir", MoveDir);
 
 	if (MoveDir.CompareInt3D(float4::ZERO) == true)
 	{

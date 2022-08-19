@@ -19,6 +19,10 @@
 #define Move_Start 180
 #define Move_End 187
 
+#define Jump_Motion_Start 125
+#define Jump_Motion_Middle 127
+#define Jump_Motion_End 131
+
 
 //·ç°¡·ç
 #define Lugaru_Attack_1_Start 0

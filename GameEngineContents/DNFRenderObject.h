@@ -62,9 +62,13 @@ protected:
 
 	float4 PrevPos_;
 
+
 	GameEngineCollision* BotCol_;
 	float4 BotPos_;
 	
+	//픽셀충돌 관련 함수
+	//이동량(미래에 이동할 양)을 매게변수로
+	bool CanMove(const float4& _MoveValue);
 	//세팅이 안된것을 체크 해 주는 함수
 	void ErrorCheck();
 
@@ -85,7 +89,11 @@ protected:
 
 	bool IsStart_; //DnfStart 호출했냐
 	
-	bool IsJump_; //Jump중?
+	//체공 관련
+	bool OnAir_; //Jump중?
+	float GroundYPos_;
+
+	//
 
 private:
 

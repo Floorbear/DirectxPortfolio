@@ -25,7 +25,8 @@ Timer::Timer(float _Value):
 }
 
 Force::Force():
-	Transform_()
+	Transform_(),
+	IsGravityOn_(false)
 {
 }
 
@@ -36,7 +37,7 @@ Force::~Force()
 void Force::Update(float _DeltaTime)
 {
 	//ForceUpdae
-	if (abs(ForceX_) > 0)
+	if (IsForceX() == true)
 	{
 		if (ForceX_ > 0.0f)
 		{
@@ -54,10 +55,15 @@ void Force::Update(float _DeltaTime)
 				ForceX_ = 0.0f;
 			}
 		}
-	}
 
-	if (IsForceX() == true)
-	{
 		Transform_->SetLocalMove(GetDirX() * ForceX_ * _DeltaTime);
 	}
+
+	if (IsForceY() == true)
+	{
+		ForceY_ -= _DeltaTime * Gravity_;
+
+		Transform_->SetLocalMove(float4::UP * ForceY_ * _DeltaTime);
+	}
+
 }

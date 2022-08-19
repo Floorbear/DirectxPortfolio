@@ -161,6 +161,26 @@ public:
 			return false;
 		}
 	}
+	bool IsForceY()
+	{
+		if (IsGravityOn_ == true)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	void OnGravity()
+	{
+		IsGravityOn_ = true;
+	}
+	void OffGravity()
+	{
+		IsGravityOn_ = false;
+	}
 
 	inline void SetTransfrom(GameEngineTransform* _Trans)
 	{
@@ -181,10 +201,17 @@ public:
 		return float4::ZERO;
 	}
 
+	//Y축 가속도의 On Off는 내가 수동으로 해줘야 한다.
+
 	float ForceX_;
+	float ForceY_;
+
 	float FrictionX_;
+	float Gravity_;
 
 private:
 	GameEngineTransform* Transform_;
+
+	bool IsGravityOn_;
 
 };

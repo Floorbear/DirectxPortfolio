@@ -4,6 +4,7 @@
 #include "DNFContentsMinimal.h"
 #include "DNFRenderObject.h"
 #include "DNFLevel.h"
+#include "DNFBackground.h"
 
 #include "DNFDebugGUI.h"
 
@@ -16,7 +17,8 @@ DNFRenderObject::DNFRenderObject():
 	BotCol_(),
 	BotPos_({0,-88.0f}),
 	PrevPos_(),
-	IsJump_(false)
+	OnAir_(false),
+	GroundYPos_()
 {
 }
 
@@ -61,6 +63,47 @@ void DNFRenderObject::ShadowUpdate()
 		ShadowRenderer_->GetTransform().SetLocalPosition(ShadowPos);
 		ShadowRenderer_->GetTransform().SetLocalRotation(ShadowRot);
 	}
+
+
+	//체공상태면 그림자고정
+	if (OnAir_ == true)
+	{
+		float4 GroundPos = GetTransform().GetWorldPosition();
+		GroundPos += ShadowPos_;
+		GroundPos.y = GroundYPos_-40.0f;
+		ShadowRenderer_->GetTransform().SetWorldPosition(GroundPos);
+	}
+}
+
+bool DNFRenderObject::CanMove(const float4& _MoveValue)
+{
+	float4 MapScale = GetDNFLevel()->GetMapScale();
+	float4 ActorPosBot = GetTransform().GetWorldPosition();
+	ActorPosBot += _MoveValue;
+	ActorPosBot.y = -ActorPosBot.y - BotPos_.y;
+
+	GameEngineTexture* ColMap = DNFGlobalValue::CurrentLevel->GetBackground()->GetColRenderer()->GetCurTexture();
+
+	//픽셀충돌범위를 넘어가면 이전 위치로 고정시킨다.
+	if (OnAir_ == false)
+	{
+		if (ColMap->GetPixelToFloat4(static_cast<int>(ActorPosBot.x), static_cast<int>(ActorPosBot.y)).CompareInt3D(float4::MAGENTA) == false)
+		{
+			return false;
+		}
+	}
+	else
+	{
+		float4 DownPos;
+		DownPos.y = -GroundYPos_ - BotPos_.y;
+		if (ColMap->GetPixelToFloat4(static_cast<int>(ActorPosBot.x), static_cast<int>(DownPos.y)).CompareInt3D(float4::MAGENTA) == false)
+		{
+			return false;
+		}
+	}
+
+
+	return true;
 }
 
 void DNFRenderObject::ErrorCheck()
