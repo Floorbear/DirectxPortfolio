@@ -50,6 +50,18 @@ void Player_Main::MoveUpdate(float _DeltaTime, const StateInfo _Info)
 	ShadowUpdate();
 }
 
+void Player_Main::JumpStart(const StateInfo _Info)
+{
+}
+
+void Player_Main::JumpUpdate(float _DeltaTime, const StateInfo _Info)
+{
+}
+
+void Player_Main::JumpEnd(const StateInfo _Info)
+{
+}
+
 void Player_Main::AutoAttackStart(const StateInfo _Info)
 {
 	AvatarManager_.ChangeMotion(PlayerAnimations::AutoAttack_0);

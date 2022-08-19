@@ -185,6 +185,10 @@ void Player_Main::InitState()
 	StateManager_.CreateStateMember("AutoAttack", std::bind(&Player_Main::AutoAttackUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::AutoAttackStart, this, std::placeholders::_1),
 		std::bind(&Player_Main::AutoAttackEnd, this, std::placeholders::_1));
+
+	StateManager_.CreateStateMember("Jump", std::bind(&Player_Main::JumpUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::JumpStart, this, std::placeholders::_1),
+		std::bind(&Player_Main::JumpEnd, this, std::placeholders::_1));
 }
 
 float4 Player_Main::GetMoveDir()

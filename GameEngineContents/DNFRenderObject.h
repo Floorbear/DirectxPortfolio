@@ -84,6 +84,8 @@ protected:
 	void ZSort();
 
 	bool IsStart_; //DnfStart 호출했냐
+	
+	bool IsJump_; //Jump중?
 
 private:
 

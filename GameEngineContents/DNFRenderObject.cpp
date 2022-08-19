@@ -15,7 +15,8 @@ DNFRenderObject::DNFRenderObject():
 	ShadowRot_(),
 	BotCol_(),
 	BotPos_({0,-88.0f}),
-	PrevPos_()
+	PrevPos_(),
+	IsJump_(false)
 {
 }
 

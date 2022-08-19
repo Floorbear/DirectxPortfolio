@@ -100,9 +100,15 @@ private:
 	void MoveStart(const StateInfo _Info);
 	void MoveUpdate(float _DeltaTime, const StateInfo _Info);
 
+	void JumpStart(const StateInfo _Info);
+	void JumpUpdate(float _DeltaTime, const StateInfo _Info);
+	void JumpEnd(const StateInfo _Info);
+
 	void AutoAttackStart(const StateInfo _Info);
 	void AutoAttackUpdate(float _DeltaTime, const StateInfo _Info);
 	void AutoAttackEnd(const StateInfo _Info);
+
+	
 
 	bool  IsAutoAttack_End_;
 	bool IsReadyNextAttack_;
