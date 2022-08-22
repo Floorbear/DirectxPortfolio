@@ -43,9 +43,12 @@ private:
 
 	//캐릭터의 애니메이션 함수 초기화
 	void InitAniFunc();
+	//다음 공격키를 선입력 받는다.
+	bool CheckAttackKey();
 
 	//공격관련
-	GameEngineCollision* MiddleAttackCol_;
+	GameEngineCollision* AttackCol_;
+	GameEngineCollision* BottomAttackCol_;
 	int AttackCount_;
 
 	//UI
@@ -108,11 +111,17 @@ private:
 	void AutoAttackUpdate(float _DeltaTime, const StateInfo _Info);
 	void AutoAttackEnd(const StateInfo _Info);
 
-	
+	void UpperSlashStart(const StateInfo _Info);
+	void UpperSlashUpdate(float _DeltaTime, const StateInfo _Info);
+	void UpperSlashEnd(const StateInfo _Info);
 
-	bool  IsAutoAttack_End_;
+	
+	//"일단" 공격 1회가 끝나면 IsAttack_End == true > 이후 ReadyNextAttack 분기에 따라
+	bool  IsAttack_End_;
+
+
 	bool IsReadyNextAttack_;
-	PlayerAnimations NextAutoAttackAni_;
+	PlayerAnimations NextAttackAni_;
 
 
 

@@ -49,6 +49,10 @@ private:
 	void HitStart(const StateInfo _Info);
 	void HitUpdate(float _DeltaTime, const StateInfo _Info);
 
+	void AirborneStart(const StateInfo _Info);
+	void AirborneUpdate(float _DeltaTime, const StateInfo _Info);
+
+
 
 	bool AttackColCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
 
@@ -65,7 +69,7 @@ private:
 
 	//Hit 관련 변수들
 	GameEngineCollision* HitMiddle_;
-	int PrevHitCount_;
+	AttackData PrevHitData_;
 
 
 	//타이머 

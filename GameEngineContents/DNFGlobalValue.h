@@ -8,9 +8,10 @@ enum class ColOrder
 	Player,
 	Monster,
 	MonsterHitMiddle,
-	PlayerAttackMiddle,
+	PlayerAttack,
 	Debug
 };
+
 
 class DNFGlobalValue
 {

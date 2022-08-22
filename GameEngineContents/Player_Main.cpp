@@ -33,11 +33,12 @@ Player_Main::Player_Main() :
 	BeltRenderer_d_(),
 	ShoesRenderer_a_(),
 	ShoesRenderer_b_(),
-	MiddleAttackCol_(),
+	AttackCol_(),
 	AttackCount_(),
-	IsAutoAttack_End_(false),
+	IsAttack_End_(false),
 	IsReadyNextAttack_(false),
-	NextAutoAttackAni_(),
+	NextAttackAni_(),
+	BottomAttackCol_(),
 	Force_()
 {
 }
@@ -52,7 +53,7 @@ void Player_Main::Start()
 
 	InitCol();
 
-	DNFDebugGUI::AddTransform("MiddleCol", &MiddleAttackCol_->GetTransform());
+	DNFDebugGUI::AddTransform("MiddleCol", &AttackCol_->GetTransform());
 
 
 	//아바타생성
@@ -77,13 +78,6 @@ void Player_Main::Update(float _DeltaTime)
 	StateManager_.Update(_DeltaTime);
 	//ForceUpdae
 	Force_.Update(_DeltaTime);
-
-	//z를 누르면 모션의 변경이 일어남
-	if (GameEngineInput::GetInst()->IsDown("Z") == true)
-	{
-		AvatarManager_.ChangeMotion(PlayerAnimations::Buff);
-	}
-
 
 	//제한된 범위 밖으로 못나가는 카메라& 캐릭터
 	if (DNFGlobalValue::CurrentLevel != nullptr)
@@ -182,11 +176,13 @@ void Player_Main::InitCol()
 	Col->GetTransform().SetLocalMove(float4(0, 0, -500));
 	Col->ChangeOrder(ColOrder::Player);
 
-	//MiddleAttack 콜라이더
-	MiddleAttackCol_ = CreateComponent<GameEngineCollision>("MiddleAttack");
-	MiddleAttackCol_->SetDebugSetting(CollisionType::CT_OBB2D, float4(0, 1.0f, 0, 0.5f));
-	MiddleAttackCol_->ChangeOrder(ColOrder::PlayerAttackMiddle);
-	MiddleAttackCol_->Off();
+	//Attack 콜라이더
+	AttackCol_ = CreateComponent<GameEngineCollision>("Attack");
+	AttackCol_->SetDebugSetting(CollisionType::CT_OBB2D, float4(0, 1.0f, 0, 0.5f));
+	AttackCol_->ChangeOrder(ColOrder::PlayerAttack);
+	AttackCol_->Off();
+
+
 }
 
 void Player_Main::InitState()
@@ -204,6 +200,10 @@ void Player_Main::InitState()
 	StateManager_.CreateStateMember("Jump", std::bind(&Player_Main::JumpUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::JumpStart, this, std::placeholders::_1),
 		std::bind(&Player_Main::JumpEnd, this, std::placeholders::_1));
+
+	StateManager_.CreateStateMember("UpperSlash", std::bind(&Player_Main::UpperSlashUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::UpperSlashStart, this, std::placeholders::_1),
+		std::bind(&Player_Main::UpperSlashEnd, this, std::placeholders::_1));
 }
 
 float4 Player_Main::GetMoveDir()

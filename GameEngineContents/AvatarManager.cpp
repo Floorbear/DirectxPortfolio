@@ -417,7 +417,7 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 
 	float Iter_0 = 0.2f;
 	float Iter_1 = 0.08f;
-	float Iter_2 = 0.05f;
+	float Iter_2 = 0.02f;
 
 
 	//아바타 애니메이션 생성
@@ -436,9 +436,10 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 	CurRenderer->CreateFrameAnimationFolder("AutoAttack_0"+ Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_0_Start, AutoAttack_0_End, Iter_2,false));
 	CurRenderer->CreateFrameAnimationFolder("AutoAttack_1" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_1_Start, AutoAttack_1_End, Iter_2, false));
 	CurRenderer->CreateFrameAnimationFolder("AutoAttack_2" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_2_Start, AutoAttack_2_End, Iter_2, false));
+	CurRenderer->CreateFrameAnimationFolder("UpperSlash" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_2_Start, AutoAttack_2_End, Iter_2, false));
 	CurRenderer->CreateFrameAnimationFolder("Buff" + Name, FrameAnimation_DESC(_AvatarFolderName, BuffOn_Start, BuffOn_End, Iter_1,false));
-	CurRenderer->CreateFrameAnimationFolder("Jump_Start" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Start, Jump_Motion_Middle, Iter_1, false));
-	CurRenderer->CreateFrameAnimationFolder("Jump_End" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Middle+1, Jump_Motion_End, Iter_1, false));
+	CurRenderer->CreateFrameAnimationFolder("Jump_Start" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Start, Jump_Motion_Middle, 0.06f, false));
+	CurRenderer->CreateFrameAnimationFolder("Jump_End" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Middle+1, Jump_Motion_End, 0.06f, false));
 }
 
 std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
@@ -458,6 +459,9 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 	case PlayerAnimations::Move:
 		return "Move";
 		break;
+	case PlayerAnimations::AutoAttack: //Enum To String State전이용 
+		return "AutoAttack";
+		break;
 	case PlayerAnimations::AutoAttack_0:
 		return "AutoAttack_0";
 		break;
@@ -472,6 +476,9 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 		break;
 	case PlayerAnimations::Jump_End:
 		return "Jump_End";
+		break;
+	case PlayerAnimations::UpperSlash:
+		return "UpperSlash";
 		break;
 	default:
 		break;

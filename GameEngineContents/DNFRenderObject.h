@@ -4,6 +4,25 @@
 
 //렌더러를 가지는 액터들은 이 클래스를 상속 받는다.
 //스프라이트 리소스를 좀 더 활용하기 용이하게 하기위한 클래스
+enum class AttackType
+{
+	Top,
+	Bottom,
+	Middle,
+};
+
+struct AttackData
+{
+	std::string AttackName;
+	int AttCount;
+	AttackType Type;
+	int* Att;
+	float Stiffness;
+	float YForce;
+	float XForce;
+};
+
+
 class DNFLevel;
 class DNFRenderObject : public GameEngineActor
 {
@@ -47,8 +66,10 @@ public:
 		return float4::ZERO;
 	}
 
+	AttackData CurAttackData_;
 
 protected:
+
 	GameEngineTextureRenderer* MainRenderer_;
 	GameEngineTextureRenderer* ShadowRenderer_;
 
@@ -93,7 +114,11 @@ protected:
 	bool OnAir_; //Jump중?
 	float GroundYPos_;
 
-	//
+	//경직도
+	float Stiffness_;
+
+
+
 
 private:
 

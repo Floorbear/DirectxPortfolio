@@ -38,9 +38,12 @@ enum class PlayerAnimations
 	Idle,
 	Move,
 	Buff,
+	NoneAttack,
+	AutoAttack,
 	AutoAttack_0,
 	AutoAttack_1,
 	AutoAttack_2,
 	Jump_Start,
-	Jump_End
+	Jump_End,
+	UpperSlash
 };

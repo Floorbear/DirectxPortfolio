@@ -56,6 +56,7 @@ void Force::Update(float _DeltaTime)
 			}
 		}
 
+
 		Transform_->SetLocalMove(GetDirX() * ForceX_ * _DeltaTime);
 	}
 
@@ -65,5 +66,7 @@ void Force::Update(float _DeltaTime)
 
 		Transform_->SetLocalMove(float4::UP * ForceY_ * _DeltaTime);
 	}
+
+
 
 }

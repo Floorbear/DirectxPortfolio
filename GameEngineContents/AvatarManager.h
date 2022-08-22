@@ -33,6 +33,8 @@ public:
 	//CurAvatar와 RenderList의 변경이 일어남
 	void ChangeAvatar(AvatarType _Type, AvatarParts _Parts);
 
+	std::string EnumToString(PlayerAnimations _Ani);
+
 protected:
 
 private:
@@ -41,7 +43,7 @@ private:
 	//주의! 아직 애니메이션을 전부 만들지 않음
 	void CreateAvatar(const std::string& _AvatarFolderName, AvatarParts _Parts, AvatarType _Type, AvatarLayer _Layer);
 
-	std::string EnumToString(PlayerAnimations _Ani);
+
 	std::string EnumToString(AvatarType _Type);
 
 	//어떤 아바타가 무슨 렌더러를 쓰는지 확인하는 함수

@@ -3569,7 +3569,7 @@
 											"font": "Arial;13;0",
 											"left": 2192,
 											"top": 16,
-											"width": 73.67724609375,
+											"width": 77.9365234375,
 											"height": 13,
 											"text": "(from Model)"
 										},
@@ -3731,7 +3731,7 @@
 											"font": "Arial;13;1",
 											"left": 965,
 											"top": 655,
-											"width": 230.0390625,
+											"width": 235.39013671875,
 											"height": 13,
 											"text": "Hit"
 										},
@@ -3745,7 +3745,7 @@
 											"font": "Arial;13;0",
 											"left": 1616,
 											"top": 64,
-											"width": 73.67724609375,
+											"width": 77.9365234375,
 											"height": 13,
 											"text": "(from Model)"
 										},
@@ -3766,7 +3766,7 @@
 									"font": "Arial;13;0",
 									"left": 960,
 									"top": 648,
-									"width": 240.0390625,
+									"width": 245.39013671875,
 									"height": 25,
 									"stereotypeLabel": {
 										"$ref": "AAAAAAGCpXk7Wj4lr9Y="
@@ -3803,7 +3803,7 @@
 											"font": "Arial;13;0",
 											"left": 965,
 											"top": 678,
-											"width": 230.0390625,
+											"width": 235.39013671875,
 											"height": 13,
 											"text": "+Hit감지가 끝난 후 들어옴",
 											"horizontalAlignment": 0
@@ -3820,16 +3820,16 @@
 											"font": "Arial;13;0",
 											"left": 965,
 											"top": 693,
-											"width": 230.0390625,
+											"width": 235.39013671875,
 											"height": 13,
-											"text": "+히트커버리타임이 지날 때 까지 이상태",
+											"text": "+HItTime동안 지날 때 까지 이상태",
 											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 960,
 									"top": 673,
-									"width": 240.0390625,
+									"width": 245.39013671875,
 									"height": 38
 								},
 								{
@@ -3844,7 +3844,7 @@
 									"font": "Arial;13;0",
 									"left": 960,
 									"top": 711,
-									"width": 240.0390625,
+									"width": 245.39013671875,
 									"height": 10
 								},
 								{
@@ -3884,7 +3884,7 @@
 							"containerChangeable": true,
 							"left": 960,
 							"top": 648,
-							"width": 240.0390625,
+							"width": 245.39013671875,
 							"height": 88,
 							"nameCompartment": {
 								"$ref": "AAAAAAGCpXk7Wj4kLGo="
@@ -3923,8 +3923,8 @@
 									},
 									"font": "Arial;13;0",
 									"left": 1165,
-									"top": 587,
-									"width": 89.20361328125,
+									"top": 586,
+									"width": 91.67919921875,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -3945,8 +3945,8 @@
 									},
 									"visible": null,
 									"font": "Arial;13;0",
-									"left": 1219,
-									"top": 598,
+									"left": 1220,
+									"top": 597,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -3966,8 +3966,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1188,
-									"top": 564,
+									"left": 1189,
+									"top": 565,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -3987,7 +3987,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1261,
+									"left": 1262,
 									"top": 539,
 									"height": 13,
 									"alpha": 0.5235987755982988,
@@ -4008,7 +4008,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1268,
+									"left": 1269,
 									"top": 550,
 									"height": 13,
 									"alpha": 0.7853981633974483,
@@ -4050,7 +4050,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1156,
+									"left": 1159,
 									"top": 634,
 									"height": 13,
 									"alpha": -0.5235987755982988,
@@ -4070,8 +4070,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1166,
-									"top": 643,
+									"left": 1169,
+									"top": 642,
 									"height": 13,
 									"alpha": -0.7853981633974483,
 									"distance": 40,
@@ -4090,7 +4090,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1134,
+									"left": 1137,
 									"top": 617,
 									"height": 13,
 									"alpha": 0.5235987755982988,
@@ -4140,7 +4140,7 @@
 								"$ref": "AAAAAAGCpXkNkTO8v2Q="
 							},
 							"lineStyle": 1,
-							"points": "1271:517;1127:647",
+							"points": "1271:517;1130:647",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGCpXloPEWzc1o="
@@ -4218,7 +4218,7 @@
 											"font": "Arial;13;1",
 											"left": 1397,
 											"top": 623,
-											"width": 355.79248046875,
+											"width": 360.978515625,
 											"height": 13,
 											"text": "Airborne"
 										},
@@ -4232,7 +4232,7 @@
 											"font": "Arial;13;0",
 											"left": -224,
 											"top": -112,
-											"width": 73.67724609375,
+											"width": 77.9365234375,
 											"height": 13,
 											"text": "(from Model)"
 										},
@@ -4253,7 +4253,7 @@
 									"font": "Arial;13;0",
 									"left": 1392,
 									"top": 616,
-									"width": 365.79248046875,
+									"width": 370.978515625,
 									"height": 25,
 									"stereotypeLabel": {
 										"$ref": "AAAAAAGCpXvroHlsKMA="
@@ -4290,7 +4290,7 @@
 											"font": "Arial;13;0",
 											"left": 1397,
 											"top": 646,
-											"width": 355.79248046875,
+											"width": 360.978515625,
 											"height": 13,
 											"text": "+Hit감지할 때 몬스터가 Airborne상태면 Hit 전이 무시",
 											"horizontalAlignment": 0
@@ -4307,7 +4307,7 @@
 											"font": "Arial;13;0",
 											"left": 1397,
 											"top": 661,
-											"width": 355.79248046875,
+											"width": 360.978515625,
 											"height": 13,
 											"text": "+공중의 뜸 감지가 끝난 후 들어옴",
 											"horizontalAlignment": 0
@@ -4324,7 +4324,7 @@
 											"font": "Arial;13;0",
 											"left": 1397,
 											"top": 676,
-											"width": 355.79248046875,
+											"width": 360.978515625,
 											"height": 13,
 											"text": "+에어본 상태의 적을 공격하면 중력량이 더해짐",
 											"horizontalAlignment": 0
@@ -4341,7 +4341,7 @@
 											"font": "Arial;13;0",
 											"left": 1397,
 											"top": 691,
-											"width": 355.79248046875,
+											"width": 360.978515625,
 											"height": 13,
 											"text": "+시간이 지날수록 중력가속도량이 강해짐",
 											"horizontalAlignment": 0
@@ -4358,7 +4358,7 @@
 											"font": "Arial;13;0",
 											"left": 1397,
 											"top": 706,
-											"width": 355.79248046875,
+											"width": 360.978515625,
 											"height": 13,
 											"text": "+BotPos가 AirborneStartPos보다 작아지면 Down 상태로 전이",
 											"horizontalAlignment": 0
@@ -4367,7 +4367,7 @@
 									"font": "Arial;13;0",
 									"left": 1392,
 									"top": 641,
-									"width": 365.79248046875,
+									"width": 370.978515625,
 									"height": 83
 								},
 								{
@@ -4382,7 +4382,7 @@
 									"font": "Arial;13;0",
 									"left": 1392,
 									"top": 724,
-									"width": 365.79248046875,
+									"width": 370.978515625,
 									"height": 10
 								},
 								{
@@ -4422,7 +4422,7 @@
 							"containerChangeable": true,
 							"left": 1392,
 							"top": 616,
-							"width": 365.79248046875,
+							"width": 370.978515625,
 							"height": 145,
 							"nameCompartment": {
 								"$ref": "AAAAAAGCpXvroHlrfLM="
@@ -4481,7 +4481,7 @@
 											"font": "Arial;13;1",
 											"left": 1157,
 											"top": 847,
-											"width": 329.7353515625,
+											"width": 338.93310546875,
 											"height": 13,
 											"text": "Down"
 										},
@@ -4495,7 +4495,7 @@
 											"font": "Arial;13;0",
 											"left": -1008,
 											"top": 352,
-											"width": 73.67724609375,
+											"width": 77.9365234375,
 											"height": 13,
 											"text": "(from Model)"
 										},
@@ -4516,7 +4516,7 @@
 									"font": "Arial;13;0",
 									"left": 1152,
 									"top": 840,
-									"width": 339.7353515625,
+									"width": 348.93310546875,
 									"height": 25,
 									"stereotypeLabel": {
 										"$ref": "AAAAAAGCpXzXyX+wCQ0="
@@ -4553,7 +4553,7 @@
 											"font": "Arial;13;0",
 											"left": 1157,
 											"top": 870,
-											"width": 329.7353515625,
+											"width": 338.93310546875,
 											"height": 13,
 											"text": "+DownTime이 지나면 기상함",
 											"horizontalAlignment": 0
@@ -4570,7 +4570,7 @@
 											"font": "Arial;13;0",
 											"left": 1157,
 											"top": 885,
-											"width": 329.7353515625,
+											"width": 338.93310546875,
 											"height": 13,
 											"text": "+DownTime은 점점 빨라짐",
 											"horizontalAlignment": 0
@@ -4587,7 +4587,7 @@
 											"font": "Arial;13;0",
 											"left": 1157,
 											"top": 900,
-											"width": 329.7353515625,
+											"width": 338.93310546875,
 											"height": 13,
 											"text": "+Down상태 동안은 Down콜라이더의 공격만 받을 수 있음",
 											"horizontalAlignment": 0
@@ -4596,7 +4596,7 @@
 									"font": "Arial;13;0",
 									"left": 1152,
 									"top": 865,
-									"width": 339.7353515625,
+									"width": 348.93310546875,
 									"height": 53
 								},
 								{
@@ -4611,7 +4611,7 @@
 									"font": "Arial;13;0",
 									"left": 1152,
 									"top": 918,
-									"width": 339.7353515625,
+									"width": 348.93310546875,
 									"height": 10
 								},
 								{
@@ -4651,7 +4651,7 @@
 							"containerChangeable": true,
 							"left": 1152,
 							"top": 840,
-							"width": 339.7353515625,
+							"width": 348.93310546875,
 							"height": 121,
 							"nameCompartment": {
 								"$ref": "AAAAAAGCpXzXyX+vA0k="
@@ -4689,9 +4689,9 @@
 										"$ref": "AAAAAAGCpYDgK8npyXo="
 									},
 									"font": "Arial;13;0",
-									"left": 1363,
+									"left": 1335,
 									"top": 547,
-									"width": 89.20361328125,
+									"width": 146.9990234375,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -4699,7 +4699,7 @@
 										"$ref": "AAAAAAGCpYDgK8ntYDw="
 									},
 									"edgePosition": 1,
-									"text": "+콜라이더 충돌"
+									"text": "+콜라이더 충돌 & YForce"
 								},
 								{
 									"_type": "EdgeLabelView",
@@ -4712,7 +4712,7 @@
 									},
 									"visible": null,
 									"font": "Arial;13;0",
-									"left": 1416,
+									"left": 1417,
 									"top": 535,
 									"height": 13,
 									"alpha": 1.5707963267948966,
@@ -4733,7 +4733,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1390,
+									"left": 1391,
 									"top": 572,
 									"height": 13,
 									"alpha": -1.5707963267948966,
@@ -4776,7 +4776,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 1368,
-									"top": 504,
+									"top": 503,
 									"height": 13,
 									"alpha": 0.7853981633974483,
 									"distance": 40,
@@ -4817,7 +4817,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1456,
+									"left": 1458,
 									"top": 581,
 									"height": 13,
 									"alpha": -0.5235987755982988,
@@ -4837,7 +4837,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1462,
+									"left": 1463,
 									"top": 569,
 									"height": 13,
 									"alpha": -0.7853981633974483,
@@ -4857,7 +4857,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1444,
+									"left": 1446,
 									"top": 606,
 									"height": 13,
 									"alpha": 0.5235987755982988,
@@ -4903,7 +4903,7 @@
 								"$ref": "AAAAAAGCpXkNkTO8v2Q="
 							},
 							"lineStyle": 1,
-							"points": "1329:517;1469:615",
+							"points": "1329:517;1471:615",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGCpYDgK8nuZsg="
@@ -4961,7 +4961,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1449,
+									"left": 1452,
 									"top": 805,
 									"height": 13,
 									"alpha": 1.5707963267948966,
@@ -4982,7 +4982,7 @@
 									},
 									"visible": null,
 									"font": "Arial;13;0",
-									"left": 1459,
+									"left": 1462,
 									"top": 816,
 									"height": 13,
 									"alpha": 1.5707963267948966,
@@ -5003,7 +5003,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1430,
+									"left": 1433,
 									"top": 782,
 									"height": 13,
 									"alpha": -1.5707963267948966,
@@ -5024,7 +5024,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1476,
+									"left": 1479,
 									"top": 783,
 									"height": 13,
 									"alpha": 0.5235987755982988,
@@ -5045,7 +5045,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1483,
+									"left": 1486,
 									"top": 794,
 									"height": 13,
 									"alpha": 0.7853981633974483,
@@ -5066,7 +5066,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1462,
+									"left": 1465,
 									"top": 759,
 									"height": 13,
 									"alpha": -0.5235987755982988,
@@ -5087,7 +5087,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1423,
+									"left": 1426,
 									"top": 827,
 									"height": 13,
 									"alpha": -0.5235987755982988,
@@ -5107,7 +5107,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1433,
+									"left": 1436,
 									"top": 836,
 									"height": 13,
 									"alpha": -0.7853981633974483,
@@ -5127,7 +5127,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1402,
+									"left": 1405,
 									"top": 809,
 									"height": 13,
 									"alpha": 0.5235987755982988,
@@ -5173,7 +5173,7 @@
 								"$ref": "AAAAAAGCpXvroHlqS94="
 							},
 							"lineStyle": 1,
-							"points": "1487:761;1394:839",
+							"points": "1490:761;1397:839",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGCpYFBgP/ISdg="
@@ -5230,17 +5230,17 @@
 										"$ref": "AAAAAAGCpYHFcREUZF8="
 									},
 									"font": "Arial;13;0",
-									"left": 1261,
-									"top": 671,
-									"width": 120.275390625,
+									"left": 1243,
+									"top": 670,
+									"width": 146.9990234375,
 									"height": 13,
-									"alpha": 1.5707963267948966,
-									"distance": 15,
+									"alpha": 1.7746989478485422,
+									"distance": 7.280109889280518,
 									"hostEdge": {
 										"$ref": "AAAAAAGCpYHFcREYIYo="
 									},
 									"edgePosition": 1,
-									"text": "+콜라이더 충돌&Pos"
+									"text": "+콜라이더 충돌 & YForce"
 								},
 								{
 									"_type": "EdgeLabelView",
@@ -5253,8 +5253,8 @@
 									},
 									"visible": null,
 									"font": "Arial;13;0",
-									"left": 1336,
-									"top": 670,
+									"left": 1338,
+									"top": 669,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -5274,8 +5274,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1292,
-									"top": 672,
+									"left": 1294,
+									"top": 673,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -5295,8 +5295,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1313,
-									"top": 536,
+									"left": 1314,
+									"top": 535,
 									"height": 13,
 									"alpha": 0.5235987755982988,
 									"distance": 30,
@@ -5316,7 +5316,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1326,
+									"left": 1328,
 									"top": 537,
 									"height": 13,
 									"alpha": 0.7853981633974483,
@@ -5337,7 +5337,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1285,
+									"left": 1287,
 									"top": 533,
 									"height": 13,
 									"alpha": -0.5235987755982988,
@@ -5358,7 +5358,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1330,
+									"left": 1334,
 									"top": 806,
 									"height": 13,
 									"alpha": -0.5235987755982988,
@@ -5378,8 +5378,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1343,
-									"top": 803,
+									"left": 1347,
+									"top": 802,
 									"height": 13,
 									"alpha": -0.7853981633974483,
 									"distance": 40,
@@ -5398,7 +5398,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1303,
+									"left": 1306,
 									"top": 812,
 									"height": 13,
 									"alpha": 0.5235987755982988,
@@ -5444,7 +5444,7 @@
 								"$ref": "AAAAAAGCpXkNkTO8v2Q="
 							},
 							"lineStyle": 1,
-							"points": "1297:517;1317:839",
+							"points": "1298:517;1321:839",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGCpYHFcREZNrI="
@@ -6049,7 +6049,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCpXkNjDO6wvA="
 							},
-							"name": "콜라이더 충돌",
+							"name": "콜라이더 충돌 & YForce",
 							"end1": {
 								"_type": "UMLAssociationEnd",
 								"_id": "AAAAAAGCpYDgK8nqSa0=",
@@ -6078,7 +6078,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCpXkNjDO6wvA="
 							},
-							"name": "콜라이더 충돌&Pos",
+							"name": "콜라이더 충돌 & YForce",
 							"ownedElements": [
 								{
 									"_type": "UMLConstraint",
@@ -6158,7 +6158,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCpXk7WT4hc4o="
 							},
-							"name": "Hit감지가 끝난 후 들어옴"
+							"name": "Hit감지가 끝난 후 들어옴",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -6166,7 +6167,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCpXk7WT4hc4o="
 							},
-							"name": "히트커버리타임이 지날 때 까지 이상태"
+							"name": "HItTime동안 지날 때 까지 이상태"
 						}
 					]
 				},
@@ -6214,7 +6215,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCpXvrn3loZu0="
 							},
-							"name": "Hit감지할 때 몬스터가 Airborne상태면 Hit 전이 무시"
+							"name": "Hit감지할 때 몬스터가 Airborne상태면 Hit 전이 무시",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -6222,7 +6224,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCpXvrn3loZu0="
 							},
-							"name": "공중의 뜸 감지가 끝난 후 들어옴"
+							"name": "공중의 뜸 감지가 끝난 후 들어옴",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -6230,7 +6233,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCpXvrn3loZu0="
 							},
-							"name": "에어본 상태의 적을 공격하면 중력량이 더해짐"
+							"name": "에어본 상태의 적을 공격하면 중력량이 더해짐",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -6238,7 +6242,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCpXvrn3loZu0="
 							},
-							"name": "시간이 지날수록 중력가속도량이 강해짐"
+							"name": "시간이 지날수록 중력가속도량이 강해짐",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -6246,7 +6251,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCpXvrn3loZu0="
 							},
-							"name": "BotPos가 AirborneStartPos보다 작아지면 Down 상태로 전이"
+							"name": "BotPos가 AirborneStartPos보다 작아지면 Down 상태로 전이",
+							"type": ""
 						}
 					]
 				},
@@ -6264,7 +6270,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCpXzXyX+sNu8="
 							},
-							"name": "DownTime이 지나면 기상함"
+							"name": "DownTime이 지나면 기상함",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -6272,7 +6279,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCpXzXyX+sNu8="
 							},
-							"name": "DownTime은 점점 빨라짐"
+							"name": "DownTime은 점점 빨라짐",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -6280,7 +6288,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCpXzXyX+sNu8="
 							},
-							"name": "Down상태 동안은 Down콜라이더의 공격만 받을 수 있음"
+							"name": "Down상태 동안은 Down콜라이더의 공격만 받을 수 있음",
+							"type": ""
 						}
 					]
 				}

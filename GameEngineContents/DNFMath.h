@@ -209,6 +209,7 @@ public:
 	float FrictionX_;
 	float Gravity_;
 
+
 private:
 	GameEngineTransform* Transform_;
 

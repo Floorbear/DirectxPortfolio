@@ -20,11 +20,12 @@ void Player_Main::IdleUpdate(float _DeltaTime, const StateInfo _Info)
 		StateManager_.ChangeState("Move");
 		return;
 	}
-	if (GameEngineInput::GetInst()->IsDown("X") == true)
+	if (CheckAttackKey() == true)
 	{
-		StateManager_.ChangeState("AutoAttack");
+		StateManager_.ChangeState(AvatarManager_.EnumToString(NextAttackAni_));
 		return;
 	}
+
 	if (GameEngineInput::GetInst()->IsDown("C") == true)
 	{
 		StateManager_.ChangeState("Jump");
@@ -44,11 +45,14 @@ void Player_Main::MoveUpdate(float _DeltaTime, const StateInfo _Info)
 		StateManager_.ChangeState("Idle");
 		return;
 	}
-	if (GameEngineInput::GetInst()->IsDown("X") == true)
+
+	//공격 State 전이
+	if (CheckAttackKey() == true)
 	{
-		StateManager_.ChangeState("AutoAttack");
+		StateManager_.ChangeState(AvatarManager_.EnumToString(NextAttackAni_));
 		return;
 	}
+
 	if (GameEngineInput::GetInst()->IsDown("C") == true)
 	{
 		StateManager_.ChangeState("Jump");
@@ -62,7 +66,7 @@ void Player_Main::MoveUpdate(float _DeltaTime, const StateInfo _Info)
 
 void Player_Main::JumpStart(const StateInfo _Info)
 {
-	AvatarManager_.ChangeMotion(PlayerAnimations::Jump_End);
+	AvatarManager_.ChangeMotion(PlayerAnimations::Jump_Start);
 	Force_.ForceY_ = 400.0f;
 	Force_.OnGravity();
 	GroundYPos_ = GetTransform().GetWorldPosition().y;
@@ -103,16 +107,19 @@ void Player_Main::AutoAttackStart(const StateInfo _Info)
 
 void Player_Main::AutoAttackUpdate(float _DeltaTime, const StateInfo _Info)
 {
-
-
 	//평소에는 False
-	if (IsAutoAttack_End_ == true)
+	if (IsAttack_End_ == true)
 	{
 		if (IsReadyNextAttack_ == true)
 		{
-			AvatarManager_.ChangeMotion(NextAutoAttackAni_);
-			IsAutoAttack_End_ = false;
-			IsReadyNextAttack_ = false;
+			if (NextAttackAni_ == PlayerAnimations::AutoAttack_1 || NextAttackAni_ == PlayerAnimations::AutoAttack_2)
+			{
+				AvatarManager_.ChangeMotion(NextAttackAni_);
+				IsAttack_End_ = false;
+				IsReadyNextAttack_ = false;
+				return;
+			}
+			StateManager_.ChangeState(AvatarManager_.EnumToString(NextAttackAni_));
 			return;
 		}
 
@@ -131,7 +138,49 @@ void Player_Main::AutoAttackUpdate(float _DeltaTime, const StateInfo _Info)
 
 void Player_Main::AutoAttackEnd(const StateInfo _Info)
 {
-	MiddleAttackCol_->Off();
+	AttackCol_->Off();
+	CurAttackData_ = {};
+	IsAttack_End_ = false;
+	IsReadyNextAttack_ = false;
+	Force_.ForceX_ = 0;
+}
+
+void Player_Main::UpperSlashStart(const StateInfo _Info)
+{
+	AvatarManager_.ChangeMotion(PlayerAnimations::UpperSlash);
+}
+
+void Player_Main::UpperSlashUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	//평소에는 False
+	if (IsAttack_End_ == true)
+	{
+		if (IsReadyNextAttack_ == true)
+		{
+			AvatarManager_.ChangeMotion(NextAttackAni_);
+			IsAttack_End_ = false;
+			IsReadyNextAttack_ = false;
+			return;
+		}
+
+		if (IsPressMoveKey() == false)
+		{
+			StateManager_.ChangeState("Idle");
+			return;
+		}
+		else
+		{
+			StateManager_.ChangeState("Move");
+			return;
+		}
+	}
+}
+
+void Player_Main::UpperSlashEnd(const StateInfo _Info)
+{
+	AttackCol_->Off();
 	AttackCount_ = 0;
-	IsAutoAttack_End_ = false;
+	IsAttack_End_ = false;
+	Force_.ForceX_ = 0;
+	CurAttackData_ = {};
 }

@@ -5,6 +5,50 @@
 #include "DNFContentsMinimal.h"
 #include "Player_Main.h"
 
+bool Player_Main::CheckAttackKey()
+{
+	if (GameEngineInput::GetInst()->IsPress("X") == true)
+	{
+		IsReadyNextAttack_ = true;
+		//아예 다른 공격
+		if (CurAttackData_.AttackName != "AutoAttack")
+		{
+			NextAttackAni_ = PlayerAnimations::AutoAttack;
+			return true;
+		}
+		//같은 공격인데 이미 공격횟수를 전부 했음
+		if (CurAttackData_.AttCount >= 3)
+		{
+			IsReadyNextAttack_ = false;
+			return false;
+		}
+		switch (CurAttackData_.AttCount)
+		{
+		case 1:
+			NextAttackAni_ = PlayerAnimations::AutoAttack_1;
+			break;
+		case 2:
+			NextAttackAni_ = PlayerAnimations::AutoAttack_2;
+			break;
+		default:
+			break;
+		}
+		return true;
+	}
+
+	if (GameEngineInput::GetInst()->IsPress("Z") == true)
+	{
+		if (CurAttackData_.AttackName == "UpperSlash")
+		{
+			IsReadyNextAttack_ = false;
+			return false;
+		}
+		IsReadyNextAttack_ = true;
+		NextAttackAni_ = PlayerAnimations::UpperSlash;
+		return true;
+	}
+}
+
 void Player_Main::InitAniFunc()
 {
 	//AutoAttack_0
@@ -13,28 +57,27 @@ void Player_Main::InitAniFunc()
 		{
 			if (_Desc.Frames[_Desc.CurFrame - 1] >= AutoAttack_0_Start + 3)
 			{
-				if (GameEngineInput::GetInst()->IsPress("X") == true)
-				{
-					IsReadyNextAttack_ = true;
-					NextAutoAttackAni_ = PlayerAnimations::AutoAttack_1;
-				}
+				CheckAttackKey();
 			}
-			
 
 			if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_0_Start + 3)
 			{
-				MiddleAttackCol_->On();
-				MiddleAttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
-				MiddleAttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
-				AttackCount_++;
+				AttackCol_->On();
+				AttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
+				AttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
+				CurAttackData_.AttackName = "AutoAttack";
+				CurAttackData_.XForce = 140.0f;
+				CurAttackData_.AttCount = 0;
+				CurAttackData_.AttCount++;
+
 			}
 			else if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_0_Start + 7)
 			{
-				MiddleAttackCol_->Off();
+				AttackCol_->Off();
 			}
 			else if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_0_End)
 			{
-				IsAutoAttack_End_ = true;
+				IsAttack_End_ = true;
 			}
 		});
 
@@ -44,29 +87,25 @@ void Player_Main::InitAniFunc()
 		{
 			if (_Desc.Frames[_Desc.CurFrame - 1] >= AutoAttack_1_Start + 3)
 			{
-				if (GameEngineInput::GetInst()->IsPress("X") == true)
-				{
-					IsReadyNextAttack_ = true;
-					NextAutoAttackAni_ = PlayerAnimations::AutoAttack_2;
-				}
+				CheckAttackKey();
 			}
 
 			if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_1_Start + 3)
 			{
-				MiddleAttackCol_->On();
-				MiddleAttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
-				MiddleAttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
-				AttackCount_++;
-				//AddForce
+				AttackCol_->On();
+				AttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
+				AttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
+				CurAttackData_.XForce = 140.0f;
+				CurAttackData_.AttCount++;
 				Force_.ForceX_ = 200.0f;
 			}
 			else if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_1_Start + 7)
 			{
-				MiddleAttackCol_->Off();
+				AttackCol_->Off();
 			}
 			else if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_1_End)
 			{				
-				IsAutoAttack_End_ = true;
+				IsAttack_End_ = true;
 			}
 		});
 
@@ -74,32 +113,66 @@ void Player_Main::InitAniFunc()
 	MainRenderer_->AnimationBindFrame("AutoAttack_2",
 		[&](const FrameAnimation_DESC& _Desc)
 		{
+
+			if (_Desc.Frames[_Desc.CurFrame - 1] >= AutoAttack_2_Start + 3)
+			{
+				CheckAttackKey();
+			}
 			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 3)
 			{
-				MiddleAttackCol_->On();
-				MiddleAttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
-				MiddleAttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
-				AttackCount_++;
-				//AddForce
+				AttackCol_->On();
+				AttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
+				AttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
+				CurAttackData_.XForce = 140.0f;
+				CurAttackData_.AttCount++;
 				Force_.ForceX_ = 200.0f;
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 7)
 			{
-				MiddleAttackCol_->Off();
+				AttackCol_->Off();
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_End)
 			{
-				IsReadyNextAttack_ = false;
-				IsAutoAttack_End_ = true;
+				IsAttack_End_ = true;
 			}
 		});
 
 	//Jump
-	MainRenderer_->AnimationBindFrame("Jump_End",
+	MainRenderer_->AnimationBindFrame("Jump_Start",
 		[&](const FrameAnimation_DESC& _Desc)
 		{
-			if (_Desc.Frames[_Desc.CurFrame - 1] == Jump_Motion_End)
+			if (Force_.ForceY_ < 0.0f)
 			{
+				AvatarManager_.ChangeMotion(PlayerAnimations::Jump_End);
+			}
+		});
+
+	//UpperSlash
+	MainRenderer_->AnimationBindFrame("UpperSlash",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 3)
+			{
+				AttackCol_->On();
+				AttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
+				AttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
+				CurAttackData_.AttackName = "UpperSlash";
+				CurAttackData_.AttCount = 0;
+				CurAttackData_.XForce = 250.0f;
+				CurAttackData_.YForce = 400.0f;
+				CurAttackData_.AttCount++;
+				Force_.ForceX_ = 200.0f;
+			}
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 7)
+			{
+				AttackCol_->Off();
+			}
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_End)
+			{
+				IsReadyNextAttack_ = false;
+				IsAttack_End_ = true;
 			}
 		});
 }
+
+

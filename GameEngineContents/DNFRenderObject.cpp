@@ -18,7 +18,8 @@ DNFRenderObject::DNFRenderObject():
 	BotPos_({0,-88.0f}),
 	PrevPos_(),
 	OnAir_(false),
-	GroundYPos_()
+	GroundYPos_(),
+	CurAttackData_()
 {
 }
 
