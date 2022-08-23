@@ -69,6 +69,9 @@ public:
 	AttackData CurAttackData_;
 
 protected:
+	//피격자가 호출
+	//경직과 역경직관리
+	//void GiveAndRecevieStiffness();
 
 	GameEngineTextureRenderer* MainRenderer_;
 	GameEngineTextureRenderer* ShadowRenderer_;

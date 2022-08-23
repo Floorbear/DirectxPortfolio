@@ -103,7 +103,8 @@ void BloodLugaru::Start()
 	//Force
 	Force_.SetTransfrom(&GetTransform());
 	Force_.FrictionX_ = 700.0f;
-	Force_.Gravity_ = 700.0f;
+	Force_.Gravity_ = 1000.0f;
+	DNFDebugGUI::AddMutableValue("Gravity", &Force_.Gravity_);
 
 }
 
@@ -139,6 +140,7 @@ void BloodLugaru::Update(float _DeltaTime)
 			{
 				Player_Main* Player = DNFGlobalValue::CurrentLevel->GetPlayer();
 				AttackData Data = Player->CurAttackData_;
+
 				//같은 공격에 여러번 충돌 방지
 				if (Data.AttackName == PrevHitData_.AttackName && Data.AttCount <= PrevHitData_.AttCount)
 				{
@@ -161,14 +163,21 @@ void BloodLugaru::Update(float _DeltaTime)
 				if (OnAir_ == false)
 				{
 					GroundYPos_ = GetTransform().GetWorldPosition().y;
-					Force_.ForceY_ = 0.0f;
+					Force_.ForceY_ = PrevHitData_.YForce;
+					StateManager_.ChangeState("Airborne");
+					return true;
+				}
+				else//공중의 뜸 상태에서 공격을 받은경우
+				{
+					Stiffness_ += 0.1f;
+					Force_.ForceY_ = PrevHitData_.YForce;
+					StateManager_.ChangeState("Airborne");
+					return true;
 				}
 
-				//이후 공중의 뜸 상태
-									//PrevData
-				Stiffness_ += 0.1f;
-				StateManager_.ChangeState("Airborne");
-				return true;
+				
+
+
 
 				
 			});
@@ -511,7 +520,7 @@ void BloodLugaru::AirborneStart(const StateInfo _Info)
 	//플레이어를 마주보는 방향으로 Flip
 	FlipX(-Player_->GetDirX());
 	Force_.ForceX_ = -PrevHitData_.XForce;
-	Force_.ForceY_ += PrevHitData_.YForce;
+	
 
 	GetTransform().SetLocalMove(float4(0, Force_.ForceY_ * GameEngineTime::GetDeltaTime()));
 	Force_.OnGravity();

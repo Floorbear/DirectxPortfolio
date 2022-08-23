@@ -124,6 +124,7 @@ void Player_Main::InitAniFunc()
 				AttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
 				AttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
 				CurAttackData_.XForce = 140.0f;
+				CurAttackData_.YForce = 400.0f;
 				CurAttackData_.AttCount++;
 				Force_.ForceX_ = 200.0f;
 			}
@@ -158,8 +159,8 @@ void Player_Main::InitAniFunc()
 				AttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
 				CurAttackData_.AttackName = "UpperSlash";
 				CurAttackData_.AttCount = 0;
-				CurAttackData_.XForce = 250.0f;
-				CurAttackData_.YForce = 400.0f;
+				CurAttackData_.XForce = 140.0f;
+				CurAttackData_.YForce = 550.0f;
 				CurAttackData_.AttCount++;
 				Force_.ForceX_ = 200.0f;
 			}
