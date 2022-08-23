@@ -166,8 +166,8 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.AttackName = "UpperSlash";
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.XForce = 140.0f;
-				CurAttackData_.Stiffness = 1.15f;
-				CurAttackData_.RStiffness = 1.0f;
+				CurAttackData_.Stiffness = 0.15f;
+				CurAttackData_.RStiffness = 0.11f;
 				CurAttackData_.YForce = 550.0f;
 				CurAttackData_.AttCount++;
 				Force_.ForceX_ = 70.0f;

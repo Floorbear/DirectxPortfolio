@@ -21,7 +21,8 @@ DNFRenderObject::DNFRenderObject():
 	GroundYPos_(),
 	CurAttackData_(),
 	AirborneTime_(),
-	IsStiffFirst_(true)
+	IsStiffFirst_(true),
+	AttackManager_()
 {
 }
 
@@ -194,3 +195,63 @@ void DNFRenderObject::ZSort()
 	CurPos.z = CurPos.y;
 	GetTransform().SetWorldPosition(CurPos);
 }
+
+AttackManager::AttackManager()
+{
+}
+
+AttackManager::~AttackManager()
+{
+}
+
+bool AttackManager::CreateAttack(const std::string& _AttackName, AttackSet _Set)
+{
+	if (AttackSet_.find(_AttackName) != AttackSet_.end())
+	{
+		MsgBoxAssert("이미 존재하는 Attack을 또 만들려고 했습니다.");
+		return false;
+	}
+
+	AttackSet_.insert(std::make_pair(_AttackName, _Set));
+	return true;
+}
+
+void AttackManager::OnAttack(std::string _Name)
+{
+	if (AttackSet_.find(_Name) == AttackSet_.end())
+	{
+		MsgBoxAssert("존재하지 않는 AttackSet을 Get하려 했습니다.");
+	}
+
+	AttackSet& Att = AttackSet_[_Name];
+	Att.Col->On();
+	if (Att.AttData.AttCount > Att.AttData.MaxAttCount)
+	{
+		MsgBoxAssert("AttData가 참조범위를 넘겼습니다.");
+	}
+	Att.Col->GetTransform().SetLocalScale(Att.ScaleAndPos[Att.AttData.AttCount].Scale);
+	Att.Col->GetTransform().SetLocalPosition(Att.ScaleAndPos[Att.AttData.AttCount].Scale);
+	Att.AttData.AttCount++;
+}
+
+void AttackManager::OffAttack(std::string _Name)
+{
+	if (AttackSet_.find(_Name) == AttackSet_.end())
+	{
+		MsgBoxAssert("존재하지 않는 AttackSet을 Get하려 했습니다.");
+	}
+
+	AttackSet& Att = AttackSet_[_Name];
+	Att.Col->Off();
+}
+
+void AttackManager::ResetAttCount(std::string _Name)
+{
+	if (AttackSet_.find(_Name) == AttackSet_.end())
+	{
+		MsgBoxAssert("존재하지 않는 AttackSet을 Get하려 했습니다.");
+	}
+	AttackSet& Att = AttackSet_[_Name];
+	Att.AttData.AttCount = 0;
+}
+

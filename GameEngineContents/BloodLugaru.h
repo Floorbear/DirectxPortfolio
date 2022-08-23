@@ -32,7 +32,9 @@ private:
 	//플레이어를 발견하는 거리
 	float FindRange_;
 
+	void InitAni();
 
+	void InitCol();
 
 
 	void IdleStart(const StateInfo _Info);
@@ -55,8 +57,11 @@ private:
 	void AirborneUpdate(float _DeltaTime, const StateInfo _Info);
 
 
+	void HitColCheck();
+	bool HitCheck(float _YForce);//파라미터 : YForce에 곱할값
+	bool MiddleHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
+	bool BottomHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
 
-	bool AttackColCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
 
 	//Idle 관련 변수들
 	bool IsIdleFirst_;
@@ -71,6 +76,7 @@ private:
 
 	//Hit 관련 변수들
 	GameEngineCollision* HitMiddle_;
+	GameEngineCollision* HitBottom_;
 	AttackData PrevHitData_;
 
 

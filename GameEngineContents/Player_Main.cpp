@@ -66,6 +66,11 @@ void Player_Main::Start()
 
 	InitAniFunc();
 
+	//어텍 매니저 초기화
+	AttackManager_.CreateAttack("TempAttack", { 10,10,10 }, { 10,10,10 }, AttackCol_, {});
+	AttackManager_.CreateAttack("CrackAttack", { 10,10,10 }, { 10,10,10 }, AttackCol_, {});
+
+
 	Force_.FrictionX_ = 700.0f;
 	Force_.Gravity_ = 700.0f;
 	Force_.SetTransfrom(&GetTransform());

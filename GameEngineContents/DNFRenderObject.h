@@ -15,12 +15,54 @@ struct AttackData
 {
 	std::string AttackName;
 	int AttCount;
+	int MaxAttCount;
 	AttackType Type;
-	int* Att;
+	int Att;
 	float Stiffness; //경직
 	float RStiffness; //역경직
 	float YForce;
 	float XForce;
+};
+
+struct ScaleNPos
+{
+	float4 Scale;
+	float4 Pos;
+};
+
+class AttackManager
+{
+
+public:
+	struct AttackSet
+	{
+		AttackData AttData;
+		GameEngineCollision* Col;
+		std::vector<ScaleNPos> ScaleAndPos;
+	};
+	AttackManager();
+	~AttackManager();
+
+	bool CreateAttack(const std::string& _AttackName, AttackSet _Set);
+	void OnAttack(std::string _Name);//On하면서 Count늘고 콜리전을 Scale, Pos값에 맞춰 변경
+	void OffAttack(std::string _Name);//Off할때
+
+	//void SetScaleNPos(const std::string& _Name, Scale)
+
+	void ResetAttCount(std::string _Name);//AttackData의 Count를 0으로 만든다. 
+
+	inline AttackSet& GetAttackSet(std::string _Name)
+	{
+		if (AttackSet_.find(_Name) == AttackSet_.end())
+		{
+			MsgBoxAssert("존재하지 않는 AttackSet을 Get하려 했습니다.");
+		}
+		return AttackSet_[_Name];
+	}
+	//void OffAllAttack(); //
+
+public:
+	std::map<std::string, AttackSet> AttackSet_;
 };
 
 
@@ -95,6 +137,9 @@ protected:
 
 	GameEngineCollision* BotCol_;
 	float4 BotPos_;
+
+	//
+	AttackManager AttackManager_;
 	
 	//픽셀충돌 관련 함수
 	//이동량(미래에 이동할 양)을 매게변수로
