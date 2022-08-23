@@ -4,8 +4,14 @@
 enum class PIVOTMODE
 {
 	CENTER,
-	LEFTTOP,
 	BOT,
+	TOP,
+	LEFT,
+	RIGHT,
+	LEFTTOP,
+	RIGHTTOP,
+	LEFTBOT,
+	RIGHTBOT,
 	CUSTOM,
 };
 
@@ -28,6 +34,14 @@ struct ColorData
 	}
 };
 
+struct AtlasData 
+{
+public:
+	float4 FrameData;
+	float4 PivotPos;
+};
+
+
 class FrameAnimation_DESC 
 {
 public:
@@ -43,6 +57,8 @@ public:
 
 	bool Loop;
 	// 아틀라스 애니메이션
+
+	class GameEngineTextureRenderer* Renderer;
 
 public:
 	FrameAnimation_DESC()
@@ -101,12 +117,15 @@ class FrameAnimation : public GameEngineNameObject
 	GameEngineTexture* Texture;
 	GameEngineFolderTexture* FolderTexture;
 
+	bool Pause;
 	bool bOnceStart;
 	bool bOnceEnd;
 	std::function<void(const FrameAnimation_DESC&)> Frame;
 	std::function<void(const FrameAnimation_DESC&)> End;
 	std::function<void(const FrameAnimation_DESC&)> Start;
 	std::function<void(const FrameAnimation_DESC&, float)> Time;
+
+	void PauseSwtich();
 
 	void Reset();
 
@@ -116,6 +135,7 @@ public:
 	FrameAnimation() 
 		: bOnceStart(true)
 		, bOnceEnd(false)
+		, Pause(false)
 	{
 
 	}
@@ -173,6 +193,8 @@ public:
 
 	void SetTexture(GameEngineTexture* _Texture, UINT _Index);
 
+	void SetFolderTextureToIndex(const std::string& _Text, UINT _Index);
+
 	void CreateFrameAnimationFolder(const std::string& _AnimationName, const FrameAnimation_DESC& _Desc);
 
 	void CreateFrameAnimationCutTexture(const std::string& _AnimationName, const FrameAnimation_DESC& _Desc);
@@ -181,6 +203,8 @@ public:
 	void ScaleToTexture();
 
 	void ScaleToCutTexture(int _Index);
+
+	void CurAnimationPauseSwitch();
 
 	void CurAnimationReset();
 
@@ -262,6 +286,7 @@ private:
 	float4 FrameData;
 
 	ColorData ColorData;
+	AtlasData AtlasDataInst;
 
 	std::map<std::string, FrameAnimation> FrameAni;
 	FrameAnimation* CurAni;

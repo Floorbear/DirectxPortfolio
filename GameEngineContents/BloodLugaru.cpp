@@ -110,18 +110,10 @@ void BloodLugaru::Start()
 
 void BloodLugaru::Update(float _DeltaTime)
 {
-	if (Stiffness_ > 0.0f)
+	StiffnessUpdate(_DeltaTime);
+	if(Stiffness_ <= 0.0f)
 	{
-		Stiffness_ -= _DeltaTime;
-		_DeltaTime = 0.0f;
-		if (Stiffness_ <= 0)
-		{
-			Stiffness_ = 0.0f;
-		}
-	}
-	else
-	{
-		Force_.Update(_DeltaTime);
+		Force_.Update(_DeltaTime*(1+(AirborneTime_*AirborneTime_)*0.01f));
 	}
 
 
@@ -151,8 +143,7 @@ void BloodLugaru::Update(float _DeltaTime)
 
 				if (OnAir_ == false && Data.YForce <= 0.0f)
 				{
-					//PrevData
-					Stiffness_ += 0.1f;
+					GiveAndRecevieStiffness(PrevHitData_, Player);
 					StateManager_.ChangeState("Hit");
 					return true;
 				}
@@ -164,22 +155,18 @@ void BloodLugaru::Update(float _DeltaTime)
 				{
 					GroundYPos_ = GetTransform().GetWorldPosition().y;
 					Force_.ForceY_ = PrevHitData_.YForce;
+					AirborneTime_ = 0.0f;
+					GiveAndRecevieStiffness(PrevHitData_, Player);
 					StateManager_.ChangeState("Airborne");
 					return true;
 				}
 				else//공중의 뜸 상태에서 공격을 받은경우
 				{
-					Stiffness_ += 0.1f;
+					GiveAndRecevieStiffness(PrevHitData_, Player);
 					Force_.ForceY_ = PrevHitData_.YForce;
 					StateManager_.ChangeState("Airborne");
 					return true;
-				}
-
-				
-
-
-
-				
+				}				
 			});
 	}
 
@@ -531,12 +518,14 @@ void BloodLugaru::AirborneUpdate(float _DeltaTime, const StateInfo _Info)
 {
 	//경직
 	//추락
+	AirborneTime_ += _DeltaTime;
 	float CurYPos = GetTransform().GetWorldPosition().y;
 	if (CurYPos <= GroundYPos_)
 	{
 		GetTransform().SetWorldPosition(float4(GetTransform().GetWorldPosition().x, GroundYPos_, GroundYPos_));
 		OnAir_ = false;
 		Force_.ForceY_ = 0.0f;
+		AirborneTime_ = 0.0f;
 		Force_.OffGravity();
 		PrevHitData_ = {};
 		StateManager_.ChangeState("Idle");

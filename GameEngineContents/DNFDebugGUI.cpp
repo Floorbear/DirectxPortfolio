@@ -32,6 +32,10 @@ void DNFDebugGUI::Initialize(GameEngineLevel* _Level)
 
 void DNFDebugGUI::OnGUI(GameEngineLevel* _Level, float _DeltaTime)
 {
+	if (DNFGlobalValue::CurrentLevel == nullptr)
+	{
+		return;
+	}
 	std::string CurrentLevel = "Current Level : " + DNFGlobalValue::CurrentLevel->GetNameCopy();
 	ImGui::Text(CurrentLevel.c_str());
 	

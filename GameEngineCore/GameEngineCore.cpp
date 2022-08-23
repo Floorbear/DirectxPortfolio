@@ -59,6 +59,9 @@ void GameEngineCore::CoreStart(GameEngineCore* _UserCore)
 	// 엔진 리소스는 완성되어야 합니다.
 	EngineResourcesInitialize();
 
+	// 
+	GameEngineDevice::CreateSwapChain();
+
 	GameEngineDebug::Debug3DInitialize();
 
 // 엔진이 뭔가를 할겁니다.
@@ -77,8 +80,8 @@ void GameEngineCore::CoreUpdate(GameEngineCore* _UserCore)
 
 		if (nullptr != CurrentLevel)
 		{
-			CurrentLevel->ActorOffEvent();
-			CurrentLevel->OffEvent();
+			CurrentLevel->ActorLevelEndEvent();
+			CurrentLevel->LevelEndEvent();
 			// 넘어가려는 액터가 이때 존재해야 겠죠?
 
 			CurrentLevel->OverChildMove(NextLevel);
@@ -86,8 +89,8 @@ void GameEngineCore::CoreUpdate(GameEngineCore* _UserCore)
 
 		CurrentLevel = NextLevel;
 		NextLevel = nullptr;
-		CurrentLevel->OnEvent();
-		CurrentLevel->ActorOnEvent();
+		CurrentLevel->LevelStartEvent();
+		CurrentLevel->ActorLevelStartEvent();
 
 		// ex) 타이틀에서 5초후 => 플레이 레벨로 이동
 		//     플레이 레벨에서 => 다시 타이틀레벨로

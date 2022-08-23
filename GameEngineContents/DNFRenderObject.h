@@ -17,7 +17,8 @@ struct AttackData
 	int AttCount;
 	AttackType Type;
 	int* Att;
-	float Stiffness;
+	float Stiffness; //경직
+	float RStiffness; //역경직
 	float YForce;
 	float XForce;
 };
@@ -71,7 +72,12 @@ public:
 protected:
 	//피격자가 호출
 	//경직과 역경직관리
-	//void GiveAndRecevieStiffness();
+	void GiveAndRecevieStiffness(AttackData& _Data, DNFRenderObject* _Other);
+
+	//경직 업데이트, Update문에서 최우선적으로 호출
+	void StiffnessUpdate(float& _DeltaTime);
+
+	bool IsStiffFirst_;
 
 	GameEngineTextureRenderer* MainRenderer_;
 	GameEngineTextureRenderer* ShadowRenderer_;
@@ -115,6 +121,9 @@ protected:
 	
 	//체공 관련
 	bool OnAir_; //Jump중?
+	
+	float AirborneTime_;
+
 	float GroundYPos_;
 
 	//경직도

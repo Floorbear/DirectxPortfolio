@@ -28,7 +28,7 @@ void Vilmark_0_Background::Start()
 	FarRenderer_->ScaleToTexture();
 	FarRenderer_->SetPivot(PIVOTMODE::LEFTTOP);
 	PrevCameraPos_ = GetLevel()->GetMainCamera()->GetTransform().GetWorldPosition();
-	FarRenderer_->GetTransform().SetWorldPosition({ PrevCameraPos_.x,FarRenderer_->GetTransform().GetWorldPosition().y,GetTransform().GetLocalPosition().z+10});
+	FarRenderer_->GetTransform().SetWorldPosition({-200.0f,FarRenderer_->GetTransform().GetWorldPosition().y,GetTransform().GetLocalPosition().z+10});
 	//On이벤트 버그 수정 되면 OnEvent로 변경해야함
 }
 

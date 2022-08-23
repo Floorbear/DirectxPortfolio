@@ -44,6 +44,7 @@ private:
 	//캐릭터의 애니메이션 함수 초기화
 	void InitAniFunc();
 	//다음 공격키를 선입력 받는다.
+	// 다음 공격의 애니메이션을 Enum으로 알아오고, 다음 공격이 있다는 bool을 true로 변환, 그 결과를 bool로 return
 	bool CheckAttackKey();
 
 	//공격관련

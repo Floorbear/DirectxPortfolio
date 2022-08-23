@@ -73,6 +73,7 @@ void Player_Main::Start()
 
 void Player_Main::Update(float _DeltaTime)
 {
+	StiffnessUpdate(_DeltaTime);
 	DNFUpdate();
 	DNFDebugGUI::AddValue("PlayerState", StateManager_.GetCurStateStateName());
 	StateManager_.Update(_DeltaTime);

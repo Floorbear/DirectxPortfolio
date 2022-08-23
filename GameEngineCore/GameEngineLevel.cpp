@@ -3,6 +3,7 @@
 #include "GameEngineActor.h"
 #include "GameEngineRenderer.h"
 #include "GameEngineCamera.h"
+#include "GameEngineRenderTarget.h"
 #include "GameEngineCameraActor.h"
 #include "GameEngineCollision.h"
 #include "GameEngineGUI.h"
@@ -62,7 +63,7 @@ void GameEngineLevel::ActorUpdate(float _DeltaTime)
 	}
 }
 
-void GameEngineLevel::ActorOnEvent() 
+void GameEngineLevel::ActorLevelStartEvent() 
 {
 	for (const std::pair<int, std::list<GameEngineActor*>>& Group : AllActors)
 	{
@@ -74,12 +75,12 @@ void GameEngineLevel::ActorOnEvent()
 				continue;
 			}
 			// 루트 액터만 뭔가를 하는거죠?
-			Actor->AllOnEvent();
+			Actor->AllLevelStartEvent();
 		}
 	}
 }
 
-void GameEngineLevel::ActorOffEvent()
+void GameEngineLevel::ActorLevelEndEvent()
 {
 	for (const std::pair<int, std::list<GameEngineActor*>>& Group : AllActors)
 	{
@@ -90,7 +91,7 @@ void GameEngineLevel::ActorOffEvent()
 			{
 				continue;
 			}
-			Actor->AllOffEvent();
+			Actor->AllLevelEndEvent();
 		}
 	}
 }
@@ -171,6 +172,16 @@ void GameEngineLevel::Render(float _DelataTime)
 		}
 
 		Cameras[i]->Render(_DelataTime);
+	}
+
+	for (size_t i = 0; i < Cameras.size(); i++)
+	{
+		if (nullptr == Cameras[i])
+		{
+			continue;
+		}
+
+		GameEngineDevice::GetBackBuffer()->Merge(Cameras[i]->CameraRenderTarget, 0);
 	}
 
 	// 여기서 그려져야 합니다.

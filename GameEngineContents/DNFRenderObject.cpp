@@ -19,7 +19,9 @@ DNFRenderObject::DNFRenderObject():
 	PrevPos_(),
 	OnAir_(false),
 	GroundYPos_(),
-	CurAttackData_()
+	CurAttackData_(),
+	AirborneTime_(),
+	IsStiffFirst_(true)
 {
 }
 
@@ -30,6 +32,38 @@ DNFRenderObject::~DNFRenderObject()
 DNFLevel* DNFRenderObject::GetDNFLevel()
 {
 	return dynamic_cast<DNFLevel*>(GetLevel());
+}
+
+void DNFRenderObject::GiveAndRecevieStiffness(AttackData& _Data, DNFRenderObject* _Other)
+{
+	Stiffness_ = _Data.Stiffness;
+	_Other->Stiffness_ = _Data.RStiffness;
+}
+
+void DNFRenderObject::StiffnessUpdate(float& _DeltaTime)
+{
+	if (Stiffness_ > 0.0f)
+	{
+		if (IsStiffFirst_ == true)
+		{
+			MainRenderer_->CurAnimationPauseSwitch();
+			IsStiffFirst_ = false;
+		}
+		Stiffness_ -= _DeltaTime;
+		_DeltaTime = 0.0f;
+		if (Stiffness_ <= 0)
+		{
+			Stiffness_ = 0.0f;
+		}
+	}
+	else
+	{
+		if (IsStiffFirst_ == false)
+		{
+			IsStiffFirst_ = true;
+			MainRenderer_->CurAnimationPauseSwitch();
+		}
+	}
 }
 
 void DNFRenderObject::CreateDNFAnimation(const std::string& _AnimationName, const FrameAnimation_DESC& _Desc)

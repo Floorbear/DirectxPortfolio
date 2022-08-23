@@ -53,6 +53,8 @@ protected:
 	void InitCamera(float4 _Pos, float _ZoomRate);
 
 	void OnEvent() override;
+
+	void LevelStartEvent() override;
 	virtual void DNFOnEvent();
 	Player_Main* Player_;
 

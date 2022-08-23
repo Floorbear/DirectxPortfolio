@@ -417,7 +417,7 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 
 	float Iter_0 = 0.2f;
 	float Iter_1 = 0.08f;
-	float Iter_2 = 0.034f;
+	float Iter_2 = 0.027f;
 
 
 	//아바타 애니메이션 생성

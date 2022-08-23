@@ -66,7 +66,9 @@ void Player_Main::InitAniFunc()
 				AttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
 				AttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
 				CurAttackData_.AttackName = "AutoAttack";
-				CurAttackData_.XForce = 140.0f;
+				CurAttackData_.XForce = 70.0f;
+				CurAttackData_.Stiffness = 0.15f;
+				CurAttackData_.RStiffness = 0.11f;
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.AttCount++;
 
@@ -96,8 +98,10 @@ void Player_Main::InitAniFunc()
 				AttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
 				AttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
 				CurAttackData_.XForce = 140.0f;
+				CurAttackData_.Stiffness = 0.15f;
+				CurAttackData_.RStiffness = 0.11f;
 				CurAttackData_.AttCount++;
-				Force_.ForceX_ = 200.0f;
+				Force_.ForceX_ = 70.0f;
 			}
 			else if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_1_Start + 7)
 			{
@@ -125,8 +129,10 @@ void Player_Main::InitAniFunc()
 				AttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
 				CurAttackData_.XForce = 140.0f;
 				CurAttackData_.YForce = 400.0f;
+				CurAttackData_.Stiffness = 0.15f;
+				CurAttackData_.RStiffness = 0.11f;
 				CurAttackData_.AttCount++;
-				Force_.ForceX_ = 200.0f;
+				Force_.ForceX_ = 70.0f;
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 7)
 			{
@@ -160,9 +166,11 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.AttackName = "UpperSlash";
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.XForce = 140.0f;
+				CurAttackData_.Stiffness = 1.15f;
+				CurAttackData_.RStiffness = 1.0f;
 				CurAttackData_.YForce = 550.0f;
 				CurAttackData_.AttCount++;
-				Force_.ForceX_ = 200.0f;
+				Force_.ForceX_ = 70.0f;
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 7)
 			{

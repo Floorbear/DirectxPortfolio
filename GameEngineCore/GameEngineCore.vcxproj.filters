@@ -105,9 +105,6 @@
     <ClInclude Include="GameEngineFolderTexture.h">
       <Filter>Resources\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="GameEngineDepthStencilTexture.h">
-      <Filter>Resources\OutputMerger</Filter>
-    </ClInclude>
     <ClInclude Include="GameEngineGUI.h">
       <Filter>GUI</Filter>
     </ClInclude>
@@ -152,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="portable-file-dialogs.h">
       <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngineUpdateObject.h">
+      <Filter>Object\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -258,9 +258,6 @@
     <ClCompile Include="GameEngineFolderTexture.cpp">
       <Filter>Resources\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="GameEngineDepthStencilTexture.cpp">
-      <Filter>Resources\OutputMerger</Filter>
-    </ClCompile>
     <ClCompile Include="GameEngineGUI.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
@@ -296,6 +293,9 @@
     </ClCompile>
     <ClCompile Include="GameEngineCoreDebug.cpp">
       <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngineUpdateObject.cpp">
+      <Filter>Object\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
