@@ -47,6 +47,8 @@ bool Player_Main::CheckAttackKey()
 		NextAttackAni_ = PlayerAnimations::UpperSlash;
 		return true;
 	}
+
+	return false;
 }
 
 void Player_Main::InitAniFunc()
@@ -62,9 +64,9 @@ void Player_Main::InitAniFunc()
 
 			if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_0_Start + 3)
 			{
-				AttackCol_->On();
-				AttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
-				AttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
+				SetAttackCol(float4(50, -20, -500), float4(120, 40, 1));
+				//Set Attack
+				CurAttackData_.Type = AttackType::Above;
 				CurAttackData_.AttackName = "AutoAttack";
 				CurAttackData_.XForce = 70.0f;
 				CurAttackData_.Stiffness = 0.15f;
@@ -94,9 +96,9 @@ void Player_Main::InitAniFunc()
 
 			if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_1_Start + 3)
 			{
-				AttackCol_->On();
-				AttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
-				AttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
+				SetAttackCol(float4(50, -20, -500), float4(120, 40, 1));
+				//Set Attack
+				CurAttackData_.Type = AttackType::Above;
 				CurAttackData_.XForce = 140.0f;
 				CurAttackData_.Stiffness = 0.15f;
 				CurAttackData_.RStiffness = 0.11f;
@@ -124,11 +126,11 @@ void Player_Main::InitAniFunc()
 			}
 			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 3)
 			{
-				AttackCol_->On();
-				AttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
-				AttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
+				SetAttackCol(DefaultValue_.UpperSlashPos, DefaultValue_.UpeerSlashScale);
+				//Set Attack
+				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.XForce = 140.0f;
-				CurAttackData_.YForce = 400.0f;
+				CurAttackData_.YForce = 300.0f;
 				CurAttackData_.Stiffness = 0.15f;
 				CurAttackData_.RStiffness = 0.11f;
 				CurAttackData_.AttCount++;
@@ -160,9 +162,9 @@ void Player_Main::InitAniFunc()
 		{
 			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 3)
 			{
-				AttackCol_->On();
-				AttackCol_->GetTransform().SetLocalScale(float4(120, 70, 1));
-				AttackCol_->GetTransform().SetLocalPosition(float4(50, -20, -500));
+				SetAttackCol(DefaultValue_.UpperSlashPos, DefaultValue_.UpeerSlashScale);
+				//Set Attack
+				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.AttackName = "UpperSlash";
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.XForce = 140.0f;
@@ -182,6 +184,16 @@ void Player_Main::InitAniFunc()
 				IsAttack_End_ = true;
 			}
 		});
+
+
+}
+
+void Player_Main::SetAttackCol(const float4& _Pos, const float4& _Scale)
+{
+
+	AttackCol_->On();
+	AttackCol_->GetTransform().SetLocalScale(_Scale);
+	AttackCol_->GetTransform().SetLocalPosition(_Pos);
 }
 
 

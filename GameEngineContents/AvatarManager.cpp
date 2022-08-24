@@ -902,4 +902,5 @@ GameEngineTextureRenderer* AvatarManager::GetRenderer(AvatarParts _Parts, Avatar
 		break;
 	}
 	MsgBoxAssert("존재하지 않는 Renderer를 Get하려 했습니다.");
+	return nullptr;
 }

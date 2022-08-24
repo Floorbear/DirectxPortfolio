@@ -6,9 +6,8 @@
 //스프라이트 리소스를 좀 더 활용하기 용이하게 하기위한 클래스
 enum class AttackType
 {
-	Top,
-	Bottom,
-	Middle,
+	Above,
+	Below
 };
 
 struct AttackData
@@ -28,41 +27,6 @@ struct ScaleNPos
 {
 	float4 Scale;
 	float4 Pos;
-};
-
-class AttackManager
-{
-
-public:
-	struct AttackSet
-	{
-		AttackData AttData;
-		GameEngineCollision* Col;
-		std::vector<ScaleNPos> ScaleAndPos;
-	};
-	AttackManager();
-	~AttackManager();
-
-	bool CreateAttack(const std::string& _AttackName, AttackSet _Set);
-	void OnAttack(std::string _Name);//On하면서 Count늘고 콜리전을 Scale, Pos값에 맞춰 변경
-	void OffAttack(std::string _Name);//Off할때
-
-	//void SetScaleNPos(const std::string& _Name, Scale)
-
-	void ResetAttCount(std::string _Name);//AttackData의 Count를 0으로 만든다. 
-
-	inline AttackSet& GetAttackSet(std::string _Name)
-	{
-		if (AttackSet_.find(_Name) == AttackSet_.end())
-		{
-			MsgBoxAssert("존재하지 않는 AttackSet을 Get하려 했습니다.");
-		}
-		return AttackSet_[_Name];
-	}
-	//void OffAllAttack(); //
-
-public:
-	std::map<std::string, AttackSet> AttackSet_;
 };
 
 
@@ -123,6 +87,7 @@ protected:
 
 	GameEngineTextureRenderer* MainRenderer_;
 	GameEngineTextureRenderer* ShadowRenderer_;
+	std::list< GameEngineTextureRenderer*> AllDNFRenderer_;
 
 	//shadow관련 함수& 변수
 	void CreateDNFAnimation(const std::string& _AnimationName, const FrameAnimation_DESC& _Desc);
@@ -138,8 +103,6 @@ protected:
 	GameEngineCollision* BotCol_;
 	float4 BotPos_;
 
-	//
-	AttackManager AttackManager_;
 	
 	//픽셀충돌 관련 함수
 	//이동량(미래에 이동할 양)을 매게변수로

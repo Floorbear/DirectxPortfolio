@@ -33,6 +33,9 @@
 #define Lugaru_Move_End 25
 #define Lugaru_Hit_Start 15
 #define Lugaru_Hit_End 16
+#define Lugaru_Down_Start 17
+#define Lugaru_Down_End 19
+
 
 
 

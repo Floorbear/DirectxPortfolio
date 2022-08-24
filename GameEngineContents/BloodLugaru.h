@@ -32,7 +32,7 @@ private:
 	//플레이어를 발견하는 거리
 	float FindRange_;
 
-	void InitAni();
+	void InitAniNState();
 
 	void InitCol();
 
@@ -56,11 +56,18 @@ private:
 	void AirborneStart(const StateInfo _Info);
 	void AirborneUpdate(float _DeltaTime, const StateInfo _Info);
 
+	void DownStart(const StateInfo _Info);
+	void DownUpdate(float _DeltaTime, const StateInfo _Info);
+
 
 	void HitColCheck();
-	bool HitCheck(float _YForce);//파라미터 : YForce에 곱할값
-	bool MiddleHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
-	bool BottomHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
+	bool HitCheck(AttackType _Type);//파라미터 : 확인할 공격 타입
+	bool AboveHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
+	bool BelowHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
+
+	void ChangeHitColTrans(std::string _State);
+
+
 
 
 	//Idle 관련 변수들
@@ -75,8 +82,8 @@ private:
 	float4 BackMoveDir_;
 
 	//Hit 관련 변수들
-	GameEngineCollision* HitMiddle_;
-	GameEngineCollision* HitBottom_;
+	GameEngineCollision* HitAbove_;
+	GameEngineCollision* HitBelow_;
 	AttackData PrevHitData_;
 
 
@@ -86,10 +93,22 @@ private:
 	Timer Back_Timer_;
 	Timer Chase_Timer_;
 	Timer Hit_Timer_;
-
+	Timer Down_Timer_;
 	Force Force_;
 
-	//임시 Value
-	float Temp_;
+
+	//DefaultVales
+	void InitDefaultValue();
+	struct DefaultValue
+	{
+		float4 HitAboveColPos;
+		float4 HitAboveColScale;
+		float4 HitBelowColPos;
+		float4 HitBelowColScale;
+
+		float Down_Time;
+	};
+	DefaultValue Value_;
+
 };
 

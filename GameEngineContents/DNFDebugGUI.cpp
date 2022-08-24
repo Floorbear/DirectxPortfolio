@@ -28,6 +28,7 @@ DNFDebugGUI::~DNFDebugGUI()
 
 void DNFDebugGUI::Initialize(GameEngineLevel* _Level)
 {
+
 }
 
 void DNFDebugGUI::OnGUI(GameEngineLevel* _Level, float _DeltaTime)

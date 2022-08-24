@@ -2,6 +2,8 @@
 #include <GameEngineCore/GameEngineGUI.h>
 #include <GameEngineBase/GameEngineMath.h>
 
+#define GET_NAME(n) #n
+
 class DNFDebugGUI : public GameEngineGUIWindow
 {
 public:
@@ -43,7 +45,7 @@ public:
 	{
 		Transform_.insert(std::make_pair(_Name, _Value));
 	}
-
+	
 private:
 	void Initialize(class GameEngineLevel* _Level) override;
 	void OnGUI(GameEngineLevel* _Level, float _DeltaTime) override;

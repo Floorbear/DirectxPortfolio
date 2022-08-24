@@ -184,3 +184,4 @@ void Player_Main::UpperSlashEnd(const StateInfo _Info)
 	Force_.ForceX_ = 0;
 	CurAttackData_ = {};
 }
+

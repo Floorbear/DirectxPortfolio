@@ -39,8 +39,17 @@ Player_Main::Player_Main() :
 	IsReadyNextAttack_(false),
 	NextAttackAni_(),
 	BottomAttackCol_(),
-	Force_()
+	Force_(),
+	DefaultValue_()
 {
+	InitDefaultValue();
+}
+
+
+void Player_Main::InitDefaultValue()
+{
+	DefaultValue_.UpperSlashPos = float4(75, -55, -500);
+	DefaultValue_.UpeerSlashScale = float4(120, 45, 1);
 }
 
 Player_Main::~Player_Main()
@@ -66,14 +75,14 @@ void Player_Main::Start()
 
 	InitAniFunc();
 
-	//어텍 매니저 초기화
-	AttackManager_.CreateAttack("TempAttack", { 10,10,10 }, { 10,10,10 }, AttackCol_, {});
-	AttackManager_.CreateAttack("CrackAttack", { 10,10,10 }, { 10,10,10 }, AttackCol_, {});
-
 
 	Force_.FrictionX_ = 700.0f;
 	Force_.Gravity_ = 700.0f;
 	Force_.SetTransfrom(&GetTransform());
+
+	DNFDebugGUI::AddMutableValue("UpperSlashPos_", &DefaultValue_.UpperSlashPos);
+	DNFDebugGUI::AddMutableValue("UpeerSlashScale_", &DefaultValue_.UpeerSlashScale);
+
 }
 
 void Player_Main::Update(float _DeltaTime)

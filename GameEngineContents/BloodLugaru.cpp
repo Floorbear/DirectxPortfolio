@@ -20,11 +20,10 @@ BloodLugaru::BloodLugaru() :
 	Attack_1_Scale_(),
 	Attack_1_Pos_(),
 	IsAttack_1_End_(false),
-	Temp_(),
 	BackMoveDir_(),
 	IsIdleFirst_(true),
-	HitMiddle_(),
-	HitBottom_(),
+	HitAbove_(),
+	HitBelow_(),
 	Attack_1_Timer_(4.0f),
 	Idle_Timer_(3.0f),
 	Back_Timer_(3.0f),
@@ -32,6 +31,7 @@ BloodLugaru::BloodLugaru() :
 	Hit_Timer_(1.0f),
 	PrevHitData_()
 {
+	InitDefaultValue();
 }
 
 BloodLugaru::~BloodLugaru()
@@ -42,14 +42,17 @@ void BloodLugaru::Start()
 {
 	DNFStart();
 
-	InitAni();
-
 	InitCol();
+
+	InitAniNState();
+
 
 	//Force
 	Force_.SetTransfrom(&GetTransform());
 	Force_.FrictionX_ = 700.0f;
 	Force_.Gravity_ = 1000.0f;
+
+
 }
 
 void BloodLugaru::Update(float _DeltaTime)
@@ -120,7 +123,7 @@ void BloodLugaru::End()
 {
 }
 
-void BloodLugaru::InitAni()
+void BloodLugaru::InitAniNState()
 {
 	//애니메이션 추가
 	MainRenderer_->GetTransform().SetLocalScale(float4(315, 315, 1));
@@ -130,6 +133,7 @@ void BloodLugaru::InitAni()
 	CreateDNFAnimation("Move", FrameAnimation_DESC("bloodlugaru", Lugaru_Move_Start, Lugaru_Move_End, AniSpeed_));
 	CreateDNFAnimation("Attack_1", FrameAnimation_DESC("bloodlugaru", Lugaru_Attack_1_Start, Lugaru_Attack_1_End, AniSpeed_, false));
 	CreateDNFAnimation("Hit", FrameAnimation_DESC("bloodlugaru", Lugaru_Hit_Start, Lugaru_Hit_End, AniSpeed_, false));
+	CreateDNFAnimation("Down", FrameAnimation_DESC("bloodlugaru", Lugaru_Down_Start, Lugaru_Down_End, AniSpeed_, false));
 
 
 	//애니메이션 바인드
@@ -158,6 +162,9 @@ void BloodLugaru::InitAni()
 	StateManager_.CreateStateMember("Airborne", std::bind(&BloodLugaru::AirborneUpdate, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&BloodLugaru::AirborneStart, this, std::placeholders::_1));
 
+	StateManager_.CreateStateMember("Down", std::bind(&BloodLugaru::DownUpdate, this, std::placeholders::_1, std::placeholders::_2)
+		, std::bind(&BloodLugaru::DownStart, this, std::placeholders::_1));
+
 	StateManager_.CreateStateMember("Attack_1", std::bind(&BloodLugaru::Attack_1_Update, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&BloodLugaru::Attack_1_Start, this, std::placeholders::_1),
 		std::bind(&BloodLugaru::Attack_1_End, this, std::placeholders::_1));
@@ -177,25 +184,26 @@ void BloodLugaru::InitCol()
 	AttackRangeCol_->ChangeOrder(ColOrder::Monster);
 
 	//MiddleHit
-	HitMiddle_ = CreateComponent<GameEngineCollision>("Middle");
-	HitMiddle_->SetDebugSetting(CollisionType::CT_OBB2D, float4(1.0f, 0.0f, 0.0f, 0.5f));
-	HitMiddle_->GetTransform().SetLocalPosition({ 0,-30.0f,-500.0f });
-	HitMiddle_->GetTransform().SetLocalScale({ 100.0f,40.0f,1.0f });
-	HitMiddle_->ChangeOrder(ColOrder::MonsterHit);
+	HitAbove_ = CreateComponent<GameEngineCollision>("Middle");
+	HitAbove_->SetDebugSetting(CollisionType::CT_OBB2D, float4(1.0f, 0.0f, 0.0f, 0.5f));
+	HitAbove_->GetTransform().SetLocalPosition({ 0,-30.0f,-500.0f });
+	HitAbove_->GetTransform().SetLocalScale({ 100.0f,40.0f,1.0f });
+	HitAbove_->ChangeOrder(ColOrder::MonsterHit);
 
 
 	//BottomHit
-	HitBottom_ = CreateComponent<GameEngineCollision>("Bottom");
-	HitBottom_->SetDebugSetting(CollisionType::CT_OBB2D, float4(0.0f, 1.0f, 0.0f, 0.5f));
-	HitBottom_->GetTransform().SetLocalPosition({ 0,-70.0f,-500.0f });
-	HitBottom_->GetTransform().SetLocalScale({ 100.0f,40.0f,1.0f });
-	HitBottom_->ChangeOrder(ColOrder::MonsterHit);
+	HitBelow_ = CreateComponent<GameEngineCollision>("Bottom");
+	HitBelow_->SetDebugSetting(CollisionType::CT_OBB2D, float4(0.0f, 1.0f, 0.0f, 0.5f));
+	HitBelow_->GetTransform().SetLocalPosition({ 0,-70.0f,-500.0f });
+	HitBelow_->GetTransform().SetLocalScale({ 100.0f,40.0f,1.0f });
+	HitBelow_->ChangeOrder(ColOrder::MonsterHit);
 
 }
 
 void BloodLugaru::IdleStart(const StateInfo _Info)
 {
 	ChangeDNFAnimation("Idle");
+	ChangeHitColTrans("Idle");
 
 	Idle_Timer_ = GameEngineRandom::MainRandom.RandomFloat(1.0f, 3.0f);
 	Idle_Timer_.StartTimer();
@@ -457,11 +465,14 @@ void BloodLugaru::BackUpdate(float _DeltaTime, const StateInfo _Info)
 void BloodLugaru::HitStart(const StateInfo _Info)
 {
 	ChangeDNFAnimation("Hit");
+	ChangeHitColTrans("Hit");
 	Hit_Timer_.StartTimer();
 	
 	//플레이어를 마주보는 방향으로 Flip
 	FlipX(-Player_->GetDirX());
 	Force_.ForceX_ = -PrevHitData_.XForce;
+
+
 }
 
 void BloodLugaru::HitUpdate(float _DeltaTime, const StateInfo _Info)
@@ -481,7 +492,7 @@ void BloodLugaru::HitUpdate(float _DeltaTime, const StateInfo _Info)
 void BloodLugaru::AirborneStart(const StateInfo _Info)
 {
 	ChangeDNFAnimation("Hit");
-
+	ChangeHitColTrans("Hit");
 	//플레이어를 마주보는 방향으로 Flip
 	FlipX(-Player_->GetDirX());
 	Force_.ForceX_ = -PrevHitData_.XForce;
@@ -501,29 +512,74 @@ void BloodLugaru::AirborneUpdate(float _DeltaTime, const StateInfo _Info)
 	if (CurYPos <= GroundYPos_)
 	{
 		GetTransform().SetWorldPosition(float4(GetTransform().GetWorldPosition().x, GroundYPos_, GroundYPos_));
-		OnAir_ = false;
-		Force_.ForceY_ = 0.0f;
+		//Down 상태 Bounce
+		OnAir_ = true;
+		Force_.ForceY_ = 200.0f;
 		AirborneTime_ = 0.0f;
-		Force_.OffGravity();
+		Force_.OnGravity();
 		PrevHitData_ = {};
-		StateManager_.ChangeState("Idle");
+		StateManager_.ChangeState("Down");
 		return;
+	}
+}
+
+void BloodLugaru::DownStart(const StateInfo _Info)
+{
+	ChangeDNFAnimation("Down");
+	ChangeHitColTrans("Hit");
+	Down_Timer_.StartTimer(Value_.Down_Time);
+
+	//플레이어를 마주보는 방향으로 Flip
+	FlipX(-Player_->GetDirX());
+	Force_.ForceX_ = -150.0f;
+
+	GetTransform().SetLocalMove(float4(0, Force_.ForceY_ * GameEngineTime::GetDeltaTime()));
+
+}
+
+void BloodLugaru::DownUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	AirborneTime_ += 5.0f * _DeltaTime;
+	float CurYPos = GetTransform().GetWorldPosition().y;
+
+	if (CurYPos <= GroundYPos_)
+	{
+		//GroundYPos 아래로 떨어지지 않게 고정시키기
+		GetTransform().SetWorldPosition(float4(GetTransform().GetWorldPosition().x, GroundYPos_, GroundYPos_));
+		Down_Timer_ -= _DeltaTime;
+		if (Down_Timer_.IsTimerOn() == false)
+		{
+			OnAir_ = false;
+			Force_.ForceY_ = 0.0f;
+			AirborneTime_ = 0.0f;
+			Force_.OffGravity();
+			PrevHitData_ = {};
+			StateManager_.ChangeState("Idle");
+			return;
+		}
 	}
 }
 
 void BloodLugaru::HitColCheck()
 {
-	HitBottom_->IsCollision(CollisionType::CT_OBB2D, ColOrder::PlayerAttack, CollisionType::CT_OBB2D,
-		std::bind(&BloodLugaru::BottomHitCheck, this, std::placeholders::_1, std::placeholders::_2));
+	HitBelow_->IsCollision(CollisionType::CT_OBB2D, ColOrder::PlayerAttack, CollisionType::CT_OBB2D,
+		std::bind(&BloodLugaru::BelowHitCheck, this, std::placeholders::_1, std::placeholders::_2));
 
-	HitMiddle_->IsCollision(CollisionType::CT_OBB2D, ColOrder::PlayerAttack, CollisionType::CT_OBB2D,
-		std::bind(&BloodLugaru::MiddleHitCheck, this, std::placeholders::_1, std::placeholders::_2));
+	HitAbove_->IsCollision(CollisionType::CT_OBB2D, ColOrder::PlayerAttack, CollisionType::CT_OBB2D,
+		std::bind(&BloodLugaru::AboveHitCheck, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-bool BloodLugaru::HitCheck(float _YForce)
+bool BloodLugaru::HitCheck(AttackType _Type)
 {
 	Player_Main* Player = DNFGlobalValue::CurrentLevel->GetPlayer();
 	AttackData Data = Player->CurAttackData_;
+
+	//Hit충돌체와 공격타입이 불일치하면 리턴
+	if (_Type != Data.Type)
+	{
+		return false;
+	}
+
 
 	//같은 공격에 여러번 충돌 방지
 	if (Data.AttackName == PrevHitData_.AttackName && Data.AttCount <= PrevHitData_.AttCount)
@@ -546,7 +602,7 @@ bool BloodLugaru::HitCheck(float _YForce)
 	if (OnAir_ == false)
 	{
 		GroundYPos_ = GetTransform().GetWorldPosition().y;
-		Force_.ForceY_ = PrevHitData_.YForce * _YForce;
+		Force_.ForceY_ = PrevHitData_.YForce;
 		AirborneTime_ = 0.0f;
 		GiveAndRecevieStiffness(PrevHitData_, Player);
 		StateManager_.ChangeState("Airborne");
@@ -555,19 +611,50 @@ bool BloodLugaru::HitCheck(float _YForce)
 	else//공중의 뜸 상태에서 공격을 받은경우
 	{
 		GiveAndRecevieStiffness(PrevHitData_, Player);
-		Force_.ForceY_ = PrevHitData_.YForce * _YForce;
+		Force_.ForceY_ = PrevHitData_.YForce;
 		StateManager_.ChangeState("Airborne");
 		return true;
 	}
 }
 
-bool BloodLugaru::MiddleHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other)
+bool BloodLugaru::AboveHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other)
 {
-	return HitCheck(0.5f);
+	return HitCheck(AttackType::Above);
 }
 
-bool BloodLugaru::BottomHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other)
+bool BloodLugaru::BelowHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other)
 {
-	return HitCheck(1.0f);
+	return HitCheck(AttackType::Below);
+}
+
+void BloodLugaru::ChangeHitColTrans(std::string _State)
+{
+	if (_State == "Hit")
+	{
+		HitAbove_->GetTransform().SetLocalPosition(Value_.HitAboveColPos);
+		HitAbove_->GetTransform().SetLocalScale(Value_.HitAboveColScale);
+		HitBelow_->GetTransform().SetLocalPosition(Value_.HitBelowColPos);
+		HitBelow_->GetTransform().SetLocalScale(Value_.HitBelowColScale);
+		return;
+	}
+	else if (_State == "Idle")
+	{
+		HitAbove_->GetTransform().SetLocalPosition({ 0,-30.0f,-500.0f });
+		HitAbove_->GetTransform().SetLocalScale({ 100.0f,40.0f,1.0f });
+		HitBelow_->GetTransform().SetLocalPosition({ 0,-70.0f,-500.0f });
+		HitBelow_->GetTransform().SetLocalScale({ 100.0f,40.0f,1.0f });
+		return;
+	}
+	MsgBoxAssert("잘못된 _State");
+}
+
+void BloodLugaru::InitDefaultValue()
+{
+	Value_.HitAboveColPos = { 0,-40.0f,-500.0f };
+	Value_.HitAboveColScale = { 80.0f,40.0f,1.0f };
+	Value_.HitBelowColPos = { 0,-60.0f,-500.0f };
+	Value_.HitBelowColScale = { 80.0f,40.0f,1.0f };
+
+	Value_.Down_Time = 1.3f;
 }
 

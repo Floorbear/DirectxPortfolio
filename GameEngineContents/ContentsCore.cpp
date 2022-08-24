@@ -105,12 +105,6 @@ void ContentsCore::Start()
 	// GameEngineTexture::Cut("Boss_Left.bmp", 5, 7);
 
 
-	//Å° »ý¼º
-	GameEngineInput::GetInst()->CreateKey("MoveSeriaRoom", VK_NUMPAD1);
-	GameEngineInput::GetInst()->CreateKey("MoveElvenguard", VK_NUMPAD2);
-	GameEngineInput::GetInst()->CreateKey("MoveElvenguard_Front", VK_NUMPAD3);
-	GameEngineInput::GetInst()->CreateKey("MoveVilmark", VK_NUMPAD4);
-	GameEngineInput::GetInst()->CreateKey("MoveBar", VK_NUMPAD5);
 
 
 	//CreateLevel<SeriaRoom>("SeriaRoom");
@@ -133,27 +127,6 @@ void ContentsCore::Start()
 
 void ContentsCore::Update(float _DeltaTime)
 {
-	if (GameEngineInput::GetInst()->IsDown("MoveSeriaRoom") == true)
-	{
-		ChangeLevel("SeriaRoom");
-	}
-	if (GameEngineInput::GetInst()->IsDown("MoveElvenguard") == true)
-	{
-		ChangeLevel("Elvenguard");
-	}
-	if (GameEngineInput::GetInst()->IsDown("MoveElvenguard_Front") == true)
-	{
-		ChangeLevel("Elvenguard_Front");
-	}
-	if (GameEngineInput::GetInst()->IsDown("MoveVilmark") == true)
-	{
-		ChangeLevel("Vilmark_0");
-	}
-	if (GameEngineInput::GetInst()->IsDown("MoveBar") == true)
-	{
-		ChangeLevel("Bar");
-	}
-
 	
 }
 
