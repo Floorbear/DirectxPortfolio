@@ -160,7 +160,7 @@ void Player_Main::InitAniFunc()
 	MainRenderer_->AnimationBindFrame("UpperSlash",
 		[&](const FrameAnimation_DESC& _Desc)
 		{
-			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 3)
+			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 1)
 			{
 				SetAttackCol(DefaultValue_.UpperSlashPos, DefaultValue_.UpeerSlashScale);
 				//Set Attack
@@ -168,8 +168,8 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.AttackName = "UpperSlash";
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.XForce = 140.0f;
-				CurAttackData_.Stiffness = 0.15f;
-				CurAttackData_.RStiffness = 0.11f;
+				CurAttackData_.Stiffness = 0.25f;
+				CurAttackData_.RStiffness = 0.21f;
 				CurAttackData_.YForce = 550.0f;
 				CurAttackData_.AttCount++;
 				Force_.ForceX_ = 70.0f;

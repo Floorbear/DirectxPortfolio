@@ -227,7 +227,7 @@ void GameEngineTextureRenderer::SetTexture(const std::string& _Name)
 
 void GameEngineTextureRenderer::SetFrame(UINT _Index)
 {
-	FrameData = CurTex->GetFrameData(_Index);
+	AtlasDataInst.FrameData = CurTex->GetFrameData(_Index);
 }
 
 GameEngineTexture* GameEngineTextureRenderer::GetCurTexture()
@@ -344,7 +344,7 @@ void GameEngineTextureRenderer::ChangeFrameAnimation(const std::string& _Animati
 
 void GameEngineTextureRenderer::FrameDataReset()
 {
-	FrameData = { 0.0f , 0.0f, 1.0f, 1.0f};
+	AtlasDataInst.FrameData = { 0.0f , 0.0f, 1.0f, 1.0f};
 }
 
 
@@ -402,4 +402,19 @@ void GameEngineTextureRenderer::CurAnimationReset()
 void GameEngineTextureRenderer::CurAnimationSetStartPivotFrame(int SetFrame)
 {
 	CurAni->Info.CurFrame = SetFrame;
+}
+
+void GameEngineTextureRenderer::CurAnimationPauseOn() 
+{
+	CurAni->Pause = true;
+}
+
+void GameEngineTextureRenderer::CurAnimationPauseOff() 
+{
+	CurAni->Pause = false;
+}
+
+bool GameEngineTextureRenderer::IsCurAnimationPause() 
+{
+	return CurAni->Pause;
 }

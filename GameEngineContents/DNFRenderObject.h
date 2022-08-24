@@ -87,11 +87,12 @@ protected:
 
 	GameEngineTextureRenderer* MainRenderer_;
 	GameEngineTextureRenderer* ShadowRenderer_;
-	std::list< GameEngineTextureRenderer*> AllDNFRenderer_;
+	std::list< GameEngineTextureRenderer**> AllDNFRenderer_;
 
 	//shadow관련 함수& 변수
 	void CreateDNFAnimation(const std::string& _AnimationName, const FrameAnimation_DESC& _Desc);
 	void ChangeDNFAnimation(const std::string& _Name);
+	void ResetDNFAnimation();
 	void ShadowUpdate();
 
 	float4 ShadowPos_;

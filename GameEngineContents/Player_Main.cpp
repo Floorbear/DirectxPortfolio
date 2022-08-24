@@ -43,6 +43,25 @@ Player_Main::Player_Main() :
 	DefaultValue_()
 {
 	InitDefaultValue();
+
+	AllDNFRenderer_.push_back(&WeaponRenderer_b_);
+	AllDNFRenderer_.push_back(&WeaponRenderer_c_);
+	AllDNFRenderer_.push_back(&CoatRenderer_a_);
+	AllDNFRenderer_.push_back(&CoatRenderer_b_);
+	AllDNFRenderer_.push_back(&CoatRenderer_c_);
+	AllDNFRenderer_.push_back(&CoatRenderer_d_);
+	AllDNFRenderer_.push_back(&PantsRenderer_a_);
+	AllDNFRenderer_.push_back(&PantsRenderer_b_);
+	AllDNFRenderer_.push_back(&PantsRenderer_d_);
+	AllDNFRenderer_.push_back(&CapRenderer_a_);
+	AllDNFRenderer_.push_back(&CapRenderer_b_);
+	AllDNFRenderer_.push_back(&CapRenderer_c_);
+	AllDNFRenderer_.push_back(&HairRenderer_a_);
+	AllDNFRenderer_.push_back(&HairRenderer_d_);
+	AllDNFRenderer_.push_back(&BeltRenderer_c_);
+	AllDNFRenderer_.push_back(&BeltRenderer_d_);
+	AllDNFRenderer_.push_back(&ShoesRenderer_a_);
+	AllDNFRenderer_.push_back(&ShoesRenderer_b_);
 }
 
 

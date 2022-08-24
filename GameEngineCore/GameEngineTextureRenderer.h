@@ -206,9 +206,25 @@ public:
 
 	void CurAnimationPauseSwitch();
 
+	void CurAnimationPauseOn();
+
+	void CurAnimationPauseOff();
+
+	bool IsCurAnimationPause();
+
 	void CurAnimationReset();
 
 	void CurAnimationSetStartPivotFrame(int SetFrame);
+
+	bool IsCurAniSet()
+	{
+		if (nullptr == CurAni)
+		{
+			return false;
+		}
+
+		return true;
+	}
 
 	ColorData& GetColorData() 
 	{
@@ -283,7 +299,6 @@ private:
 	float ScaleRatio;
 
 	GameEngineTexture* CurTex;
-	float4 FrameData;
 
 	ColorData ColorData;
 	AtlasData AtlasDataInst;

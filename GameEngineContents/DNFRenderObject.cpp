@@ -23,8 +23,8 @@ DNFRenderObject::DNFRenderObject():
 	AirborneTime_(),
 	IsStiffFirst_(true)
 {
-	AllDNFRenderer_.push_back(MainRenderer_);
-	AllDNFRenderer_.push_back(ShadowRenderer_);
+	AllDNFRenderer_.push_back(&MainRenderer_);
+	AllDNFRenderer_.push_back(&ShadowRenderer_);
 
 }
 
@@ -47,24 +47,27 @@ void DNFRenderObject::StiffnessUpdate(float& _DeltaTime)
 {
 	if (Stiffness_ > 0.0f)
 	{
-		if (IsStiffFirst_ == true)
+		for (GameEngineTextureRenderer** i : AllDNFRenderer_)
 		{
-			MainRenderer_->CurAnimationPauseSwitch();
-			IsStiffFirst_ = false;
+			if ((*i)->IsCurAniSet() == true)
+			{
+				(*i)->CurAnimationPauseOn();
+			}
 		}
+
+		IsStiffFirst_ = false;
 		Stiffness_ -= _DeltaTime;
 		_DeltaTime = 0.0f;
 		if (Stiffness_ <= 0)
 		{
 			Stiffness_ = 0.0f;
-		}
-	}
-	else
-	{
-		if (IsStiffFirst_ == false)
-		{
-			IsStiffFirst_ = true;
-			MainRenderer_->CurAnimationPauseSwitch();
+			for (GameEngineTextureRenderer** i : AllDNFRenderer_)
+			{
+				if ((*i)->IsCurAniSet() == true)
+				{
+					(*i)->CurAnimationPauseOff();
+				}
+			}
 		}
 	}
 }
@@ -79,6 +82,12 @@ void DNFRenderObject::ChangeDNFAnimation(const std::string& _Name)
 {
 	MainRenderer_->ChangeFrameAnimation(_Name);
 	ShadowRenderer_->ChangeFrameAnimation(_Name);
+}
+
+void DNFRenderObject::ResetDNFAnimation()
+{
+	MainRenderer_->CurAnimationReset();
+	ShadowRenderer_->CurAnimationReset();
 }
 
 void DNFRenderObject::ShadowUpdate()

@@ -52,7 +52,14 @@ void BloodLugaru::Start()
 	Force_.FrictionX_ = 700.0f;
 	Force_.Gravity_ = 1000.0f;
 
-
+	/*Value_.DownAboveColPos =
+		Value_.DownAboveColScale
+		Value_.DownBelowColPos =
+		Value_.DownBelowColScale*/
+	DNFDebugGUI::AddMutableValue("AbovePos", &Value_.DownAboveColPos);
+	DNFDebugGUI::AddMutableValue("AboveScale", &Value_.DownAboveColScale);
+	DNFDebugGUI::AddMutableValue("BelowPos", &Value_.DownBelowColPos);
+	DNFDebugGUI::AddMutableValue("BelowScale", &Value_.DownBelowColScale);
 }
 
 void BloodLugaru::Update(float _DeltaTime)
@@ -526,7 +533,7 @@ void BloodLugaru::AirborneUpdate(float _DeltaTime, const StateInfo _Info)
 void BloodLugaru::DownStart(const StateInfo _Info)
 {
 	ChangeDNFAnimation("Down");
-	ChangeHitColTrans("Hit");
+	ChangeHitColTrans("Down");
 	Down_Timer_.StartTimer(Value_.Down_Time);
 
 	//플레이어를 마주보는 방향으로 Flip
@@ -546,6 +553,9 @@ void BloodLugaru::DownUpdate(float _DeltaTime, const StateInfo _Info)
 	{
 		//GroundYPos 아래로 떨어지지 않게 고정시키기
 		GetTransform().SetWorldPosition(float4(GetTransform().GetWorldPosition().x, GroundYPos_, GroundYPos_));
+		//이전에 받은 공격 데이터 초기화
+		PrevHitData_ = {};
+
 		Down_Timer_ -= _DeltaTime;
 		if (Down_Timer_.IsTimerOn() == false)
 		{
@@ -587,12 +597,22 @@ bool BloodLugaru::HitCheck(AttackType _Type)
 		return false;
 	}
 
+	//현재 받은 공격을 저장
 	PrevHitData_ = Data;
 
+	//공중공격이 아닌 경우
 	if (OnAir_ == false && Data.YForce <= 0.0f)
 	{
 		GiveAndRecevieStiffness(PrevHitData_, Player);
-		StateManager_.ChangeState("Hit");
+		if (StateManager_.GetCurStateStateName() == "Down")
+		{
+			ResetDNFAnimation();
+			StateManager_.ChangeState("Down");
+		}
+		else
+		{
+			StateManager_.ChangeState("Hit");
+		}
 		return true;
 	}
 
@@ -605,14 +625,33 @@ bool BloodLugaru::HitCheck(AttackType _Type)
 		Force_.ForceY_ = PrevHitData_.YForce;
 		AirborneTime_ = 0.0f;
 		GiveAndRecevieStiffness(PrevHitData_, Player);
-		StateManager_.ChangeState("Airborne");
+		//Down 상태 분기
+		if (StateManager_.GetCurStateStateName() == "Down")
+		{
+			ResetDNFAnimation();
+			Force_.ForceY_ = PrevHitData_.YForce * 0.5f;
+			StateManager_.ChangeState("Down");
+		}
+		else
+		{
+			StateManager_.ChangeState("Airborne");
+		}
 		return true;
 	}
 	else//공중의 뜸 상태에서 공격을 받은경우
 	{
 		GiveAndRecevieStiffness(PrevHitData_, Player);
 		Force_.ForceY_ = PrevHitData_.YForce;
-		StateManager_.ChangeState("Airborne");
+		if (StateManager_.GetCurStateStateName() == "Down")
+		{
+			ResetDNFAnimation();
+			Force_.ForceY_ = PrevHitData_.YForce * 0.5f;
+			StateManager_.ChangeState("Down");
+		}
+		else
+		{
+			StateManager_.ChangeState("Airborne");
+		}
 		return true;
 	}
 }
@@ -645,6 +684,14 @@ void BloodLugaru::ChangeHitColTrans(std::string _State)
 		HitBelow_->GetTransform().SetLocalScale({ 100.0f,40.0f,1.0f });
 		return;
 	}
+	else if (_State == "Down")
+	{
+		HitAbove_->GetTransform().SetLocalPosition(Value_.DownAboveColPos);
+		HitAbove_->GetTransform().SetLocalScale(Value_.DownAboveColScale);
+		HitBelow_->GetTransform().SetLocalPosition(Value_.DownBelowColPos);
+		HitBelow_->GetTransform().SetLocalScale(Value_.DownBelowColScale);
+		return;
+	}
 	MsgBoxAssert("잘못된 _State");
 }
 
@@ -654,6 +701,11 @@ void BloodLugaru::InitDefaultValue()
 	Value_.HitAboveColScale = { 80.0f,40.0f,1.0f };
 	Value_.HitBelowColPos = { 0,-60.0f,-500.0f };
 	Value_.HitBelowColScale = { 80.0f,40.0f,1.0f };
+
+	Value_.DownAboveColPos = { 0,-60.0f,-500.0f };
+	Value_.DownAboveColScale = { 80.0f,20.0f,1.0f };
+	Value_.DownBelowColPos = { 0,-80.0f,-500.0f };
+	Value_.DownBelowColScale = { 80.0f,20.0f,1.0f };
 
 	Value_.Down_Time = 1.3f;
 }

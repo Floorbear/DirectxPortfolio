@@ -105,6 +105,10 @@ private:
 		float4 HitAboveColScale;
 		float4 HitBelowColPos;
 		float4 HitBelowColScale;
+		float4 DownAboveColPos;
+		float4 DownAboveColScale;
+		float4 DownBelowColPos;
+		float4 DownBelowColScale;
 
 		float Down_Time;
 	};
