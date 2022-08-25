@@ -56,21 +56,21 @@ void BloodLugaru::Start()
 		Value_.DownAboveColScale
 		Value_.DownBelowColPos =
 		Value_.DownBelowColScale*/
-	DNFDebugGUI::AddMutableValue("AbovePos", &Value_.DownAboveColPos);
-	DNFDebugGUI::AddMutableValue("AboveScale", &Value_.DownAboveColScale);
-	DNFDebugGUI::AddMutableValue("BelowPos", &Value_.DownBelowColPos);
-	DNFDebugGUI::AddMutableValue("BelowScale", &Value_.DownBelowColScale);
+	DNFDebugGUI::AddMutableValue("Ground", &GroundYPos_);
+	DNFDebugGUI::AddTransform("Trans", &GetTransform());
+
+
 }
 
 void BloodLugaru::Update(float _DeltaTime)
 {
 	StiffnessUpdate(_DeltaTime);
-	if(Stiffness_ <= 0.0f)
+	if(Stiffness_ > 0.0f)
 	{
-		Force_.Update(_DeltaTime*(1+(AirborneTime_*AirborneTime_)*0.01f));
+		return;
 	}
 
-
+	Force_.Update(_DeltaTime * (1 + (AirborneTime_ * AirborneTime_) * 0.01f));
 	//공격 쿨타임 카운트
 	if (Attack_1_Timer_.IsTimerOn() == true)
 	{
@@ -519,6 +519,7 @@ void BloodLugaru::AirborneUpdate(float _DeltaTime, const StateInfo _Info)
 	if (CurYPos <= GroundYPos_)
 	{
 		GetTransform().SetWorldPosition(float4(GetTransform().GetWorldPosition().x, GroundYPos_, GroundYPos_));
+		ShadowUpdate();
 		//Down 상태 Bounce
 		OnAir_ = true;
 		Force_.ForceY_ = 200.0f;
@@ -553,10 +554,12 @@ void BloodLugaru::DownUpdate(float _DeltaTime, const StateInfo _Info)
 	{
 		//GroundYPos 아래로 떨어지지 않게 고정시키기
 		GetTransform().SetWorldPosition(float4(GetTransform().GetWorldPosition().x, GroundYPos_, GroundYPos_));
+		ShadowUpdate();
 		//이전에 받은 공격 데이터 초기화
 		PrevHitData_ = {};
-
-		Down_Timer_ -= _DeltaTime;
+		Down_Timer_ -= _DeltaTime * (1.f+AirborneTime_ * 0.1f);
+		OnAir_ = false;
+		Force_.OffGravity();
 		if (Down_Timer_.IsTimerOn() == false)
 		{
 			OnAir_ = false;
@@ -597,6 +600,16 @@ bool BloodLugaru::HitCheck(AttackType _Type)
 		return false;
 	}
 
+	//z축 차이(y축)가 나면 충돌 방지
+	int ZLength = abs(static_cast<int>(GetTransform().GetWorldPosition().y) - Data.ZPos);
+	if (ZLength > Value_.HitZRange)
+	{
+		if (Data.ZPos != 0 && Force_.IsGravity() == false ) //ZPos ==0 : 이 공격은 z축의 영향을 받지 않는다 && 공중에 뜸 상태에서는 z축 차이를 계산하지 않는다.
+		{
+			return false;
+		}
+	}
+
 	//현재 받은 공격을 저장
 	PrevHitData_ = Data;
 
@@ -623,17 +636,19 @@ bool BloodLugaru::HitCheck(AttackType _Type)
 	{
 		GroundYPos_ = GetTransform().GetWorldPosition().y;
 		Force_.ForceY_ = PrevHitData_.YForce;
-		AirborneTime_ = 0.0f;
 		GiveAndRecevieStiffness(PrevHitData_, Player);
 		//Down 상태 분기
 		if (StateManager_.GetCurStateStateName() == "Down")
 		{
 			ResetDNFAnimation();
 			Force_.ForceY_ = PrevHitData_.YForce * 0.5f;
+			OnAir_ = true;
+			Force_.OnGravity();
 			StateManager_.ChangeState("Down");
 		}
 		else
 		{
+			AirborneTime_ = 0.0f; //Down 상태에서도 이걸 넣으면, 다운상태적을 띄우면 중력이 초기화됨
 			StateManager_.ChangeState("Airborne");
 		}
 		return true;
@@ -646,6 +661,7 @@ bool BloodLugaru::HitCheck(AttackType _Type)
 		{
 			ResetDNFAnimation();
 			Force_.ForceY_ = PrevHitData_.YForce * 0.5f;
+			OnAir_ = true;
 			StateManager_.ChangeState("Down");
 		}
 		else
@@ -697,6 +713,7 @@ void BloodLugaru::ChangeHitColTrans(std::string _State)
 
 void BloodLugaru::InitDefaultValue()
 {
+	Value_.HitZRange = 15;
 	Value_.HitAboveColPos = { 0,-40.0f,-500.0f };
 	Value_.HitAboveColScale = { 80.0f,40.0f,1.0f };
 	Value_.HitBelowColPos = { 0,-60.0f,-500.0f };

@@ -40,7 +40,7 @@ Player_Main::Player_Main() :
 	NextAttackAni_(),
 	BottomAttackCol_(),
 	Force_(),
-	DefaultValue_()
+	Value_()
 {
 	InitDefaultValue();
 
@@ -67,8 +67,11 @@ Player_Main::Player_Main() :
 
 void Player_Main::InitDefaultValue()
 {
-	DefaultValue_.UpperSlashPos = float4(75, -55, -500);
-	DefaultValue_.UpeerSlashScale = float4(120, 45, 1);
+	//, 
+	Value_.AutoAttackPos = float4(50, -20, -500);
+	Value_.AutoAttackScale = float4(120, 40, 1);
+	Value_.UpperSlashPos = float4(75, -57, -500);
+	Value_.UpeerSlashScale = float4(120, 64, 1);
 }
 
 Player_Main::~Player_Main()
@@ -81,7 +84,6 @@ void Player_Main::Start()
 
 	InitCol();
 
-	DNFDebugGUI::AddTransform("MiddleCol", &AttackCol_->GetTransform());
 
 
 	//아바타생성
@@ -99,14 +101,21 @@ void Player_Main::Start()
 	Force_.Gravity_ = 700.0f;
 	Force_.SetTransfrom(&GetTransform());
 
-	DNFDebugGUI::AddMutableValue("UpperSlashPos_", &DefaultValue_.UpperSlashPos);
-	DNFDebugGUI::AddMutableValue("UpeerSlashScale_", &DefaultValue_.UpeerSlashScale);
+	DNFDebugGUI::AddMutableValue("UpperSlashPos_", &Value_.UpperSlashPos);
+	DNFDebugGUI::AddMutableValue("UpeerSlashScale_", &Value_.UpeerSlashScale);
+	DNFDebugGUI::AddMutableValue("AutoAttackPos", &Value_.AutoAttackPos);
+	DNFDebugGUI::AddMutableValue("AutoAttackScale", &Value_.AutoAttackScale);
 
 }
 
 void Player_Main::Update(float _DeltaTime)
 {
 	StiffnessUpdate(_DeltaTime);
+	if (Stiffness_ > 0)
+	{
+		return;
+	}
+
 	DNFUpdate();
 	DNFDebugGUI::AddValue("PlayerState", StateManager_.GetCurStateStateName());
 	StateManager_.Update(_DeltaTime);

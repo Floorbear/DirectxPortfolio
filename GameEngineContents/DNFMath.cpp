@@ -60,7 +60,7 @@ void Force::Update(float _DeltaTime)
 		Transform_->SetLocalMove(GetDirX() * ForceX_ * _DeltaTime);
 	}
 
-	if (IsForceY() == true)
+	if (IsGravity() == true)
 	{
 		ForceY_ -= _DeltaTime * Gravity_;
 

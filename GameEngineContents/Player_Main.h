@@ -130,9 +130,11 @@ private:
 	void InitDefaultValue();
 	struct DefaultValue
 	{
+		float4 AutoAttackPos;
+		float4 AutoAttackScale;
 		float4 UpperSlashPos;
 		float4 UpeerSlashScale;
 	};
-	DefaultValue DefaultValue_;
+	DefaultValue Value_;
 };
 

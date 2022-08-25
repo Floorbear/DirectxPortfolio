@@ -101,6 +101,8 @@ private:
 	void InitDefaultValue();
 	struct DefaultValue
 	{
+		int HitZRange;
+
 		float4 HitAboveColPos;
 		float4 HitAboveColScale;
 		float4 HitBelowColPos;

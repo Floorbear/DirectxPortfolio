@@ -49,7 +49,7 @@ void DNFRenderObject::StiffnessUpdate(float& _DeltaTime)
 	{
 		for (GameEngineTextureRenderer** i : AllDNFRenderer_)
 		{
-			if ((*i)->IsCurAniSet() == true)
+			if ((*i)->IsCurAnimation() == true)
 			{
 				(*i)->CurAnimationPauseOn();
 			}
@@ -63,7 +63,7 @@ void DNFRenderObject::StiffnessUpdate(float& _DeltaTime)
 			Stiffness_ = 0.0f;
 			for (GameEngineTextureRenderer** i : AllDNFRenderer_)
 			{
-				if ((*i)->IsCurAniSet() == true)
+				if ((*i)->IsCurAnimation() == true)
 				{
 					(*i)->CurAnimationPauseOff();
 				}

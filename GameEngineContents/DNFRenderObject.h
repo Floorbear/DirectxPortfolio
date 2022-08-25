@@ -12,6 +12,7 @@ enum class AttackType
 
 struct AttackData
 {
+	int ZPos; // ZPos == 0 > 공격이 Z축의 영향을 받지 않는다.
 	std::string AttackName;
 	int AttCount;
 	int MaxAttCount;

@@ -161,7 +161,7 @@ public:
 			return false;
 		}
 	}
-	bool IsForceY()
+	bool IsGravity()
 	{
 		if (IsGravityOn_ == true)
 		{

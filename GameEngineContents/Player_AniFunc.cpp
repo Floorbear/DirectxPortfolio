@@ -64,7 +64,7 @@ void Player_Main::InitAniFunc()
 
 			if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_0_Start + 3)
 			{
-				SetAttackCol(float4(50, -20, -500), float4(120, 40, 1));
+				SetAttackCol(Value_.AutoAttackPos, Value_.AutoAttackScale);
 				//Set Attack
 				CurAttackData_.Type = AttackType::Above;
 				CurAttackData_.AttackName = "AutoAttack";
@@ -73,6 +73,7 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.RStiffness = 0.11f;
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.AttCount++;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y);
 
 			}
 			else if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_0_Start + 7)
@@ -96,12 +97,13 @@ void Player_Main::InitAniFunc()
 
 			if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_1_Start + 3)
 			{
-				SetAttackCol(float4(50, -20, -500), float4(120, 40, 1));
+				SetAttackCol(Value_.AutoAttackPos, Value_.AutoAttackScale);
 				//Set Attack
 				CurAttackData_.Type = AttackType::Above;
 				CurAttackData_.XForce = 140.0f;
 				CurAttackData_.Stiffness = 0.15f;
 				CurAttackData_.RStiffness = 0.11f;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y);
 				CurAttackData_.AttCount++;
 				Force_.ForceX_ = 70.0f;
 			}
@@ -126,11 +128,12 @@ void Player_Main::InitAniFunc()
 			}
 			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 3)
 			{
-				SetAttackCol(DefaultValue_.UpperSlashPos, DefaultValue_.UpeerSlashScale);
+				SetAttackCol(Value_.UpperSlashPos, Value_.UpeerSlashScale);
 				//Set Attack
 				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.XForce = 140.0f;
 				CurAttackData_.YForce = 300.0f;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y);
 				CurAttackData_.Stiffness = 0.15f;
 				CurAttackData_.RStiffness = 0.11f;
 				CurAttackData_.AttCount++;
@@ -162,7 +165,7 @@ void Player_Main::InitAniFunc()
 		{
 			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 1)
 			{
-				SetAttackCol(DefaultValue_.UpperSlashPos, DefaultValue_.UpeerSlashScale);
+				SetAttackCol(Value_.UpperSlashPos, Value_.UpeerSlashScale);
 				//Set Attack
 				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.AttackName = "UpperSlash";
@@ -170,6 +173,7 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.XForce = 140.0f;
 				CurAttackData_.Stiffness = 0.25f;
 				CurAttackData_.RStiffness = 0.21f;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y);
 				CurAttackData_.YForce = 550.0f;
 				CurAttackData_.AttCount++;
 				Force_.ForceX_ = 70.0f;

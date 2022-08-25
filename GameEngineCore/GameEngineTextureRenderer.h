@@ -216,7 +216,7 @@ public:
 
 	void CurAnimationSetStartPivotFrame(int SetFrame);
 
-	bool IsCurAniSet()
+	bool IsCurAnimation()
 	{
 		if (nullptr == CurAni)
 		{
