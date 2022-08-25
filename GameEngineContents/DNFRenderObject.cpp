@@ -25,7 +25,10 @@ DNFRenderObject::DNFRenderObject():
 	GodTime_(),
 	MaxHP_(),
 	CurHP_(),
-	StateManager_()
+	StateManager_(),
+	HitAbove_(),
+	HitBelow_(),
+	PrevHitData_()
 {
 	AllDNFRenderer_.push_back(&MainRenderer_);
 	AllDNFRenderer_.push_back(&ShadowRenderer_);
@@ -140,22 +143,128 @@ void DNFRenderObject::CalHP(int _Value)
 
 void DNFRenderObject::HitColCheck(ColOrder _Order)
 {
+	if (GodTime_.IsTimerOn() == true)
+	{
+		return;
+	}
+
+	if (CurHP_ == 0)
+	{
+		return;
+	}
+	HitBelow_->IsCollision(CollisionType::CT_OBB2D, _Order, CollisionType::CT_OBB2D,
+		std::bind(&DNFRenderObject::BelowHitCheck, this, std::placeholders::_1, std::placeholders::_2));
+
+	HitAbove_->IsCollision(CollisionType::CT_OBB2D, _Order, CollisionType::CT_OBB2D,
+		std::bind(&DNFRenderObject::AboveHitCheck, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
 {
-	return false;
+	AttackData Data = _Other->CurAttackData_;
+
+	//Hit충돌체와 공격타입이 불일치하면 리턴
+	if (_Type != Data.Type)
+	{
+		return false;
+	}
+
+
+	//같은 공격에 여러번 충돌 방지
+	if (Data.AttackName == PrevHitData_.AttackName && Data.AttCount <= PrevHitData_.AttCount)
+	{
+		return false;
+	}
+
+	//z축 차이(y축)가 나면 충돌 방지
+	int ZLength = abs(static_cast<int>(GetTransform().GetWorldPosition().y) - Data.ZPos);
+	if (ZLength > 15) //상대방과 15이상 거리차가 나면 공격을 무시한다.
+	{
+		if (Data.ZPos != 0 && Force_.IsGravity() == false) //ZPos ==0 : 이 공격은 z축의 영향을 받지 않는다 && 공중에 뜸 상태에서는 z축 차이를 계산하지 않는다.
+		{
+			return false;
+		}
+	}
+
+	//여기 아래부터 공격을 받은건 확실해진다.
+
+	//현재 받은 공격을 저장
+	PrevHitData_ = Data;
+
+	CalHP(-Data.Att);
+
+	//공중공격이 아닌 경우
+	if (OnAir_ == false && Data.YForce <= 0.0f)
+	{
+		GiveAndRecevieStiffness(PrevHitData_, _Other);
+		if (StateManager_.GetCurStateStateName() == "Down")
+		{
+			ResetDNFAnimation();
+			StateManager_.ChangeState("Down");
+		}
+		else
+		{
+			StateManager_.ChangeState("Hit");
+		}
+		return true;
+	}
+
+	//여기서부터 채공상태
+
+	//최초의 공중에 뜸 상태 일때
+	if (OnAir_ == false)
+	{
+		GroundYPos_ = GetTransform().GetWorldPosition().y;
+		Force_.ForceY_ = PrevHitData_.YForce;
+		GiveAndRecevieStiffness(PrevHitData_, _Other);
+		//Down 상태 분기
+		if (StateManager_.GetCurStateStateName() == "Down")
+		{
+			ResetDNFAnimation();
+			Force_.ForceY_ = PrevHitData_.YForce * 0.5f;
+			OnAir_ = true;
+			Force_.OnGravity();
+			StateManager_.ChangeState("Down");
+		}
+		else
+		{
+			AirborneTime_ = 0.0f; //Down 상태에서도 이걸 넣으면, 다운상태적을 띄우면 중력이 초기화됨
+			StateManager_.ChangeState("Airborne");
+		}
+		return true;
+	}
+	else//공중의 뜸 상태에서 공격을 받은경우
+	{
+		GiveAndRecevieStiffness(PrevHitData_, _Other);
+		Force_.ForceY_ = PrevHitData_.YForce;
+		if (StateManager_.GetCurStateStateName() == "Down")
+		{
+			ResetDNFAnimation();
+			Force_.ForceY_ = PrevHitData_.YForce * 0.5f;
+			OnAir_ = true;
+			StateManager_.ChangeState("Down");
+		}
+		else
+		{
+			StateManager_.ChangeState("Airborne");
+		}
+		return true;
+	}
 }
 
 bool DNFRenderObject::AboveHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other)
 {
-	return false;
+	DNFRenderObject* Other = dynamic_cast<DNFRenderObject*>(_Other->GetParent());
+	return HitCheck(AttackType::Above, Other);
 }
 
 bool DNFRenderObject::BelowHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other)
 {
-	return false;
+	DNFRenderObject* Other = dynamic_cast<DNFRenderObject*>(_Other->GetParent());
+	return HitCheck(AttackType::Below, Other);
 }
+
+
 
 bool DNFRenderObject::CanMove(const float4& _MoveValue)
 {

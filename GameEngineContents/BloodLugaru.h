@@ -62,10 +62,6 @@ private:
 	void DieUpdate(float _DeltaTime, const StateInfo _Info);
 
 
-	void HitColCheck(ColOrder _Order); //호출자 Monster면 _Oter에는 PlayerAttack이 들어감
-	bool HitCheck(AttackType _Type, DNFRenderObject* _Other);//파라미터 : 확인할 공격 타입
-	bool AboveHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
-	bool BelowHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
 
 	void ChangeHitColTrans(std::string _State);
 
@@ -83,9 +79,7 @@ private:
 	//Back 관련 변수들
 	float4 BackMoveDir_;
 
-	//Hit 관련 변수들
-	GameEngineCollision* HitAbove_;
-	GameEngineCollision* HitBelow_;
+
 
 
 
