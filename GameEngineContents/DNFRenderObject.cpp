@@ -5,6 +5,7 @@
 #include "DNFRenderObject.h"
 #include "DNFLevel.h"
 #include "DNFBackground.h"
+#include "DNFMath.h"
 
 #include "DNFDebugGUI.h"
 
@@ -21,7 +22,10 @@ DNFRenderObject::DNFRenderObject():
 	GroundYPos_(),
 	CurAttackData_(),
 	AirborneTime_(),
-	IsStiffFirst_(true)
+	GodTime_(),
+	MaxHP_(),
+	CurHP_(),
+	StateManager_()
 {
 	AllDNFRenderer_.push_back(&MainRenderer_);
 	AllDNFRenderer_.push_back(&ShadowRenderer_);
@@ -55,7 +59,6 @@ void DNFRenderObject::StiffnessUpdate(float& _DeltaTime)
 			}
 		}
 
-		IsStiffFirst_ = false;
 		Stiffness_ -= _DeltaTime;
 		_DeltaTime = 0.0f;
 		if (Stiffness_ <= 0)
@@ -120,6 +123,38 @@ void DNFRenderObject::ShadowUpdate()
 		GroundPos.y = GroundYPos_-40.0f;
 		ShadowRenderer_->GetTransform().SetWorldPosition(GroundPos);
 	}
+}
+
+void DNFRenderObject::CalHP(int _Value)
+{
+	CurHP_ += _Value;
+	if (CurHP_ <= 0)
+	{
+		CurHP_ = 0;
+	}
+	if (CurHP_ > MaxHP_)
+	{
+		CurHP_ = MaxHP_;
+	}
+}
+
+void DNFRenderObject::HitColCheck(ColOrder _Order)
+{
+}
+
+bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
+{
+	return false;
+}
+
+bool DNFRenderObject::AboveHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other)
+{
+	return false;
+}
+
+bool DNFRenderObject::BelowHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other)
+{
+	return false;
 }
 
 bool DNFRenderObject::CanMove(const float4& _MoveValue)

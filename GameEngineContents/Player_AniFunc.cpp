@@ -68,6 +68,7 @@ void Player_Main::InitAniFunc()
 				//Set Attack
 				CurAttackData_.Type = AttackType::Above;
 				CurAttackData_.AttackName = "AutoAttack";
+				CurAttackData_.Att = Value_.AutoAttackAtt;
 				CurAttackData_.XForce = 70.0f;
 				CurAttackData_.Stiffness = 0.15f;
 				CurAttackData_.RStiffness = 0.11f;
@@ -99,6 +100,7 @@ void Player_Main::InitAniFunc()
 			{
 				SetAttackCol(Value_.AutoAttackPos, Value_.AutoAttackScale);
 				//Set Attack
+				CurAttackData_.Att = Value_.AutoAttackAtt;
 				CurAttackData_.Type = AttackType::Above;
 				CurAttackData_.XForce = 140.0f;
 				CurAttackData_.Stiffness = 0.15f;
@@ -130,6 +132,7 @@ void Player_Main::InitAniFunc()
 			{
 				SetAttackCol(Value_.UpperSlashPos, Value_.UpeerSlashScale);
 				//Set Attack
+				CurAttackData_.Att = Value_.AutoAttackAtt;
 				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.XForce = 140.0f;
 				CurAttackData_.YForce = 300.0f;
@@ -169,6 +172,7 @@ void Player_Main::InitAniFunc()
 				//Set Attack
 				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.AttackName = "UpperSlash";
+				CurAttackData_.Att = Value_.UpperSlashAtt;
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.XForce = 140.0f;
 				CurAttackData_.Stiffness = 0.25f;

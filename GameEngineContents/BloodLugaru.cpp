@@ -13,7 +13,6 @@
 
 BloodLugaru::BloodLugaru() :
 	AniSpeed_(0.12f),
-	StateManager_(),
 	Player_(),
 	FindRange_(450.0f),
 	AttackRangeCol_(),
@@ -28,8 +27,7 @@ BloodLugaru::BloodLugaru() :
 	Idle_Timer_(3.0f),
 	Back_Timer_(3.0f),
 	Chase_Timer_(5.0f),
-	Hit_Timer_(1.0f),
-	PrevHitData_()
+	Hit_Timer_(1.0f)
 {
 	InitDefaultValue();
 }
@@ -56,10 +54,7 @@ void BloodLugaru::Start()
 		Value_.DownAboveColScale
 		Value_.DownBelowColPos =
 		Value_.DownBelowColScale*/
-	DNFDebugGUI::AddMutableValue("Ground", &GroundYPos_);
-	DNFDebugGUI::AddTransform("Trans", &GetTransform());
-
-
+	DNFDebugGUI::AddMutableValue("HP", &CurHP_);
 }
 
 void BloodLugaru::Update(float _DeltaTime)
@@ -69,22 +64,16 @@ void BloodLugaru::Update(float _DeltaTime)
 	{
 		return;
 	}
-
+	TimerCheck(_DeltaTime);
 	Force_.Update(_DeltaTime * (1 + (AirborneTime_ * AirborneTime_) * 0.01f));
-	//공격 쿨타임 카운트
-	if (Attack_1_Timer_.IsTimerOn() == true)
-	{
-		Attack_1_Timer_ -= _DeltaTime;
-	}
+
+
 
 	if (DNFGlobalValue::CurrentLevel != nullptr)
 	{
 		Player_ = DNFGlobalValue::CurrentLevel->GetPlayer();
-		//Hit감지
-		HitColCheck();
-
 	}
-
+	HitColCheck(ColOrder::PlayerAttack);
 	StateManager_.Update(_DeltaTime);
 
 	//제한된 범위 밖을 나가지 못하게
@@ -171,6 +160,9 @@ void BloodLugaru::InitAniNState()
 
 	StateManager_.CreateStateMember("Down", std::bind(&BloodLugaru::DownUpdate, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&BloodLugaru::DownStart, this, std::placeholders::_1));
+
+	StateManager_.CreateStateMember("Die", std::bind(&BloodLugaru::DieUpdate, this, std::placeholders::_1, std::placeholders::_2)
+		, std::bind(&BloodLugaru::DieStart, this, std::placeholders::_1));
 
 	StateManager_.CreateStateMember("Attack_1", std::bind(&BloodLugaru::Attack_1_Update, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&BloodLugaru::Attack_1_Start, this, std::placeholders::_1),
@@ -472,6 +464,7 @@ void BloodLugaru::BackUpdate(float _DeltaTime, const StateInfo _Info)
 void BloodLugaru::HitStart(const StateInfo _Info)
 {
 	ChangeDNFAnimation("Hit");
+	ResetDNFAnimation();
 	ChangeHitColTrans("Hit");
 	Hit_Timer_.StartTimer();
 	
@@ -484,6 +477,12 @@ void BloodLugaru::HitStart(const StateInfo _Info)
 
 void BloodLugaru::HitUpdate(float _DeltaTime, const StateInfo _Info)
 {
+	//사망검사
+	if (CurHP_ == 0)
+	{
+		StateManager_.ChangeState("Die");
+		return;
+	}
 	if (Hit_Timer_.IsTimerOn() == true)
 	{
 		Hit_Timer_ -= _DeltaTime;
@@ -499,6 +498,7 @@ void BloodLugaru::HitUpdate(float _DeltaTime, const StateInfo _Info)
 void BloodLugaru::AirborneStart(const StateInfo _Info)
 {
 	ChangeDNFAnimation("Hit");
+	ResetDNFAnimation();
 	ChangeHitColTrans("Hit");
 	//플레이어를 마주보는 방향으로 Flip
 	FlipX(-Player_->GetDirX());
@@ -516,6 +516,7 @@ void BloodLugaru::AirborneUpdate(float _DeltaTime, const StateInfo _Info)
 	//추락
 	AirborneTime_ += _DeltaTime;
 	float CurYPos = GetTransform().GetWorldPosition().y;
+
 	if (CurYPos <= GroundYPos_)
 	{
 		GetTransform().SetWorldPosition(float4(GetTransform().GetWorldPosition().x, GroundYPos_, GroundYPos_));
@@ -526,6 +527,7 @@ void BloodLugaru::AirborneUpdate(float _DeltaTime, const StateInfo _Info)
 		AirborneTime_ = 0.0f;
 		Force_.OnGravity();
 		PrevHitData_ = {};
+		GodTime_.StartTimer(Value_.Down_God_Time);
 		StateManager_.ChangeState("Down");
 		return;
 	}
@@ -560,12 +562,21 @@ void BloodLugaru::DownUpdate(float _DeltaTime, const StateInfo _Info)
 		Down_Timer_ -= _DeltaTime * (1.f+AirborneTime_ * 0.1f);
 		OnAir_ = false;
 		Force_.OffGravity();
+
+		//사망검사
+		if (CurHP_ == 0)
+		{
+			StateManager_.ChangeState("Die");
+			return;
+		}
+		//기상검사
 		if (Down_Timer_.IsTimerOn() == false)
 		{
 			OnAir_ = false;
 			Force_.ForceY_ = 0.0f;
 			AirborneTime_ = 0.0f;
 			Force_.OffGravity();
+			GodTime_.StartTimer(Value_.Down_God_Time);
 			PrevHitData_ = {};
 			StateManager_.ChangeState("Idle");
 			return;
@@ -573,19 +584,37 @@ void BloodLugaru::DownUpdate(float _DeltaTime, const StateInfo _Info)
 	}
 }
 
-void BloodLugaru::HitColCheck()
+void BloodLugaru::DieStart(const StateInfo _Info)
 {
-	HitBelow_->IsCollision(CollisionType::CT_OBB2D, ColOrder::PlayerAttack, CollisionType::CT_OBB2D,
+	ChangeDNFAnimation("Down");
+	Death(2.0f);
+}
+
+void BloodLugaru::DieUpdate(float _DeltaTime, const StateInfo _Info)
+{
+}
+
+void BloodLugaru::HitColCheck(ColOrder _Order)
+{
+	if (GodTime_.IsTimerOn() == true)
+	{
+		return;
+	}
+
+	if (CurHP_ == 0)
+	{
+		return;
+	}
+	HitBelow_->IsCollision(CollisionType::CT_OBB2D, _Order, CollisionType::CT_OBB2D,
 		std::bind(&BloodLugaru::BelowHitCheck, this, std::placeholders::_1, std::placeholders::_2));
 
-	HitAbove_->IsCollision(CollisionType::CT_OBB2D, ColOrder::PlayerAttack, CollisionType::CT_OBB2D,
+	HitAbove_->IsCollision(CollisionType::CT_OBB2D, _Order, CollisionType::CT_OBB2D,
 		std::bind(&BloodLugaru::AboveHitCheck, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-bool BloodLugaru::HitCheck(AttackType _Type)
+bool BloodLugaru::HitCheck(AttackType _Type , DNFRenderObject* _Other)
 {
-	Player_Main* Player = DNFGlobalValue::CurrentLevel->GetPlayer();
-	AttackData Data = Player->CurAttackData_;
+	AttackData Data = _Other->CurAttackData_;
 
 	//Hit충돌체와 공격타입이 불일치하면 리턴
 	if (_Type != Data.Type)
@@ -602,7 +631,7 @@ bool BloodLugaru::HitCheck(AttackType _Type)
 
 	//z축 차이(y축)가 나면 충돌 방지
 	int ZLength = abs(static_cast<int>(GetTransform().GetWorldPosition().y) - Data.ZPos);
-	if (ZLength > Value_.HitZRange)
+	if (ZLength > 15) //상대방과 15이상 거리차가 나면 공격을 무시한다.
 	{
 		if (Data.ZPos != 0 && Force_.IsGravity() == false ) //ZPos ==0 : 이 공격은 z축의 영향을 받지 않는다 && 공중에 뜸 상태에서는 z축 차이를 계산하지 않는다.
 		{
@@ -610,13 +639,17 @@ bool BloodLugaru::HitCheck(AttackType _Type)
 		}
 	}
 
+	//여기 아래부터 공격을 받은건 확실해진다.
+
 	//현재 받은 공격을 저장
 	PrevHitData_ = Data;
+
+	CalHP(-Data.Att);
 
 	//공중공격이 아닌 경우
 	if (OnAir_ == false && Data.YForce <= 0.0f)
 	{
-		GiveAndRecevieStiffness(PrevHitData_, Player);
+		GiveAndRecevieStiffness(PrevHitData_, _Other);
 		if (StateManager_.GetCurStateStateName() == "Down")
 		{
 			ResetDNFAnimation();
@@ -636,7 +669,7 @@ bool BloodLugaru::HitCheck(AttackType _Type)
 	{
 		GroundYPos_ = GetTransform().GetWorldPosition().y;
 		Force_.ForceY_ = PrevHitData_.YForce;
-		GiveAndRecevieStiffness(PrevHitData_, Player);
+		GiveAndRecevieStiffness(PrevHitData_, _Other);
 		//Down 상태 분기
 		if (StateManager_.GetCurStateStateName() == "Down")
 		{
@@ -655,7 +688,7 @@ bool BloodLugaru::HitCheck(AttackType _Type)
 	}
 	else//공중의 뜸 상태에서 공격을 받은경우
 	{
-		GiveAndRecevieStiffness(PrevHitData_, Player);
+		GiveAndRecevieStiffness(PrevHitData_, _Other);
 		Force_.ForceY_ = PrevHitData_.YForce;
 		if (StateManager_.GetCurStateStateName() == "Down")
 		{
@@ -674,12 +707,14 @@ bool BloodLugaru::HitCheck(AttackType _Type)
 
 bool BloodLugaru::AboveHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other)
 {
-	return HitCheck(AttackType::Above);
+	DNFRenderObject* Other = dynamic_cast<DNFRenderObject*>(_Other->GetParent());
+	return HitCheck(AttackType::Above,Other);
 }
 
 bool BloodLugaru::BelowHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other)
 {
-	return HitCheck(AttackType::Below);
+	DNFRenderObject* Other = dynamic_cast<DNFRenderObject*>(_Other->GetParent());
+	return HitCheck(AttackType::Below,Other);
 }
 
 void BloodLugaru::ChangeHitColTrans(std::string _State)
@@ -711,6 +746,18 @@ void BloodLugaru::ChangeHitColTrans(std::string _State)
 	MsgBoxAssert("잘못된 _State");
 }
 
+void BloodLugaru::TimerCheck(float _DeltaTime)
+{
+	if (GodTime_.IsTimerOn() == true)
+	{
+		GodTime_ -= _DeltaTime;
+	}
+	if (Attack_1_Timer_.IsTimerOn() == true)
+	{
+		Attack_1_Timer_ -= _DeltaTime;
+	}
+}
+
 void BloodLugaru::InitDefaultValue()
 {
 	Value_.HitZRange = 15;
@@ -725,5 +772,9 @@ void BloodLugaru::InitDefaultValue()
 	Value_.DownBelowColScale = { 80.0f,20.0f,1.0f };
 
 	Value_.Down_Time = 1.3f;
+	Value_.Down_God_Time = 0.48f;
+
+	MaxHP_ = 10;
+	CurHP_ = MaxHP_;
 }
 

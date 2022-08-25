@@ -25,7 +25,6 @@ protected:
 	float AniSpeed_;
 
 private:
-	GameEngineStateManager StateManager_;
 	GameEngineCollision* AttackRangeCol_;
 	Player_Main* Player_;
 
@@ -59,9 +58,12 @@ private:
 	void DownStart(const StateInfo _Info);
 	void DownUpdate(float _DeltaTime, const StateInfo _Info);
 
+	void DieStart(const StateInfo _Info);
+	void DieUpdate(float _DeltaTime, const StateInfo _Info);
 
-	void HitColCheck();
-	bool HitCheck(AttackType _Type);//파라미터 : 확인할 공격 타입
+
+	void HitColCheck(ColOrder _Order); //호출자 Monster면 _Oter에는 PlayerAttack이 들어감
+	bool HitCheck(AttackType _Type, DNFRenderObject* _Other);//파라미터 : 확인할 공격 타입
 	bool AboveHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
 	bool BelowHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
 
@@ -69,7 +71,7 @@ private:
 
 
 
-
+	
 	//Idle 관련 변수들
 	bool IsIdleFirst_;
 
@@ -84,17 +86,17 @@ private:
 	//Hit 관련 변수들
 	GameEngineCollision* HitAbove_;
 	GameEngineCollision* HitBelow_;
-	AttackData PrevHitData_;
+
 
 
 	//타이머 
+	void TimerCheck(float _DeltaTime);
 	Timer Attack_1_Timer_;
 	Timer Idle_Timer_;
 	Timer Back_Timer_;
 	Timer Chase_Timer_;
 	Timer Hit_Timer_;
 	Timer Down_Timer_;
-	Force Force_;
 
 
 	//DefaultVales
@@ -113,6 +115,7 @@ private:
 		float4 DownBelowColScale;
 
 		float Down_Time;
+		float Down_God_Time;
 	};
 	DefaultValue Value_;
 

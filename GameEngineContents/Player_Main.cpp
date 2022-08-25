@@ -39,7 +39,6 @@ Player_Main::Player_Main() :
 	IsReadyNextAttack_(false),
 	NextAttackAni_(),
 	BottomAttackCol_(),
-	Force_(),
 	Value_()
 {
 	InitDefaultValue();
@@ -68,10 +67,14 @@ Player_Main::Player_Main() :
 void Player_Main::InitDefaultValue()
 {
 	//, 
-	Value_.AutoAttackPos = float4(50, -20, -500);
-	Value_.AutoAttackScale = float4(120, 40, 1);
-	Value_.UpperSlashPos = float4(75, -57, -500);
-	Value_.UpeerSlashScale = float4(120, 64, 1);
+	Value_.AutoAttackPos = float4(50, 0, -500);
+	Value_.AutoAttackScale = float4(120, 55, 1);
+	Value_.UpperSlashPos = float4(75, -45, -500);
+	Value_.UpeerSlashScale = float4(120,100, 1);
+
+	//°ø°Ý·Â
+	Value_.UpperSlashAtt = 2;
+	Value_.AutoAttackAtt = 1;
 }
 
 Player_Main::~Player_Main()
@@ -307,6 +310,11 @@ bool Player_Main::IsPressMoveKey()
 	{
 		return false;
 	}
+}
+
+int Player_Main::CalAtt(int _Value)
+{
+	return _Value;
 }
 
 

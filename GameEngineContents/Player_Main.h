@@ -102,11 +102,8 @@ private:
 
 	bool IsPressMoveKey();
 
-	//Force관련
-	Force Force_;
-
-	//FSM
-	GameEngineStateManager StateManager_;
+	//현재 공격의 공격력 계산
+	int CalAtt(int _Value);
 
 	void IdleStart(const StateInfo _Info);
 	void IdleUpdate(float _DeltaTime, const StateInfo _Info);
@@ -134,6 +131,11 @@ private:
 		float4 AutoAttackScale;
 		float4 UpperSlashPos;
 		float4 UpeerSlashScale;
+
+
+		//공격력
+		int UpperSlashAtt;
+		int AutoAttackAtt;
 	};
 	DefaultValue Value_;
 };

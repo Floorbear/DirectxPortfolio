@@ -18,6 +18,7 @@ class GameEngineRenderer;
 class GameEngineCamera : public GameEngineTransformComponent
 {
 	friend GameEngineLevel;
+	friend GameEngineRenderer;
 
 public:
 	// constrcuter destructer
@@ -83,8 +84,11 @@ public:
 	// float4 GetMouseViewPortPosition();
 
 
+
 protected:
 	void Start();
+
+	void ChangeRenderingOrder(GameEngineRenderer* _Renderer, int _ChangeOrder);
 
 private:
 	void Render(float _DeltaTime);
