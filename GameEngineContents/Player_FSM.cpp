@@ -138,11 +138,7 @@ void Player_Main::AutoAttackUpdate(float _DeltaTime, const StateInfo _Info)
 
 void Player_Main::AutoAttackEnd(const StateInfo _Info)
 {
-	AttackCol_->Off();
-	CurAttackData_ = {};
-	IsAttack_End_ = false;
-	IsReadyNextAttack_ = false;
-	Force_.ForceX_ = 0;
+	AttackEnd();
 }
 
 void Player_Main::UpperSlashStart(const StateInfo _Info)
@@ -178,10 +174,39 @@ void Player_Main::UpperSlashUpdate(float _DeltaTime, const StateInfo _Info)
 
 void Player_Main::UpperSlashEnd(const StateInfo _Info)
 {
-	AttackCol_->Off();
-	AttackCount_ = 0;
-	IsAttack_End_ = false;
-	Force_.ForceX_ = 0;
-	CurAttackData_ = {};
+	AttackEnd();
+}
+
+void Player_Main::HitStart(const StateInfo _Info)
+{
+	AvatarManager_.ChangeMotion(PlayerAnimations::Hit);
+	ResetDNFAnimation();
+	//ChangeHitColTrans("Hit");
+	Hit_Timer_ = 1.0f;
+	Hit_Timer_.StartTimer();
+
+	//플레이어를 마주보는 방향으로 Flip
+	//FlipX(-Player_->GetDirX());
+	Force_.ForceX_ += -PrevHitData_.XForce;
+}
+
+void Player_Main::HitUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	//사망검사
+	//if (CurHP_ == 0)
+	//{
+	//	StateManager_.ChangeState("Die");
+	//	return;
+	//}
+	if (Hit_Timer_.IsTimerOn() == true)
+	{
+		Hit_Timer_ -= _DeltaTime;
+	}
+	else
+	{
+		StateManager_.ChangeState("Idle");
+		PrevHitData_ = {};
+		return;
+	}
 }
 

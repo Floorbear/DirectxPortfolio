@@ -66,7 +66,12 @@ Player_Main::Player_Main() :
 
 void Player_Main::InitDefaultValue()
 {
-	//, 
+	//Scale
+	Value_.HitAbovePos =  { -20,-15.0f,-500.0f };
+	Value_.HitAboveScale  = { 50.0f,70.0f,1.0f };
+	Value_.HitBelowPos =  { -20,-55.0f,-500.0f };
+	Value_.HitBelowScale  = { 50.0f,70.0f,1.0f };
+
 	Value_.AutoAttackPos = float4(50, 0, -500);
 	Value_.AutoAttackScale = float4(120, 55, 1);
 	Value_.UpperSlashPos = float4(75, -45, -500);
@@ -75,6 +80,10 @@ void Player_Main::InitDefaultValue()
 	//공격력
 	Value_.UpperSlashAtt = 2;
 	Value_.AutoAttackAtt = 1;
+
+	//스텟
+	MaxHP_ = 20;
+	CurHP_ = MaxHP_;
 }
 
 Player_Main::~Player_Main()
@@ -104,10 +113,10 @@ void Player_Main::Start()
 	Force_.Gravity_ = 700.0f;
 	Force_.SetTransfrom(&GetTransform());
 
-	DNFDebugGUI::AddMutableValue("UpperSlashPos_", &Value_.UpperSlashPos);
-	DNFDebugGUI::AddMutableValue("UpeerSlashScale_", &Value_.UpeerSlashScale);
-	DNFDebugGUI::AddMutableValue("AutoAttackPos", &Value_.AutoAttackPos);
-	DNFDebugGUI::AddMutableValue("AutoAttackScale", &Value_.AutoAttackScale);
+	DNFDebugGUI::AddMutableValue("HitAbovePos", &Value_.HitAbovePos);
+	DNFDebugGUI::AddMutableValue("HitAboveScale", &Value_.HitAboveScale);
+	DNFDebugGUI::AddMutableValue("HitBelowPos", &Value_.HitBelowPos);
+	DNFDebugGUI::AddMutableValue("HitBelowSclae", &Value_.HitBelowScale);
 
 }
 
@@ -119,8 +128,13 @@ void Player_Main::Update(float _DeltaTime)
 		return;
 	}
 
+	HitAbove_->GetTransform().SetLocalPosition(Value_.HitAbovePos);
+	HitAbove_->GetTransform().SetLocalScale(Value_.HitAboveScale);
+	HitBelow_->GetTransform().SetLocalPosition(Value_.HitBelowPos);
+	HitBelow_->GetTransform().SetLocalScale(Value_.HitBelowScale);
+
 	DNFUpdate();
-	DNFDebugGUI::AddValue("PlayerState", StateManager_.GetCurStateStateName());
+	HitColCheck(ColOrder::MonsterAttack);
 	StateManager_.Update(_DeltaTime);
 	//ForceUpdae
 	Force_.Update(_DeltaTime);
@@ -215,12 +229,21 @@ void Player_Main::CheckColMap()
 
 void Player_Main::InitCol()
 {
-	//테스트용 콜라이더
-	GameEngineCollision* Col = CreateComponent<GameEngineCollision>("Col");
-	Col->SetDebugSetting(CollisionType::CT_OBB2D, float4(0, 1.0f, 0, 0.5f));
-	Col->GetTransform().SetLocalScale(float4(100, 100, 1));
-	Col->GetTransform().SetLocalMove(float4(0, 0, -500));
-	Col->ChangeOrder(ColOrder::Player);
+
+	//MiddleHit
+	HitAbove_ = CreateComponent<GameEngineCollision>("Middle");
+	HitAbove_->SetDebugSetting(CollisionType::CT_OBB2D, float4(1.0f, 0.0f, 0.0f, 0.5f));
+	HitAbove_->GetTransform().SetLocalPosition(Value_.HitAbovePos);
+	HitAbove_->GetTransform().SetLocalScale(Value_.HitAboveScale);
+	HitAbove_->ChangeOrder(ColOrder::PlayerHit);
+
+
+	//BottomHit
+	HitBelow_ = CreateComponent<GameEngineCollision>("Bottom");
+	HitBelow_->SetDebugSetting(CollisionType::CT_OBB2D, float4(0.0f, 1.0f, 0.0f, 0.5f));
+	HitBelow_->GetTransform().SetLocalPosition(Value_.HitBelowPos);
+	HitBelow_->GetTransform().SetLocalScale(Value_.HitBelowScale);
+	HitBelow_->ChangeOrder(ColOrder::PlayerHit);
 
 	//Attack 콜라이더
 	AttackCol_ = CreateComponent<GameEngineCollision>("Attack");
@@ -250,6 +273,9 @@ void Player_Main::InitState()
 	StateManager_.CreateStateMember("UpperSlash", std::bind(&Player_Main::UpperSlashUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::UpperSlashStart, this, std::placeholders::_1),
 		std::bind(&Player_Main::UpperSlashEnd, this, std::placeholders::_1));
+
+	StateManager_.CreateStateMember("Hit", std::bind(&Player_Main::HitUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::HitStart, this, std::placeholders::_1));
 }
 
 float4 Player_Main::GetMoveDir()
@@ -315,6 +341,14 @@ bool Player_Main::IsPressMoveKey()
 int Player_Main::CalAtt(int _Value)
 {
 	return _Value;
+}
+
+void Player_Main::AttackEnd()
+{
+	AttackCol_->Off();
+	CurAttackData_ = {};
+	IsAttack_End_ = false;
+	IsReadyNextAttack_ = false;
 }
 
 

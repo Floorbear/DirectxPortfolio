@@ -25,7 +25,8 @@ BloodLugaru::BloodLugaru() :
 	Idle_Timer_(3.0f),
 	Back_Timer_(3.0f),
 	Chase_Timer_(5.0f),
-	Hit_Timer_(1.0f)
+	Hit_Timer_(1.0f),
+	AttackCol_()
 {
 	InitDefaultValue();
 }
@@ -126,6 +127,40 @@ void BloodLugaru::InitAniNState()
 
 
 	//애니메이션 바인드
+	MainRenderer_->AnimationBindFrame("Attack_1",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.Frames[_Desc.CurFrame - 1] == Lugaru_Attack_1_Start + 1)
+			{
+
+				//Set Attack
+				CurAttackData_.Type = AttackType::Below;
+				CurAttackData_.AttackName = "Attack_1";
+				CurAttackData_.Att = 2;
+				CurAttackData_.XForce = 100.0f;
+				CurAttackData_.Stiffness = 0.15f;
+				CurAttackData_.RStiffness = 0.11f;
+				CurAttackData_.AttCount = 0;
+				CurAttackData_.AttCount++;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y);
+				Force_.ForceX_ = 70.0f;
+				AttackCol_->On();
+			}
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == Lugaru_Attack_1_Start + 3)
+			{
+				CurAttackData_.AttCount++;
+
+			}
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == Lugaru_Attack_1_End)
+			{
+				//공격이 끝난 직후 로직
+				IsAttack_1_End_ = true;
+				Attack_1_Timer_.StartTimer();
+				AttackCol_->Off();
+			}
+
+		}
+		);
 	MainRenderer_->AnimationBindEnd("Attack_1",
 		[&](const FrameAnimation_DESC&)
 		{
@@ -168,12 +203,20 @@ void BloodLugaru::InitCol()
 {
 	//콜라이더 추가
 	AttackRangeCol_ = CreateComponent<GameEngineCollision>("Col");
-	AttackRangeCol_->SetDebugSetting(CollisionType::CT_OBB2D, float4(0, 0.0f, 1.0f, 0.5f));
+	AttackRangeCol_->SetDebugSetting(CollisionType::CT_OBB2D, float4(0, 0.0f, 1.0f, 0.2f));
 	Attack_1_Scale_ = float4(120, 50, 1);
 	Attack_1_Pos_ = float4(40, -45, -500);
 	AttackRangeCol_->GetTransform().SetLocalScale(Attack_1_Scale_);
 	AttackRangeCol_->GetTransform().SetLocalPosition(Attack_1_Pos_);
-	AttackRangeCol_->ChangeOrder(ColOrder::Monster);
+	AttackRangeCol_->ChangeOrder(ColOrder::MonsterRange);
+
+	//AttackCol
+	AttackCol_ = CreateComponent<GameEngineCollision>("Col");
+	AttackCol_->SetDebugSetting(CollisionType::CT_OBB2D, float4(1.0, 0.0f, 1.0f, 0.5f));
+	AttackCol_->GetTransform().SetLocalScale(Attack_1_Scale_);
+	AttackCol_->GetTransform().SetLocalPosition(Attack_1_Pos_);
+	AttackCol_->ChangeOrder(ColOrder::MonsterAttack);
+	AttackCol_->Off();
 
 	//MiddleHit
 	HitAbove_ = CreateComponent<GameEngineCollision>("Middle");
@@ -240,8 +283,7 @@ void BloodLugaru::IdleUpdate(float _DeltaTime,const StateInfo _Info )
 	//상태 판단
 
 	//공격범위 내에 접근하면 바로 공격
-	if (AttackRangeCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::Player, CollisionType::CT_OBB2D)
-		== true && Attack_1_Timer_.IsTimerOn() == false)
+	if (CanHitAttack1() == true)
 	{
 		StateManager_.ChangeState("Attack_1");
 		return;
@@ -288,8 +330,7 @@ void BloodLugaru::ChaseUpdate(float _DeltaTime, const StateInfo _Info)
 
 
 	//공격범위 내에 접근하면 바로 공격
-	if (AttackRangeCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::Player, CollisionType::CT_OBB2D)
-		== true && Attack_1_Timer_.IsTimerOn() == false)
+	if (CanHitAttack1() == true)
 	{
 		StateManager_.ChangeState("Attack_1");
 		return;
@@ -374,6 +415,9 @@ void BloodLugaru::Attack_1_Update(float _DeltaTime, const StateInfo _Info)
 void BloodLugaru::Attack_1_End(const StateInfo _Info)
 {
 	IsAttack_1_End_ = false;
+	Attack_1_Timer_.StartTimer();
+	AttackCol_->Off();
+	CurAttackData_ = {};
 }
 
 void BloodLugaru::BackStart(const StateInfo _Info)
@@ -418,8 +462,8 @@ void BloodLugaru::BackUpdate(float _DeltaTime, const StateInfo _Info)
 	}
 
 	//상태 판단
-	if (AttackRangeCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::Player, CollisionType::CT_OBB2D)
-		== true && Attack_1_Timer_.IsTimerOn() == false)
+	//공격범위 내에 접근하면 바로 공격
+	if (CanHitAttack1() == true)
 	{
 		StateManager_.ChangeState("Attack_1");
 		return;
@@ -463,7 +507,7 @@ void BloodLugaru::HitStart(const StateInfo _Info)
 	
 	//플레이어를 마주보는 방향으로 Flip
 	FlipX(-Player_->GetDirX());
-	Force_.ForceX_ = -PrevHitData_.XForce;
+	Force_.ForceX_ += -PrevHitData_.XForce;
 
 
 }
@@ -495,7 +539,7 @@ void BloodLugaru::AirborneStart(const StateInfo _Info)
 	ChangeHitColTrans("Hit");
 	//플레이어를 마주보는 방향으로 Flip
 	FlipX(-Player_->GetDirX());
-	Force_.ForceX_ = -PrevHitData_.XForce;
+	Force_.ForceX_ += -PrevHitData_.XForce;
 	
 
 	GetTransform().SetLocalMove(float4(0, Force_.ForceY_ * GameEngineTime::GetDeltaTime()));
@@ -517,6 +561,7 @@ void BloodLugaru::AirborneUpdate(float _DeltaTime, const StateInfo _Info)
 		//Down 상태 Bounce
 		OnAir_ = true;
 		Force_.ForceY_ = 200.0f;
+		Force_.ForceX_ += -140.0f;
 		AirborneTime_ = 0.0f;
 		Force_.OnGravity();
 		PrevHitData_ = {};
@@ -531,10 +576,7 @@ void BloodLugaru::DownStart(const StateInfo _Info)
 	ChangeDNFAnimation("Down");
 	ChangeHitColTrans("Down");
 	Down_Timer_.StartTimer(Value_.Down_Time);
-
-	//플레이어를 마주보는 방향으로 Flip
-	FlipX(-Player_->GetDirX());
-	Force_.ForceX_ = -150.0f;
+	Force_.ForceX_ += -PrevHitData_.XForce;
 
 	GetTransform().SetLocalMove(float4(0, Force_.ForceY_ * GameEngineTime::GetDeltaTime()));
 
@@ -618,6 +660,19 @@ void BloodLugaru::ChangeHitColTrans(std::string _State)
 	MsgBoxAssert("잘못된 _State");
 }
 
+bool BloodLugaru::CanHitAttack1()
+{
+	if (AttackRangeCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::PlayerHit, CollisionType::CT_OBB2D)
+		== true && Attack_1_Timer_.IsTimerOn() == false)
+	{
+		if (IsZPosHit(static_cast<int>(Player_->GetTransform().GetWorldPosition().y)) == true)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void BloodLugaru::TimerCheck(float _DeltaTime)
 {
 	if (GodTime_.IsTimerOn() == true)
@@ -646,7 +701,7 @@ void BloodLugaru::InitDefaultValue()
 	Value_.Down_Time = 1.3f;
 	Value_.Down_God_Time = 0.48f;
 
-	MaxHP_ = 10;
+	MaxHP_ = 99990;
 	CurHP_ = MaxHP_;
 }
 

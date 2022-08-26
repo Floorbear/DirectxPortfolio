@@ -1,5 +1,7 @@
 #pragma once
 #include <GameEngineCore/GameEngineActor.h>
+
+class GaugeRenderer;
 class DNFHUD : public GameEngineActor
 {
 public:
@@ -18,8 +20,9 @@ protected:
 
 private:
 	GameEngineUIRenderer* MainRenderer_;
-	GameEngineUIRenderer* HPRenderer_;
-	GameEngineUIRenderer* MPRenderer_;
+
+	GaugeRenderer* HPRenderer_;
+	GaugeRenderer* MPRenderer_;
 
 };
 

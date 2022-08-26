@@ -92,8 +92,13 @@ void DNFRenderObject::ChangeDNFAnimation(const std::string& _Name)
 
 void DNFRenderObject::ResetDNFAnimation()
 {
-	MainRenderer_->CurAnimationReset();
-	ShadowRenderer_->CurAnimationReset();
+	for (GameEngineTextureRenderer** i : AllDNFRenderer_)
+	{
+		if ((*i)->IsCurAnimation() == true)
+		{
+			(*i)->CurAnimationReset();
+		}
+	}
 }
 
 void DNFRenderObject::ShadowUpdate()
@@ -177,13 +182,9 @@ bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
 	}
 
 	//z축 차이(y축)가 나면 충돌 방지
-	int ZLength = abs(static_cast<int>(GetTransform().GetWorldPosition().y) - Data.ZPos);
-	if (ZLength > 15) //상대방과 15이상 거리차가 나면 공격을 무시한다.
+	if (IsZPosHit(Data.ZPos) == false)
 	{
-		if (Data.ZPos != 0 && Force_.IsGravity() == false) //ZPos ==0 : 이 공격은 z축의 영향을 받지 않는다 && 공중에 뜸 상태에서는 z축 차이를 계산하지 않는다.
-		{
-			return false;
-		}
+		return false;
 	}
 
 	//여기 아래부터 공격을 받은건 확실해진다.
@@ -192,6 +193,9 @@ bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
 	PrevHitData_ = Data;
 
 	CalHP(-Data.Att);
+
+	FlipX(-_Other->GetDirX());
+
 
 	//공중공격이 아닌 경우
 	if (OnAir_ == false && Data.YForce <= 0.0f)
@@ -262,6 +266,20 @@ bool DNFRenderObject::BelowHitCheck(GameEngineCollision* _this, GameEngineCollis
 {
 	DNFRenderObject* Other = dynamic_cast<DNFRenderObject*>(_Other->GetParent());
 	return HitCheck(AttackType::Below, Other);
+}
+
+bool DNFRenderObject::IsZPosHit(int _ZPos)
+{
+	//z축 차이(y축)가 나면 충돌 방지
+	int ZLength = abs(static_cast<int>(GetTransform().GetWorldPosition().y) - _ZPos);
+	if (ZLength > 15) //상대방과 15이상 거리차가 나면 공격을 무시한다.
+	{
+		if (_ZPos != 0 && Force_.IsGravity() == false) //ZPos ==0 : 이 공격은 z축의 영향을 받지 않는다 && 공중에 뜸 상태에서는 z축 차이를 계산하지 않는다.
+		{
+			return false;
+		}
+	}
+	return true;
 }
 
 

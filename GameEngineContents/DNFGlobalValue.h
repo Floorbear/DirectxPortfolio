@@ -5,9 +5,10 @@
 enum class ColOrder
 {
 	None,
-	Player,
-	Monster,
+	PlayerHit,
+	MonsterAttack,
 	MonsterHit,
+	MonsterRange,
 	PlayerAttack,
 	Debug
 };

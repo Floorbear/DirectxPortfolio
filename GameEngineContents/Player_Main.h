@@ -48,6 +48,10 @@ private:
 	//다음 공격키를 선입력 받는다.
 	// 다음 공격의 애니메이션을 Enum으로 알아오고, 다음 공격이 있다는 bool을 true로 변환, 그 결과를 bool로 return
 	bool CheckAttackKey();
+	int CalAtt(int _Value);	//현재 공격의 공격력 계산
+
+	//Hit관련
+	Timer Hit_Timer_;
 
 
 	//변수
@@ -56,6 +60,7 @@ private:
 	GameEngineCollision* AttackCol_;
 	GameEngineCollision* BottomAttackCol_;
 	int AttackCount_;
+	void AttackEnd();
 
 	//"일단" 공격 1회가 끝나면 IsAttack_End == true > 이후 ReadyNextAttack 분기에 따라
 	bool  IsAttack_End_;
@@ -102,8 +107,7 @@ private:
 
 	bool IsPressMoveKey();
 
-	//현재 공격의 공격력 계산
-	int CalAtt(int _Value);
+
 
 	void IdleStart(const StateInfo _Info);
 	void IdleUpdate(float _DeltaTime, const StateInfo _Info);
@@ -123,10 +127,18 @@ private:
 	void UpperSlashUpdate(float _DeltaTime, const StateInfo _Info);
 	void UpperSlashEnd(const StateInfo _Info);
 
+	void HitStart(const StateInfo _Info);
+	void HitUpdate(float _DeltaTime, const StateInfo _Info);
+
 	//DefaultValues
 	void InitDefaultValue();
 	struct DefaultValue
 	{
+		//Pos&Scale
+		float4 HitAbovePos;
+		float4 HitAboveScale;
+		float4 HitBelowPos;
+		float4 HitBelowScale;
 		float4 AutoAttackPos;
 		float4 AutoAttackScale;
 		float4 UpperSlashPos;

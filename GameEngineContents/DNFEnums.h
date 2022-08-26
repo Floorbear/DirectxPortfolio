@@ -45,5 +45,6 @@ enum class PlayerAnimations
 	AutoAttack_2,
 	Jump_Start,
 	Jump_End,
-	UpperSlash
+	UpperSlash,
+	Hit
 };

@@ -226,6 +226,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Enums.h" />
+    <ClInclude Include="GaugeRenderer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="GlobalContentsValue.h">
       <SubType>
       </SubType>
@@ -342,6 +346,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Elvenguard_Front_Background.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="GaugeRenderer.cpp">
       <SubType>
       </SubType>
     </ClCompile>

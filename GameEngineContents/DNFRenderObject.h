@@ -77,6 +77,15 @@ public:
 		return float4::ZERO;
 	}
 
+	inline	int GetMaxHP()
+	{
+		return MaxHP_;
+	}
+	inline int GetCurHP()
+	{
+		return CurHP_;
+	}
+
 	AttackData CurAttackData_;
 
 protected:
@@ -142,6 +151,7 @@ protected:
 	void CalHP(int _Value); //_Value값 만큼 체력을 더하거나 뺀다.
 
 
+
 	//Hit관련
 	AttackData PrevHitData_; //내가 방금 Hit한 Attack의 정보
 	GameEngineCollision* HitAbove_;
@@ -150,6 +160,7 @@ protected:
 	bool HitCheck(AttackType _Type, DNFRenderObject* _Other);//파라미터 : 확인할 공격 타입
 	bool AboveHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
 	bool BelowHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
+	bool IsZPosHit(int _ZPos);
 
 private:
 

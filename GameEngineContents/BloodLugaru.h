@@ -71,10 +71,12 @@ private:
 	//Idle 관련 변수들
 	bool IsIdleFirst_;
 
-	//Attack_1 관련 변수들
+	//공격관련
 	float4 Attack_1_Scale_;
 	float4	Attack_1_Pos_;
 	bool IsAttack_1_End_;
+	GameEngineCollision* AttackCol_;
+	bool CanHitAttack1();
 
 	//Back 관련 변수들
 	float4 BackMoveDir_;
