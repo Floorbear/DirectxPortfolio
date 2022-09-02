@@ -104,7 +104,27 @@ void ContentsCore::Start()
 	// 이걸 해줘야 합니다.
 	// GameEngineTexture::Cut("Boss_Left.bmp", 5, 7);
 
+	//쉐이더 컴파일
+	{
+		GameEngineDirectory Dir;
 
+		Dir.MoveParentToExitsChildDirectory("ContentsResources");
+		Dir.Move("ContentsShader");
+
+		std::vector<GameEngineFile> Shaders = Dir.GetAllFile("hlsl");
+
+		for (size_t i = 0; i < Shaders.size(); i++)
+		{
+			GameEngineShader::AutoCompile(Shaders[i].GetFullPath());
+		}
+	}
+	
+	//랜파생성
+	{
+		GameEngineRenderingPipeLine* NewPipe = GameEngineRenderingPipeLine::Create("Gauge");
+		NewPipe->SetVertexShader("Gauge.hlsl");
+		NewPipe->SetPixelShader("Gauge.hlsl");
+	}
 
 
 	//CreateLevel<SeriaRoom>("SeriaRoom");
