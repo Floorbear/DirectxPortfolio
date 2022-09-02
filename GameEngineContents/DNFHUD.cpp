@@ -8,7 +8,9 @@
 #include "GaugeRenderer.h"
 #include <GameEngineCore/GameEngineUIRenderer.h>
 
-DNFHUD::DNFHUD()
+DNFHUD::DNFHUD():
+	PrevHp_(),
+	LerpHp_()
 {
 }
 
@@ -37,10 +39,14 @@ void DNFHUD::Start()
 	MPRenderer_->SetTexture("MP.png");
 	MPRenderer_->GetTransform().SetLocalScale({ 56.0f,56.0f });
 	MPRenderer_->GetTransform().SetLocalMove(float4(146, -323));
+
+	//PrevHp Set
+
 }
 
 void DNFHUD::Update(float _DeltaTime)
 {
+	//HP변화 감지
 	if (DNFGlobalValue::CurrentLevel != nullptr)
 	{
 		Player_Main* Player = DNFGlobalValue::CurrentLevel->GetPlayer();

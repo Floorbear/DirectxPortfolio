@@ -24,5 +24,7 @@ private:
 	GaugeRenderer* HPRenderer_;
 	GaugeRenderer* MPRenderer_;
 
+	int PrevHp_;
+	int LerpHp_;
 };
 
