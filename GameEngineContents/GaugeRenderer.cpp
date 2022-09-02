@@ -29,7 +29,7 @@ void GaugeRenderer::Start()
 
 void GaugeRenderer::SetTextureRendererSetting()
 {
-	SetPipeLine("TextureAtlas");
+	SetPipeLine("Gauge");
 
 	AtlasDataInst.FrameData.PosX = 0.0f;
 	AtlasDataInst.FrameData.PosY = 0.0f;
