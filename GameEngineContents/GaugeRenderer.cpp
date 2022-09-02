@@ -16,8 +16,7 @@ void GaugeRenderer::SetTexture(const std::string& _Name)
 
 void GaugeRenderer::UpdateGauge(float _Ratio)
 {
-	AtlasDataInst.FrameData.PosY = (1.f-_Ratio);
-	AtlasDataInst.PivotPos.y = -(1.0f-_Ratio);
+	GaugeDataInst.Ratio = _Ratio;
 }
 
 void GaugeRenderer::Start()
@@ -31,13 +30,10 @@ void GaugeRenderer::SetTextureRendererSetting()
 {
 	SetPipeLine("Gauge");
 
-	AtlasDataInst.FrameData.PosX = 0.0f;
-	AtlasDataInst.FrameData.PosY = 0.0f;
-	AtlasDataInst.FrameData.SizeX = 1.0f;
-	AtlasDataInst.FrameData.SizeY = 1.0f;
-	AtlasDataInst.PivotPos = float4::ZERO;
+	GaugeDataInst.IsBottomGauge = 1;
+	GaugeDataInst.Ratio = 1.0f;
 
-	ShaderResources.SetConstantBufferLink("AtlasData", AtlasDataInst);
+	ShaderResources.SetConstantBufferLink("GaugeData", GaugeDataInst);
 	ShaderResources.SetConstantBufferLink("ColorData", ColorData);
 }
 

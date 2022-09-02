@@ -2,6 +2,14 @@
 #include <GameEngineCore/GameEngineDefaultRenderer.h>
 #include <GameEngineCore/GameEngineTextureRenderer.h>
 
+struct GaugeData
+{
+	int IsBottomGauge; // 0은 아래서 위로 게이지가 사라짐, 1은 위에서 아래로 게이지가 사라짐
+	float Ratio; //게이지 비율
+	//더미
+	int a1;
+	int a2;
+};
 class GaugeRenderer : public GameEngineDefaultRenderer
 {
 public:
@@ -39,7 +47,7 @@ private:
 	GameEngineTexture* CurTex;
 
 	ColorData ColorData;
-	AtlasData AtlasDataInst;
+	GaugeData GaugeDataInst;
 
 	void FrameDataReset();
 };

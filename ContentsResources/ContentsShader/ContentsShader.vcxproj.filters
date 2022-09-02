@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <FxCompile Include="RenderOption.fx" />
     <FxCompile Include="Gauge.hlsl" />
+    <FxCompile Include="RenderOption.fx" />
     <FxCompile Include="TransformHeader.fx" />
-    <FxCompile Include="GeometryShader.hlsl" />
   </ItemGroup>
 </Project>
