@@ -19,15 +19,23 @@ protected:
 	void Update(float _DeltaTime) override;
 
 private:
+
+	void HPAndMPBarUpdate(float _DeltaTime);
 	GameEngineUIRenderer* MainRenderer_;
 
 	GaugeRenderer* HPRenderer_;
 	GaugeRenderer* MPRenderer_;
 
+	std::vector<GameEngineUIRenderer*> SkillIconBackground_;
+
 	int PrevHp_;
 	float LerpHp_;
 	float GauageDelta_;
-	float AccTime_;
-	float AccDelta_;
+
+	struct DefaultValue
+	{
+		float4 SkillIconBackPos;
+	};
+	DefaultValue Value_;
 };
 
