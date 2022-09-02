@@ -25,6 +25,9 @@ private:
 	GaugeRenderer* MPRenderer_;
 
 	int PrevHp_;
-	int LerpHp_;
+	float LerpHp_;
+	float GauageDelta_;
+	float AccTime_;
+	float AccDelta_;
 };
 
