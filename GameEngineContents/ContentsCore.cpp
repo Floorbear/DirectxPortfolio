@@ -109,6 +109,7 @@ void ContentsCore::Start()
 		GameEngineDirectory Dir;
 
 		Dir.MoveParentToExitsChildDirectory("ContentsResources");
+		Dir.Move("ContentsResources");
 		Dir.Move("ContentsShader");
 
 		std::vector<GameEngineFile> Shaders = Dir.GetAllFile("hlsl");
