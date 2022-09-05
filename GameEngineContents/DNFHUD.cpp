@@ -16,6 +16,7 @@ DNFHUD::DNFHUD() :
 	Value_()
 {
 	SkillIconBackground_.reserve(14);
+	ShortCut_.reserve(14);
 }
 
 DNFHUD::~DNFHUD()
@@ -45,7 +46,7 @@ void DNFHUD::Start()
 	MPRenderer_->GetTransform().SetLocalMove(float4(146, -323));
 
 	//스킬 아이콘 백그라운드
-	Value_.SkillIconBackPos = { -100,-340 };
+	Value_.SkillIconBackPos = { -100,-308 };
 	for (size_t i = 0; i < 14; i++)
 	{
 		GameEngineUIRenderer* NewSkillIcon = CreateComponent<GameEngineUIRenderer>(GetNameCopy());
@@ -55,18 +56,28 @@ void DNFHUD::Start()
 		SkillIconBackground_.push_back(NewSkillIcon);
 	}
 
+	//스킬 아이콘
+	Value_.SkillIconPos = { -100,-308 };
+	SkillRendererInit();
+
+
+	//스킬 숏컷 백그라운드
+	Value_.ShortCutPos = { -100,-308 };
+	for (size_t i = 0; i < 14; i++)
+	{
+		GameEngineUIRenderer* NewShortCutIcon = CreateComponent<GameEngineUIRenderer>(GetNameCopy());
+		NewShortCutIcon->SetFolderTextureToIndex("SkillShortCut", i);
+		NewShortCutIcon->ScaleToTexture();
+		NewShortCutIcon->SetPivot(PIVOTMODE::CENTER);
+		ShortCut_.push_back(NewShortCutIcon);
+	}
+
+
 }
 
 void DNFHUD::Update(float _DeltaTime)
 {
-	for (size_t i = 0; i < 2; i++)
-	{
-		for (size_t j = 0; j < 7; j++)
-		{
-			float4 AddPos = float4(static_cast<float>(j) * 32, static_cast<float>(i) * 32, 0) + Value_.SkillIconBackPos;
-			SkillIconBackground_[j+(i*7)]->GetTransform().SetLocalPosition(AddPos);
-		}
-	}
+	IconPosUpdate(_DeltaTime);
 	HPAndMPBarUpdate(_DeltaTime);
 }
 
@@ -100,7 +111,53 @@ void DNFHUD::HPAndMPBarUpdate(float _DeltaTime)
 		}
 
 		float ratio = LerpHp_ / MaxHP;
-		DNFDebugGUI::AddValue("ratio", ratio);
 		HPRenderer_->UpdateGauge(ratio);
 	}
+}
+
+void DNFHUD::IconPosUpdate(float _DeltaTime)
+{
+	for (size_t i = 0; i < 2; i++)
+	{
+		for (size_t j = 0; j < 7; j++)
+		{
+			float4 AddPos = float4(static_cast<float>(j) * 32, static_cast<float>(i) * -32, 0) + Value_.SkillIconBackPos;
+			SkillIconBackground_[j + (i * 7)]->GetTransform().SetLocalPosition(AddPos);
+		}
+	}
+
+	for (size_t i = 0; i < 2; i++)
+	{
+		for (size_t j = 0; j < 7; j++)
+		{
+			float4 AddPos = float4(static_cast<float>(j) * 32, static_cast<float>(i) * -32, 0) + Value_.SkillIconPos;
+			SkillIcon_[j + (i * 7)]->GetTransform().SetLocalPosition(AddPos);
+		}
+	}
+
+	for (size_t i = 0; i < 2; i++)
+	{
+		for (size_t j = 0; j < 7; j++)
+		{
+			float4 AddPos = float4(static_cast<float>(j) * 32, static_cast<float>(i) * -32, 0) + Value_.ShortCutPos;
+			ShortCut_[j + (i * 7)]->GetTransform().SetLocalPosition(AddPos);
+		}
+	}
+}
+
+void DNFHUD::SkillRendererInit()
+{
+	for (size_t i = 0; i < 14; i++)
+	{
+		GaugeRenderer* NewSkillIcon = CreateComponent<GaugeRenderer>(GetNameCopy());
+		NewSkillIcon->Off();
+		//NewSkillIcon->SetTexture("SkillBack.png");
+		//NewSkillIcon->ScaleToTexture();
+		//NewSkillIcon->SetPivot(PIVOTMODE::CENTER);
+		SkillIcon_.push_back(NewSkillIcon);
+	}
+
+	SkillIcon_[13]->On();
+	SkillIcon_[13]->SetTexture("UpperSlash.png");
+	SkillIcon_[13]->GetTransform().SetLocalScale({28,28});
 }
