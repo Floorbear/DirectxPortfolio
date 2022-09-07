@@ -35,6 +35,10 @@ public:
 
 	std::string EnumToString(PlayerAnimations _Ani);
 
+	inline std::multimap<AvatarParts, GameEngineTextureRenderer*> GetRenderList()
+	{
+		return RenderList_;
+	}
 protected:
 
 private:

@@ -40,7 +40,8 @@ Player_Main::Player_Main() :
 	NextAttackAni_(),
 	BottomAttackCol_(),
 	Value_(),
-	SkillCoolTime_()
+	SkillCoolTime_(),
+	SuperArmorMulTime_()
 {
 	InitDefaultValue();
 
@@ -62,6 +63,7 @@ Player_Main::Player_Main() :
 	AllDNFRenderer_.push_back(&BeltRenderer_d_);
 	AllDNFRenderer_.push_back(&ShoesRenderer_a_);
 	AllDNFRenderer_.push_back(&ShoesRenderer_b_);
+	AllCopyRenderer_.reserve(20);
 }
 
 
@@ -77,6 +79,10 @@ void Player_Main::InitDefaultValue()
 	Value_.AutoAttackScale = float4(120, 55, 1);
 	Value_.UpperSlashPos = float4(75, -45, -500);
 	Value_.UpeerSlashScale = float4(120,100, 1);
+
+	Value_.SuperArmorPos = {1.0f,1.0f };
+	Value_.SuperArmorScale = { 528.0f,513.0f };
+	Value_.SuperArmorMul = 1000.0f;
 
 	//공격력
 	Value_.UpperSlashAtt = 2;
@@ -108,6 +114,15 @@ void Player_Main::Start()
 	AvatarManager_.LinkPlayerToAvatar(this);
 	AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
 
+	//카피렌더러 생성
+	for (size_t i = 0; i < 20; i++)
+	{
+		GameEngineTextureRenderer* NewRenderer = CreateComponent<GameEngineTextureRenderer>();
+		NewRenderer->GetTransform().SetLocalScale({ 500,500,1 });
+		NewRenderer->Off();
+		AllCopyRenderer_.push_back(NewRenderer);
+	}
+
 	//스테이트 초기화
 	InitState();
 	StateManager_.ChangeState("Idle");
@@ -122,13 +137,13 @@ void Player_Main::Start()
 	Force_.Gravity_ = 700.0f;
 	Force_.SetTransfrom(&GetTransform());
 
-	DNFDebugGUI::AddMutableValue("Time", SkillCoolTime_["UpperSlash"]->GetIterTime());
 
 }
 
 void Player_Main::Update(float _DeltaTime)
 {
 	CoolTimeUpdate(_DeltaTime);
+	CopyRendererUpdate(_DeltaTime);
 	StiffnessUpdate(_DeltaTime);
 	if (Stiffness_ > 0)
 	{
@@ -279,6 +294,108 @@ void Player_Main::InitState()
 
 	StateManager_.CreateStateMember("Hit", std::bind(&Player_Main::HitUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::HitStart, this, std::placeholders::_1));
+}
+
+void Player_Main::StartSuperArmor()
+{
+	//Clear 해야함
+	for (auto i : AllCopyRenderer_)
+	{
+		i->Off();
+	}
+
+
+	int count = 0;
+	for (auto i : AvatarManager_.GetRenderList())
+	{
+		if (i.second->GetNameCopy() == "ShadowRenderer")
+		{
+			continue;
+		}
+		if (i.second->IsUpdate() == false)
+		{
+			continue;
+		}
+		AllCopyRenderer_[count]->On();
+		float4 SetPos = i.second->GetTransform().GetLocalPosition();
+		SetPos.z = i.second->GetTransform().GetLocalPosition().z + 20;
+		//SetPos.x = i.second->GetTransform().GetLocalPosition().x + 20;
+		AllCopyRenderer_[count]->GetTransform().SetLocalPosition(SetPos);
+
+
+
+		//스케일
+		SuperArmorScale_ = { 730,730 };
+		AllCopyRenderer_[count]->GetTransform().SetLocalScale({ SuperArmorScale_ });
+		AllCopyRenderer_[count]->SetTexture(i.second->GetCurTexture());
+		count++;
+	}
+
+	for (auto i : AllCopyRenderer_)
+	{
+		i->GetColorData().MulColor = float4(99999.f, 0, 0, 0.6f);
+	}
+	
+}
+
+void Player_Main::CopyRendererUpdate(float _DeltaTime)
+{
+	int count = 0;
+	for (auto i : AvatarManager_.GetRenderList())
+	{
+		if (i.second->IsUpdate() == false)
+		{
+			continue;
+		}
+		if (i.second->GetNameCopy() == "ShadowRenderer")
+		{
+			continue;
+		}
+
+		//크기 커졌다가 작아지는 것
+		if (SuperArmorScale_.x > Value_.SuperArmorScale.x)
+		{
+			SuperArmorScale_.x -= _DeltaTime * 100.f;
+		}
+		else
+		{
+			SuperArmorScale_.x = Value_.SuperArmorScale.x;
+		}
+		if (SuperArmorScale_.y > Value_.SuperArmorScale.y)
+		{
+			SuperArmorScale_.y -= _DeltaTime * 100.f;
+		}
+		else
+		{
+			SuperArmorScale_.y = Value_.SuperArmorScale.y;
+		}
+		AllCopyRenderer_[count]->SetTexture(i.second->GetCurTexture());
+		AllCopyRenderer_[count]->GetTransform().SetLocalScale(SuperArmorScale_);
+
+		//색깔
+		if (SuperArmorMulTime_ < 5.0f)
+		{
+			SuperArmorMulTime_ += _DeltaTime;
+			AllCopyRenderer_[count]->GetColorData().MulColor = float4(5, (_DeltaTime)/5, 0, 0.6f);
+		}
+		else if (SuperArmorMulTime_ >= 5.0 && SuperArmorMulTime_ < 10.0)
+		{
+			SuperArmorMulTime_ += _DeltaTime;
+			AllCopyRenderer_[count]->GetColorData().MulColor = float4(5, (10.0f-_DeltaTime)/5, 0, 0.6f);
+		}
+		else if (SuperArmorMulTime_ >= 10.0f)
+		{
+			SuperArmorMulTime_ = 0.0f;
+		}
+
+		//Pos
+		float4 SetPos = i.second->GetTransform().GetLocalPosition();
+		SetPos.x = i.second->GetTransform().GetLocalPosition().x + Value_.SuperArmorPos.x;
+		SetPos.y = i.second->GetTransform().GetLocalPosition().y + Value_.SuperArmorPos.y;
+		SetPos.z = i.second->GetTransform().GetLocalPosition().z + 20;
+		AllCopyRenderer_[count]->GetTransform().SetLocalPosition(SetPos);
+		count++;
+	}
 }
 
 float4 Player_Main::GetMoveDir()

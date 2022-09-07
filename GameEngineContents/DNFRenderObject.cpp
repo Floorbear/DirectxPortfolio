@@ -343,7 +343,7 @@ void DNFRenderObject::DNFUpdate()
 
 void DNFRenderObject::DNFStart()
 {
-	ShadowRenderer_ = CreateComponent<GameEngineTextureRenderer>(GetNameCopy());
+	ShadowRenderer_ = CreateComponent<GameEngineTextureRenderer>("ShadowRenderer");
 	MainRenderer_ = CreateComponent<GameEngineTextureRenderer>(GetNameCopy());
 
 	//BotCol

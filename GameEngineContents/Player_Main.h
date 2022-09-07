@@ -107,6 +107,12 @@ private:
 	GameEngineTextureRenderer* CapRenderer_b_;
 	GameEngineTextureRenderer* CapRenderer_c_;
 
+	//슈퍼아머 & 잔상
+	std::vector<GameEngineTextureRenderer*> AllCopyRenderer_;
+	float4 SuperArmorScale_;
+	float SuperArmorMulTime_;
+	void StartSuperArmor();
+	void CopyRendererUpdate(float _DeltaTime);
 
 
 	//내가 누른 방향키의 값을 리턴 아무키도 누르지 않으면 float4::zero리턴
@@ -155,6 +161,9 @@ private:
 		float4 UpperSlashPos;
 		float4 UpeerSlashScale;
 
+		float4 SuperArmorPos;
+		float4 SuperArmorScale;
+		float SuperArmorMul;
 
 		//공격력
 		int UpperSlashAtt;

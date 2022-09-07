@@ -191,6 +191,8 @@ void Player_Main::InitAniFunc()
 				Force_.ForceX_ = 70.0f;
 				//CoolTime Set
 				SkillCoolTime_["UpperSlash"]->StartTimer();
+				//½´ÆÛ¾Æ¸Ó set
+				StartSuperArmor();
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 7)
 			{
