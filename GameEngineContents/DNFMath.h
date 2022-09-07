@@ -84,8 +84,24 @@ public:
 		Reset();
 	}
 
+	void Update(float _DeltaTime)
+	{
+		Iter_Time_ -= _DeltaTime;
+		if (Iter_Time_ <= 0.0f)
+		{
+			Iter_Time_ = 0.0f;
+			IsTimerOn_ = false;
+		}
+	}
+
+	inline float* GetIterTime()
+	{
+		return &Iter_Time_;
+	}
 	//타이머의 초기 시간
 	float Default_Time_;
+
+	bool IsSet; //타이머가 끝난 후 한번만 뭘 호출하고 싶을 때 사용하려고
 
 	private:
 		//실제 시간

@@ -9,7 +9,11 @@ DNFMath::~DNFMath()
 {
 }
 
-Timer::Timer()
+Timer::Timer():
+	Iter_Time_(),
+	Default_Time_(),
+	IsTimerOn_(false),
+	IsSet(false)
 {
 }
 
@@ -20,7 +24,8 @@ Timer::~Timer()
 Timer::Timer(float _Value):
 	Iter_Time_(_Value),
 	Default_Time_(_Value),
-	IsTimerOn_(false)
+	IsTimerOn_(false),
+	IsSet(false)
 {
 }
 

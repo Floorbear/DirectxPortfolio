@@ -38,7 +38,15 @@ bool Player_Main::CheckAttackKey()
 
 	if (GameEngineInput::GetInst()->IsPress("Z") == true)
 	{
+		//같은 공격의 선입력을 받으면 무시한다.
 		if (CurAttackData_.AttackName == "UpperSlash")
+		{
+			IsReadyNextAttack_ = false;
+			return false;
+		}
+
+		//어퍼슬래쉬를 사용해서 쿨타임이 돌고있는 상태면 무시한다.
+		if (SkillCoolTime_["UpperSlash"]->IsTimerOn() == true)
 		{
 			IsReadyNextAttack_ = false;
 			return false;
@@ -181,6 +189,8 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.YForce = 550.0f;
 				CurAttackData_.AttCount++;
 				Force_.ForceX_ = 70.0f;
+				//CoolTime Set
+				SkillCoolTime_["UpperSlash"]->StartTimer();
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 7)
 			{

@@ -5,10 +5,9 @@
 struct GaugeData
 {
 	int IsBottomGauge; // 0은 아래서 위로 게이지가 사라짐, 1은 위에서 아래로 게이지가 사라짐
+	int IsColorGauge; // 0 : TexCoord를 건들이는 게이지 1: Color를 건드리는 게이지
 	float Ratio; //게이지 비율
-	//더미
 	int a1;
-	int a2;
 };
 class GaugeRenderer : public GameEngineDefaultRenderer
 {
@@ -30,7 +29,14 @@ public:
 		return ColorData;
 	}
 
-	void UpdateGauge(float _Ratio); //비율만큼 게이지를 업데이트 하는 함수
+	inline void SetGauge(int IsBottomGauge, int IsColorGauge)
+	{
+		GaugeDataInst.IsBottomGauge = IsBottomGauge;
+		GaugeDataInst.IsColorGauge = IsColorGauge;
+	}
+
+	void UpdateGauge(float _Ratio); //비율만큼 게이지를 TexCoord좌표를 조절하는 함수
+	void UpdateGauegeColor(float _Ratio, float4 _Color); //게이지 위에 _Color을 덮어씌우고 그 Color을 비율만큼 게이지처럼 보여주는 함수
 
 protected:
 	void Start() override;
@@ -49,6 +55,5 @@ private:
 	ColorData ColorData;
 	GaugeData GaugeDataInst;
 
-	void FrameDataReset();
 };
 

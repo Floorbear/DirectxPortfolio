@@ -23,17 +23,19 @@ private:
 	void HPAndMPBarUpdate(float _DeltaTime);
 	void IconPosUpdate(float _DeltaTime);
 	void SkillRendererInit();
+	void SkillIconUpdate(float _DeltaTime);
 	GameEngineUIRenderer* MainRenderer_;
 
 	GaugeRenderer* HPRenderer_;
 	GaugeRenderer* MPRenderer_;
 
-	// 6 : 어퍼슬래쉬
+	//스킬 쿨타임 관련
 	std::vector<GameEngineUIRenderer*> SkillIconBackground_;
-	std::vector<GaugeRenderer*> SkillIcon_;
+	std::vector<GaugeRenderer*> SkillIcon_; //13: 어퍼 슬래쉬
 	std::vector<GameEngineUIRenderer*> ShortCut_;
+	std::list<GaugeRenderer*> FlashSkillIcon_; //쿨타임이 다 돌면 번쩍일 녀석들을 보관
 
-
+	//HP바 관련
 	int PrevHp_;
 	float LerpHp_;
 	float GauageDelta_;

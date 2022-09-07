@@ -36,9 +36,9 @@ struct Output
 cbuffer GaugeData : register(b2)
 {
     int IsBottomGauge; // 0은 아래서 위로 게이지가 사라짐, 1은 위에서 아래로 게이지가 사라짐
+    int IsSkillGauge;
     float Ratio; //게이지 비율
     int a1;
-    int a2;
 };
 
 
@@ -79,10 +79,31 @@ Texture2D Tex : register(t0);
 SamplerState Smp : register(s0);
 float4 Gauge_PS(Output _Input) : SV_Target0
 {
-    float ClipYPos = 1.0f - Ratio;
-    if(_Input.Tex.y < ClipYPos)
+    if (IsSkillGauge == 0)
     {
-        clip(-1);
+        if (IsBottomGauge == 1)
+        {
+            float ClipYPos = 1.0f - Ratio;
+            if (_Input.Tex.y < ClipYPos)
+            {
+                clip(-1);
+            }
+        }
+        return (Tex.Sample(Smp, _Input.Tex.xy) * MulColor) + PlusColor;
     }
+    else if (IsSkillGauge == 1)
+    {
+        float ClipYPos = 1.0f - Ratio;
+        if (_Input.Tex.y > ClipYPos)
+        {
+            return (Tex.Sample(Smp, _Input.Tex.xy));
+        }
+        else
+        {
+            return (Tex.Sample(Smp, _Input.Tex.xy) * MulColor) + PlusColor;
+        }
+    }
+
+
     return (Tex.Sample(Smp, _Input.Tex.xy) * MulColor) + PlusColor;
 }

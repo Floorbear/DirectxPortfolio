@@ -39,7 +39,8 @@ Player_Main::Player_Main() :
 	IsReadyNextAttack_(false),
 	NextAttackAni_(),
 	BottomAttackCol_(),
-	Value_()
+	Value_(),
+	SkillCoolTime_()
 {
 	InitDefaultValue();
 
@@ -88,6 +89,13 @@ void Player_Main::InitDefaultValue()
 
 Player_Main::~Player_Main()
 {
+	for (auto i : SkillCoolTime_)
+	{
+		if (i.second != nullptr)
+		{
+			delete i.second;
+		}
+	}
 }
 
 void Player_Main::Start()
@@ -95,8 +103,6 @@ void Player_Main::Start()
 	DNFStart();
 
 	InitCol();
-
-
 
 	//아바타생성
 	AvatarManager_.LinkPlayerToAvatar(this);
@@ -108,36 +114,33 @@ void Player_Main::Start()
 
 	InitAniFunc();
 
+	InitSkillCoolTime();
+	
+
 
 	Force_.FrictionX_ = 700.0f;
 	Force_.Gravity_ = 700.0f;
 	Force_.SetTransfrom(&GetTransform());
 
-	DNFDebugGUI::AddMutableValue("HitAbovePos", &Value_.HitAbovePos);
-	DNFDebugGUI::AddMutableValue("HitAboveScale", &Value_.HitAboveScale);
-	DNFDebugGUI::AddMutableValue("HitBelowPos", &Value_.HitBelowPos);
-	DNFDebugGUI::AddMutableValue("HitBelowSclae", &Value_.HitBelowScale);
+	DNFDebugGUI::AddMutableValue("Time", SkillCoolTime_["UpperSlash"]->GetIterTime());
 
 }
 
 void Player_Main::Update(float _DeltaTime)
 {
+	CoolTimeUpdate(_DeltaTime);
 	StiffnessUpdate(_DeltaTime);
 	if (Stiffness_ > 0)
 	{
 		return;
 	}
 
-	HitAbove_->GetTransform().SetLocalPosition(Value_.HitAbovePos);
-	HitAbove_->GetTransform().SetLocalScale(Value_.HitAboveScale);
-	HitBelow_->GetTransform().SetLocalPosition(Value_.HitBelowPos);
-	HitBelow_->GetTransform().SetLocalScale(Value_.HitBelowScale);
-
 	DNFUpdate();
 	HitColCheck(ColOrder::MonsterAttack);
 	StateManager_.Update(_DeltaTime);
-	//ForceUpdae
 	Force_.Update(_DeltaTime);
+
+
 
 	//제한된 범위 밖으로 못나가는 카메라& 캐릭터
 	if (DNFGlobalValue::CurrentLevel != nullptr)
@@ -341,6 +344,35 @@ bool Player_Main::IsPressMoveKey()
 int Player_Main::CalAtt(int _Value)
 {
 	return _Value;
+}
+
+Timer* Player_Main::CreateSkillCoolTime(std::string _Name, float Time_)
+{
+	Timer* NewCoolTime = new Timer(Time_);
+	SkillCoolTime_.insert(std::make_pair(_Name, NewCoolTime));
+	return NewCoolTime;
+}
+
+void Player_Main::InitSkillCoolTime()
+{
+	CreateSkillCoolTime("UpperSlash", 4.0f);
+}
+
+void Player_Main::CoolTimeUpdate(float _DeltaTime)
+{
+	for (auto i : SkillCoolTime_)
+	{
+		Timer* CurTimer = i.second;
+		if (CurTimer->IsTimerOn() == true)
+		{
+			CurTimer->Update(_DeltaTime);
+			if (CurTimer->IsTimerOn() == false) // 타이머가 종료되면 딱 한번만 호출
+			{
+				CurTimer->IsSet = true;
+			}
+		}
+	}
+	
 }
 
 void Player_Main::AttackEnd()

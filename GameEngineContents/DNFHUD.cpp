@@ -66,7 +66,7 @@ void DNFHUD::Start()
 	for (size_t i = 0; i < 14; i++)
 	{
 		GameEngineUIRenderer* NewShortCutIcon = CreateComponent<GameEngineUIRenderer>(GetNameCopy());
-		NewShortCutIcon->SetFolderTextureToIndex("SkillShortCut", i);
+		NewShortCutIcon->SetFolderTextureToIndex("SkillShortCut", static_cast<UINT>(i));
 		NewShortCutIcon->ScaleToTexture();
 		NewShortCutIcon->SetPivot(PIVOTMODE::CENTER);
 		ShortCut_.push_back(NewShortCutIcon);
@@ -79,6 +79,7 @@ void DNFHUD::Update(float _DeltaTime)
 {
 	IconPosUpdate(_DeltaTime);
 	HPAndMPBarUpdate(_DeltaTime);
+	SkillIconUpdate(_DeltaTime);
 }
 
 void DNFHUD::HPAndMPBarUpdate(float _DeltaTime)
@@ -151,6 +152,7 @@ void DNFHUD::SkillRendererInit()
 	{
 		GaugeRenderer* NewSkillIcon = CreateComponent<GaugeRenderer>(GetNameCopy());
 		NewSkillIcon->Off();
+		NewSkillIcon->SetGauge(1, 1);
 		//NewSkillIcon->SetTexture("SkillBack.png");
 		//NewSkillIcon->ScaleToTexture();
 		//NewSkillIcon->SetPivot(PIVOTMODE::CENTER);
@@ -161,3 +163,58 @@ void DNFHUD::SkillRendererInit()
 	SkillIcon_[13]->SetTexture("UpperSlash.png");
 	SkillIcon_[13]->GetTransform().SetLocalScale({28,28});
 }
+
+void DNFHUD::SkillIconUpdate(float _DeltaTime)
+{
+	if (DNFGlobalValue::CurrentLevel != nullptr)
+	{
+		Player_Main* Player = DNFGlobalValue::CurrentLevel->GetPlayer();
+
+		//어퍼슬래쉬
+		std::map<std::string, Timer*> CoolTimeMap = Player->GetSkillCoolTimeList();
+		if (CoolTimeMap["UpperSlash"]->IsTimerOn() == true)
+		{
+			SkillIcon_[13]->SetTexture("UpperSlashCool.png");
+			float MaxTime = CoolTimeMap["UpperSlash"]->Default_Time_;
+			float CurTime = *CoolTimeMap["UpperSlash"]->GetIterTime();
+			float ratio = CurTime / MaxTime;
+			float4 Black = { 0.f,0.f,0.f,1.0f };
+			SkillIcon_[13]->UpdateGauegeColor(ratio, Black);
+
+		}
+		else
+		{
+			if (CoolTimeMap["UpperSlash"]->IsSet == true) //쿨타임이 다 돌면 스킬아이콘이 번쩍이게 한다.
+			{
+				SkillIcon_[13]->GetColorData().PlusColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+				FlashSkillIcon_.push_back(SkillIcon_[13]);
+				CoolTimeMap["UpperSlash"]->IsSet = false;
+			}
+			SkillIcon_[13]->SetTexture("UpperSlash.png");
+		}
+
+
+
+
+
+
+
+
+
+		std::list<GaugeRenderer*>::iterator StartIter = FlashSkillIcon_.begin();
+		for (; StartIter != FlashSkillIcon_.end(); StartIter++)
+		{
+			(*StartIter)->GetColorData().PlusColor -= _DeltaTime * 1.4f;
+			(*StartIter)->GetColorData().PlusColor.a -= _DeltaTime * 1.4f;
+			if ((*StartIter)->GetColorData().PlusColor.a < 0.02f)
+			{
+				(*StartIter)->GetColorData().PlusColor = float4::ZERO;
+				FlashSkillIcon_.erase(StartIter);
+				break;
+			}
+		}
+	}
+}
+
+
+

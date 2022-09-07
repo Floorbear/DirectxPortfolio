@@ -54,7 +54,17 @@ private:
 	Timer Hit_Timer_;
 
 
-	//변수
+	//쿨타임 관련
+	std::map<std::string, Timer*> SkillCoolTime_;
+public:
+	std::map<std::string, Timer*> GetSkillCoolTimeList()
+	{
+		return SkillCoolTime_;
+	}
+private:
+	Timer* CreateSkillCoolTime(std::string _Name, float Time_); //새로운 스킬쿨타임을 동적으로 생성한다.
+	void InitSkillCoolTime(); //여러 스킬쿨타임들을 초기화 한다.
+	void CoolTimeUpdate(float _DeltaTime); //스킬 쿨타임을 업데이트한다.
 
 	//공격관련
 	GameEngineCollision* AttackCol_;
@@ -71,6 +81,7 @@ private:
 	GameEngineUIRenderer* UIRenderer_;
 
 
+	//아바타
 	GameEngineTextureRenderer* HairRenderer_a_;
 	GameEngineTextureRenderer* HairRenderer_d_;
 	GameEngineTextureRenderer* WeaponRenderer_b_;

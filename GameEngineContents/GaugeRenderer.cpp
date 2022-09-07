@@ -19,6 +19,12 @@ void GaugeRenderer::UpdateGauge(float _Ratio)
 	GaugeDataInst.Ratio = _Ratio;
 }
 
+void GaugeRenderer::UpdateGauegeColor(float _Ratio, float4 _Color)
+{
+	GaugeDataInst.Ratio = _Ratio;
+	ColorData.PlusColor = _Color;
+}
+
 void GaugeRenderer::Start()
 {
 	GameEngineDefaultRenderer::Start();
@@ -31,6 +37,7 @@ void GaugeRenderer::SetTextureRendererSetting()
 	SetPipeLine("Gauge");
 
 	GaugeDataInst.IsBottomGauge = 1;
+	GaugeDataInst.IsColorGauge = 0;
 	GaugeDataInst.Ratio = 1.0f;
 
 	ShaderResources.SetConstantBufferLink("GaugeData", GaugeDataInst);
