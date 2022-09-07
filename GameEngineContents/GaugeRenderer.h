@@ -24,7 +24,7 @@ public:
 	void SetTexture(const std::string& _Name);
 
 
-	ColorData& GetColorData()
+	PixelData& GetColorData()
 	{
 		return ColorData;
 	}
@@ -52,7 +52,7 @@ private:
 
 	GameEngineTexture* CurTex;
 
-	ColorData ColorData;
+	PixelData ColorData;
 	GaugeData GaugeDataInst;
 
 };

@@ -162,6 +162,10 @@ protected:
 	bool BelowHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other);
 	bool IsZPosHit(int _ZPos);
 
+	//슈퍼아머 관련
+	bool IsSuperArmor_;
+	Timer SuperArmorTimer_;
+
 private:
 
 };

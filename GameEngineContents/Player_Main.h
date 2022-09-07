@@ -111,7 +111,7 @@ private:
 	std::vector<GameEngineTextureRenderer*> AllCopyRenderer_;
 	float4 SuperArmorScale_;
 	float SuperArmorMulTime_;
-	void StartSuperArmor();
+	void StartSuperArmor(float _SuperArmorTime);
 	void CopyRendererUpdate(float _DeltaTime);
 
 

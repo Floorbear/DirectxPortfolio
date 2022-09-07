@@ -92,6 +92,7 @@ public:
 			Iter_Time_ = 0.0f;
 			IsTimerOn_ = false;
 		}
+
 	}
 
 	inline float* GetIterTime()

@@ -137,6 +137,7 @@ void Player_Main::Start()
 	Force_.Gravity_ = 700.0f;
 	Force_.SetTransfrom(&GetTransform());
 
+	DNFDebugGUI::AddMutableValue("Time", &SuperArmorMulTime_);
 
 }
 
@@ -149,6 +150,19 @@ void Player_Main::Update(float _DeltaTime)
 	{
 		return;
 	}
+	if (SuperArmorTimer_.IsTimerOn() == true)
+	{
+		SuperArmorTimer_.Update(_DeltaTime);
+	}
+	else
+	{
+		for (auto i : AllCopyRenderer_)
+		{
+			i->Off();
+		}
+		IsSuperArmor_ = false;
+	}
+
 
 	DNFUpdate();
 	HitColCheck(ColOrder::MonsterAttack);
@@ -296,7 +310,7 @@ void Player_Main::InitState()
 		std::bind(&Player_Main::HitStart, this, std::placeholders::_1));
 }
 
-void Player_Main::StartSuperArmor()
+void Player_Main::StartSuperArmor(float _SuperArmorTime)
 {
 	//Clear ÇØ¾ßÇÔ
 	for (auto i : AllCopyRenderer_)
@@ -333,8 +347,10 @@ void Player_Main::StartSuperArmor()
 
 	for (auto i : AllCopyRenderer_)
 	{
-		i->GetColorData().MulColor = float4(99999.f, 0, 0, 0.6f);
+		i->GetPixelData().MulColor = float4(99999.f, 0, 0, 0.6f);
 	}
+	IsSuperArmor_ = true;
+	SuperArmorTimer_.StartTimer(_SuperArmorTime);
 	
 }
 
@@ -376,14 +392,21 @@ void Player_Main::CopyRendererUpdate(float _DeltaTime)
 		if (SuperArmorMulTime_ < 5.0f)
 		{
 			SuperArmorMulTime_ += _DeltaTime;
-			AllCopyRenderer_[count]->GetColorData().MulColor = float4(5, (_DeltaTime)/5, 0, 0.6f);
+			AllCopyRenderer_[count]->GetPixelData().MulColor = float4(0, 0, 0, 0.0f);
+			AllCopyRenderer_[count]->GetPixelData().PlusColor = float4(1, SuperArmorMulTime_/5.0f,0, 1.f);
 		}
 		else if (SuperArmorMulTime_ >= 5.0 && SuperArmorMulTime_ < 10.0)
 		{
 			SuperArmorMulTime_ += _DeltaTime;
-			AllCopyRenderer_[count]->GetColorData().MulColor = float4(5, (10.0f-_DeltaTime)/5, 0, 0.6f);
+			AllCopyRenderer_[count]->GetPixelData().MulColor = float4(0,0,0,0.0f);
+			AllCopyRenderer_[count]->GetPixelData().PlusColor = float4(1, 1-(SuperArmorMulTime_-5.0f)/5, 0, 1.f);
 		}
-		else if (SuperArmorMulTime_ >= 10.0f)
+		//else if (SuperArmorMulTime_ >= 10.0f && SuperArmorMulTime_ < 15.0f)
+		//{
+		//	SuperArmorMulTime_ += _DeltaTime;
+		//	AllCopyRenderer_[count]->GetPixelData().MulColor = float4(100, 6.0f * (SuperArmorMulTime_-10.0f), 0, 0.5f);
+		//}
+		else
 		{
 			SuperArmorMulTime_ = 0.0f;
 		}
@@ -472,7 +495,7 @@ Timer* Player_Main::CreateSkillCoolTime(std::string _Name, float Time_)
 
 void Player_Main::InitSkillCoolTime()
 {
-	CreateSkillCoolTime("UpperSlash", 4.0f);
+	CreateSkillCoolTime("UpperSlash", 1.5f);
 }
 
 void Player_Main::CoolTimeUpdate(float _DeltaTime)

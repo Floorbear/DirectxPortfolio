@@ -10,6 +10,7 @@
 void Player_Main::IdleStart(const StateInfo _Info)
 {
 	AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
+	PrevHitData_ = {};
 }
 
 void Player_Main::IdleUpdate(float _DeltaTime, const StateInfo _Info)

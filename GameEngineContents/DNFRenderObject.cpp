@@ -28,7 +28,9 @@ DNFRenderObject::DNFRenderObject():
 	StateManager_(),
 	HitAbove_(),
 	HitBelow_(),
-	PrevHitData_()
+	PrevHitData_(),
+	IsSuperArmor_(false),
+	SuperArmorTimer_()
 {
 	AllDNFRenderer_.push_back(&MainRenderer_);
 	AllDNFRenderer_.push_back(&ShadowRenderer_);
@@ -194,13 +196,19 @@ bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
 
 	CalHP(-Data.Att);
 
+	GiveAndRecevieStiffness(PrevHitData_, _Other);
+
+	if (IsSuperArmor_ == true)
+	{
+		return true;
+	}
+
 	FlipX(-_Other->GetDirX());
 
 
 	//공중공격이 아닌 경우
 	if (OnAir_ == false && Data.YForce <= 0.0f)
 	{
-		GiveAndRecevieStiffness(PrevHitData_, _Other);
 		if (StateManager_.GetCurStateStateName() == "Down")
 		{
 			ResetDNFAnimation();
@@ -220,7 +228,7 @@ bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
 	{
 		GroundYPos_ = GetTransform().GetWorldPosition().y;
 		Force_.ForceY_ = PrevHitData_.YForce;
-		GiveAndRecevieStiffness(PrevHitData_, _Other);
+
 		//Down 상태 분기
 		if (StateManager_.GetCurStateStateName() == "Down")
 		{
@@ -239,7 +247,6 @@ bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
 	}
 	else//공중의 뜸 상태에서 공격을 받은경우
 	{
-		GiveAndRecevieStiffness(PrevHitData_, _Other);
 		Force_.ForceY_ = PrevHitData_.YForce;
 		if (StateManager_.GetCurStateStateName() == "Down")
 		{
@@ -356,7 +363,7 @@ void DNFRenderObject::DNFStart()
 	//이전 액터 위치
 	PrevPos_ = GetTransform().GetWorldPosition();
 
-	ShadowRenderer_->GetColorData().MulColor = float4(0, 0, 0, 0.6f);
+	ShadowRenderer_->GetPixelData().MulColor = float4(0, 0, 0, 0.6f);
 	ShadowPos_ = { -10,-45,500};
 	ShadowRot_ = { -60,0,5 };
 	IsStart_ = true;
