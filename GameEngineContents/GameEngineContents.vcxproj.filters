@@ -160,6 +160,9 @@
     <ClInclude Include="EffectActor.h">
       <Filter>Global</Filter>
     </ClInclude>
+    <ClInclude Include="DamageFont.h">
+      <Filter>Global</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -260,6 +263,9 @@
       <Filter>Global</Filter>
     </ClCompile>
     <ClCompile Include="EffectActor.cpp">
+      <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="DamageFont.cpp">
       <Filter>Global</Filter>
     </ClCompile>
   </ItemGroup>

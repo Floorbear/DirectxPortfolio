@@ -158,6 +158,8 @@ protected:
 	AttackData PrevHitData_; //내가 방금 Hit한 Attack의 정보
 	GameEngineCollision* HitAbove_;
 	GameEngineCollision* HitBelow_;
+	float4 DamageFontMovePos_;
+	void SetDamageFont(int _Value, float4 _WorldPos, bool IsCritical);
 	void HitColCheck(ColOrder _Order); //호출자 Monster면 _Oter에는 PlayerAttack이 들어감
 	bool HitCheck(AttackType _Type, DNFRenderObject* _Other);//파라미터 : 확인할 공격 타입
 	bool AboveHitCheck(GameEngineCollision* _this, GameEngineCollision* _Other);

@@ -703,7 +703,7 @@ void BloodLugaru::InitDefaultValue()
 	Value_.Down_Time = 1.3f;
 	Value_.Down_God_Time = 0.48f;
 
-	MaxHP_ = 99990;
+	MaxHP_ = 9999990;
 	CurHP_ = MaxHP_;
 
 	HitEffectMovePos_ = { 0,-50,0 };

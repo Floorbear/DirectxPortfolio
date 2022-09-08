@@ -1,4 +1,5 @@
 #include "PreCompile.h"
+#include <GameEngineBase/GameEngineRandom.h>
 #include "GameEngineCore/GameEngineCollision.h"
 
 #include "DNFContentsMinimal.h"
@@ -7,6 +8,7 @@
 #include "DNFBackground.h"
 #include "DNFMath.h"
 #include "EffectActor.h"
+#include "DamageFont.h"
 
 #include "DNFDebugGUI.h"
 
@@ -32,7 +34,8 @@ DNFRenderObject::DNFRenderObject():
 	PrevHitData_(),
 	IsSuperArmor_(false),
 	SuperArmorTimer_(),
-	HitEffectMovePos_()
+	HitEffectMovePos_(),
+	DamageFontMovePos_()
 {
 	AllDNFRenderer_.push_back(&MainRenderer_);
 	AllDNFRenderer_.push_back(&ShadowRenderer_);
@@ -150,6 +153,16 @@ void DNFRenderObject::CalHP(int _Value)
 	}
 }
 
+void DNFRenderObject::SetDamageFont(int _Value, float4 _WorldPos, bool _IsCritical)
+{
+	DamageFont* NewDamageFont = GetLevel()->CreateActor<DamageFont>();
+	NewDamageFont->GetTransform().SetWorldPosition(_WorldPos);
+	NewDamageFont->GetTransform().SetLocalMove({ 0,0,-1000 });
+
+
+	NewDamageFont->SetDamageFont(_Value,_IsCritical);
+}
+
 void DNFRenderObject::HitColCheck(ColOrder _Order)
 {
 	if (GodTime_.IsTimerOn() == true)
@@ -203,8 +216,13 @@ bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
 	//공격이펙트가 있으면 생성해라
 	if (PrevHitData_.AttEffect != Effect::None)
 	{
-		SetEffect(PrevHitData_.AttEffect, GetTransform().GetWorldPosition(), _Other->GetDirX());
+		SetEffect(PrevHitData_.AttEffect, GetTransform().GetWorldPosition()+ HitEffectMovePos_, _Other->GetDirX());
 	}
+
+	//데미지
+	int Damage = GameEngineRandom::MainRandom.RandomInt(1, 9999999);
+	int IsCritical = GameEngineRandom::MainRandom.RandomInt(0, 1);
+	SetDamageFont(Damage, GetTransform().GetWorldPosition() + DamageFontMovePos_ , IsCritical);
 
 	if (IsSuperArmor_ == true)
 	{
@@ -300,7 +318,7 @@ bool DNFRenderObject::IsZPosHit(int _ZPos)
 EffectActor* DNFRenderObject::SetEffect(Effect _Effect, float4 _WorldPos , float4 _Dir)
 {
 	EffectActor* NewEffect = GetLevel()->CreateActor<EffectActor>();
-	NewEffect->GetTransform().SetWorldPosition(_WorldPos + HitEffectMovePos_);
+	NewEffect->GetTransform().SetWorldPosition(_WorldPos);
 	NewEffect->GetTransform().SetLocalMove({ 0,0,-300 });
 
 	//Dir영향을 받으면 Dir을 바꿔줘라
