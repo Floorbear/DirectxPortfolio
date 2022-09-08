@@ -4,9 +4,9 @@
 
 struct GaugeData
 {
-	int IsBottomGauge; // 0은 아래서 위로 게이지가 사라짐, 1은 위에서 아래로 게이지가 사라짐
-	int IsColorGauge; // 0 : TexCoord를 건들이는 게이지 1: Color를 건드리는 게이지
+	int GaugeType; // 0 : 플레이어 MP,HP , 1 : 스킬 쿨타임
 	float Ratio; //게이지 비율
+	float Ratio2; //하얗게 될 게이지 비율
 	int a1;
 };
 class GaugeRenderer : public GameEngineDefaultRenderer
@@ -29,10 +29,9 @@ public:
 		return ColorData;
 	}
 
-	inline void SetGauge(int IsBottomGauge, int IsColorGauge)
+	inline void SetGauge(int _Type)
 	{
-		GaugeDataInst.IsBottomGauge = IsBottomGauge;
-		GaugeDataInst.IsColorGauge = IsColorGauge;
+		GaugeDataInst.GaugeType = _Type;
 	}
 
 	void UpdateGauge(float _Ratio); //비율만큼 게이지를 TexCoord좌표를 조절하는 함수

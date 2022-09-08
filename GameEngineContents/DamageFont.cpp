@@ -1,7 +1,9 @@
 #include "PreCompile.h"
 #include "DamageFont.h"
 
-DamageFont::DamageFont()
+DamageFont::DamageFont() :
+	Speed_(0.0f),
+	AlphaValue_(1.0f)
 {
 }
 
@@ -39,9 +41,10 @@ DamageFont* DamageFont::SetDamageFont(int _Value, bool IsCriticalDamage)
 		NewFont->GetTransform().SetLocalMove({ MovePosX,0,0 });
 		MovePosX += NewFont->GetTransform().GetLocalScale().x * 0.35f;
 		FontRenderer_.push_back(NewFont);
-		NewFont->Death(1.0f); //나중에 한번에 죽여
 	}
-	
+	GetTransform().SetLocalMove({ -MovePosX * 0.5f,0,0 });
+	GetTransform().SetLocalScale({ 1.8f,1.8f,1 });
+
 
 	return this;
 }
@@ -52,6 +55,32 @@ void DamageFont::Start()
 
 void DamageFont::Update(float _DeltaTime)
 {
+	//
+	if (GetAccTime() > 1.0f)
+	{
+		Death();
+	}
+	float ScaleX = GetTransform().GetLocalScale().x;
+	if (ScaleX > 1.0f)
+	{
+		ScaleX -= _DeltaTime * 5.0f;
+		float ScaleY = ScaleX;
+		GetTransform().SetLocalScale({ ScaleX,ScaleY,1 });
+	}
+	else
+	{
+		Speed_ += 1000.0f * _DeltaTime;
+		for (auto i : FontRenderer_)
+		{
+			AlphaValue_ -= _DeltaTime*0.5f;
+			if (AlphaValue_ <= 0)
+			{
+				AlphaValue_ = 0.0f;
+			}
+			i->GetPixelData().MulColor = float4{ 1.f,1.f,1.f,AlphaValue_ };
+		}
+		GetTransform().SetLocalMove(float4::UP * Speed_ * _DeltaTime);
+	}
 }
 
 void DamageFont::End()

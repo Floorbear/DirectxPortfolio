@@ -152,7 +152,7 @@ void DNFHUD::SkillRendererInit()
 	{
 		GaugeRenderer* NewSkillIcon = CreateComponent<GaugeRenderer>(GetNameCopy());
 		NewSkillIcon->Off();
-		NewSkillIcon->SetGauge(1, 1);
+		NewSkillIcon->SetGauge(1);
 		//NewSkillIcon->SetTexture("SkillBack.png");
 		//NewSkillIcon->ScaleToTexture();
 		//NewSkillIcon->SetPivot(PIVOTMODE::CENTER);
@@ -172,7 +172,7 @@ void DNFHUD::SkillIconUpdate(float _DeltaTime)
 
 		//어퍼슬래쉬
 		std::map<std::string, Timer*> CoolTimeMap = Player->GetSkillCoolTimeList();
-		if (CoolTimeMap["UpperSlash"]->IsTimerOn() == true)
+		if (CoolTimeMap["UpperSlash"]->IsTimerOn() == true) //쿨타임 도는 것을 보여준다.
 		{
 			SkillIcon_[13]->SetTexture("UpperSlashCool.png");
 			float MaxTime = CoolTimeMap["UpperSlash"]->Default_Time_;

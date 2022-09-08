@@ -36,8 +36,7 @@ void GaugeRenderer::SetTextureRendererSetting()
 {
 	SetPipeLine("Gauge");
 
-	GaugeDataInst.IsBottomGauge = 1;
-	GaugeDataInst.IsColorGauge = 0;
+	GaugeDataInst.GaugeType = 0;
 	GaugeDataInst.Ratio = 1.0f;
 
 	ShaderResources.SetConstantBufferLink("GaugeData", GaugeDataInst);

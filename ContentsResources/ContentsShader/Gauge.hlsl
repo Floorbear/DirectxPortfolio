@@ -35,9 +35,9 @@ struct Output
 
 cbuffer GaugeData : register(b2)
 {
-    int IsBottomGauge; // 0은 아래서 위로 게이지가 사라짐, 1은 위에서 아래로 게이지가 사라짐
-    int IsSkillGauge;
+    int GaugeType; // 0 : 플레이어 체력, Mp바 , 1: 스킬 쿨타임
     float Ratio; //게이지 비율
+    float Ratio2; //하얗게 칠해질 부분
     int a1;
 };
 
@@ -80,19 +80,16 @@ Texture2D Tex : register(t0);
 SamplerState Smp : register(s0);
 float4 Gauge_PS(Output _Input) : SV_Target0
 {
-    if (IsSkillGauge == 0)
+    if (GaugeType == 0)
     {
-        if (IsBottomGauge == 1)
+        float ClipYPos = 1.0f - Ratio;
+        if (_Input.Tex.y < ClipYPos)
         {
-            float ClipYPos = 1.0f - Ratio;
-            if (_Input.Tex.y < ClipYPos)
-            {
-                clip(-1);
-            }
+            clip(-1);
         }
         return (Tex.Sample(Smp, _Input.Tex.xy) * MulColor) + PlusColor;
     }
-    else if (IsSkillGauge == 1)
+    else if (GaugeType == 1)
     {
         float ClipYPos = 1.0f - Ratio;
         if (_Input.Tex.y > ClipYPos)

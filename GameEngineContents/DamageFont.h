@@ -23,5 +23,7 @@ protected:
 private:
 	std::vector<GameEngineTextureRenderer*> FontRenderer_;
 
+	float Speed_;
+	float AlphaValue_;
 };
 
