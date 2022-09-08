@@ -183,7 +183,7 @@ void Player_Main::HitStart(const StateInfo _Info)
 	AvatarManager_.ChangeMotion(PlayerAnimations::Hit);
 	ResetDNFAnimation();
 	//ChangeHitColTrans("Hit");
-	Hit_Timer_ = 1.0f;
+	Hit_Timer_ = 0.65f;
 	Hit_Timer_.StartTimer();
 
 	//플레이어를 마주보는 방향으로 Flip

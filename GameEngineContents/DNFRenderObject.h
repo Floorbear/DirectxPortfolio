@@ -14,11 +14,12 @@ enum class AttackType
 
 struct AttackData
 {
-	int ZPos = 0; // ZPos == 0 > 공격이 Z축의 영향을 받지 않는다.
+	int ZPos = 0; // ZPos == 0 > 공격이 Z축의 영향을 받지 않는다. 
 	std::string AttackName = "";
 	int AttCount = 0;
 	int MaxAttCount = 10;
 	AttackType Type = AttackType::Above;
+	Effect AttEffect = Effect::None;
 	int Att = 0;
 	float Stiffness = 0.f; //경직
 	float RStiffness =0.0f; //역경직
@@ -35,6 +36,7 @@ struct ScaleNPos
 
 class DNFLevel;
 class Timer;
+class EffectActor;
 class DNFRenderObject : public GameEngineActor
 {
 	friend class DNFLevel;
@@ -165,6 +167,10 @@ protected:
 	//슈퍼아머 관련
 	bool IsSuperArmor_;
 	Timer SuperArmorTimer_;
+
+	//이펙트 관련
+	EffectActor* SetEffect(Effect _Effect, float4 _Pos, float4 _Dir = float4::ZERO);
+	float4 HitEffectMovePos_;
 
 private:
 

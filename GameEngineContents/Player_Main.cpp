@@ -91,6 +91,8 @@ void Player_Main::InitDefaultValue()
 	//½ºÅÝ
 	MaxHP_ = 20;
 	CurHP_ = MaxHP_;
+
+	HitEffectMovePos_ = { 0,-30,0 };
 }
 
 Player_Main::~Player_Main()
@@ -137,7 +139,7 @@ void Player_Main::Start()
 	Force_.Gravity_ = 700.0f;
 	Force_.SetTransfrom(&GetTransform());
 
-	DNFDebugGUI::AddMutableValue("Time", &SuperArmorMulTime_);
+	//DNFDebugGUI::AddMutableValue("MulColoer", &DNFGlobalValue::Temp1);
 
 }
 

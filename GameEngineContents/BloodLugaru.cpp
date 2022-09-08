@@ -143,12 +143,14 @@ void BloodLugaru::InitAniNState()
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.AttCount++;
 				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y);
+				CurAttackData_.AttEffect = Effect::SlashSHori;
 				Force_.ForceX_ = 70.0f;
 				AttackCol_->On();
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == Lugaru_Attack_1_Start + 3)
 			{
 				CurAttackData_.AttCount++;
+				CurAttackData_.AttEffect = Effect::SlashSRight;
 
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == Lugaru_Attack_1_End)
@@ -703,5 +705,7 @@ void BloodLugaru::InitDefaultValue()
 
 	MaxHP_ = 99990;
 	CurHP_ = MaxHP_;
+
+	HitEffectMovePos_ = { 0,-50,0 };
 }
 

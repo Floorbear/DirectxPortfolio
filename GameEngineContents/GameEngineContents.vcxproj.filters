@@ -157,6 +157,9 @@
     <ClInclude Include="GaugeRenderer.h">
       <Filter>Global</Filter>
     </ClInclude>
+    <ClInclude Include="EffectActor.h">
+      <Filter>Global</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -254,6 +257,9 @@
       <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="GaugeRenderer.cpp">
+      <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectActor.cpp">
       <Filter>Global</Filter>
     </ClCompile>
   </ItemGroup>

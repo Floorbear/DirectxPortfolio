@@ -6,6 +6,7 @@
 #include "DNFLevel.h"
 #include "DNFBackground.h"
 #include "DNFMath.h"
+#include "EffectActor.h"
 
 #include "DNFDebugGUI.h"
 
@@ -30,7 +31,8 @@ DNFRenderObject::DNFRenderObject():
 	HitBelow_(),
 	PrevHitData_(),
 	IsSuperArmor_(false),
-	SuperArmorTimer_()
+	SuperArmorTimer_(),
+	HitEffectMovePos_()
 {
 	AllDNFRenderer_.push_back(&MainRenderer_);
 	AllDNFRenderer_.push_back(&ShadowRenderer_);
@@ -198,6 +200,12 @@ bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
 
 	GiveAndRecevieStiffness(PrevHitData_, _Other);
 
+	//공격이펙트가 있으면 생성해라
+	if (PrevHitData_.AttEffect != Effect::None)
+	{
+		SetEffect(PrevHitData_.AttEffect, GetTransform().GetWorldPosition(), _Other->GetDirX());
+	}
+
 	if (IsSuperArmor_ == true)
 	{
 		return true;
@@ -287,6 +295,22 @@ bool DNFRenderObject::IsZPosHit(int _ZPos)
 		}
 	}
 	return true;
+}
+
+EffectActor* DNFRenderObject::SetEffect(Effect _Effect, float4 _WorldPos , float4 _Dir)
+{
+	EffectActor* NewEffect = GetLevel()->CreateActor<EffectActor>();
+	NewEffect->GetTransform().SetWorldPosition(_WorldPos + HitEffectMovePos_);
+	NewEffect->GetTransform().SetLocalMove({ 0,0,-300 });
+
+	//Dir영향을 받으면 Dir을 바꿔줘라
+	if (_Dir.Length() > 0)
+	{
+		NewEffect->GetTransform().SetLocalScale({ _Dir.x, 1, 1 });
+	}
+
+	NewEffect->InitEffect(_Effect);
+	return NewEffect;
 }
 
 

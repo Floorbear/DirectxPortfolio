@@ -38,9 +38,24 @@ void Vilmark_0::DNFOnEvent()
 		GameEngineDirectory Dir;
 		Dir.MoveParentToExitsChildDirectory("ContentsResources");
 		Dir.Move("ContentsResources");
+		Dir.Move("FolderTexture");
 		Dir.Move("MonsterTexture");
 		Dir.Move("bloodlugaru");
 		GameEngineFolderTexture::Load(Dir.GetFullPath());
+	}
+
+	//이펙트 텍스처 로드
+	{
+		GameEngineDirectory Dir;
+		Dir.MoveParentToExitsChildDirectory("ContentsResources");
+		Dir.Move("ContentsResources");
+		Dir.Move("FolderTexture");
+		Dir.Move("EffectTexture");
+		std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
+		for (GameEngineDirectory Dir_i : Dirs)
+		{
+			GameEngineFolderTexture::Load(Dir_i.GetFullPath());
+		}
 	}
 
 	BloodLugaru* Monster = CreateActor<BloodLugaru>();

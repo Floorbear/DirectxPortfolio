@@ -83,6 +83,8 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.AttCount++;
 				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y);
+				CurAttackData_.AttEffect = Effect::SlashSHori;
+
 
 			}
 			else if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_0_Start + 7)
@@ -116,6 +118,9 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y);
 				CurAttackData_.AttCount++;
 				Force_.ForceX_ = 70.0f;
+				CurAttackData_.AttEffect = Effect::SlashSHori;
+
+
 			}
 			else if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_1_Start + 7)
 			{
@@ -149,6 +154,8 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.RStiffness = 0.11f;
 				CurAttackData_.AttCount++;
 				Force_.ForceX_ = 70.0f;
+				CurAttackData_.AttEffect = Effect::SlashSRight;
+
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 7)
 			{
@@ -188,6 +195,9 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y);
 				CurAttackData_.YForce = 550.0f;
 				CurAttackData_.AttCount++;
+				CurAttackData_.AttEffect = Effect::SlashSRight;
+
+				//내가 앞으로 가는 정도
 				Force_.ForceX_ = 70.0f;
 				//CoolTime Set
 				SkillCoolTime_["UpperSlash"]->StartTimer();

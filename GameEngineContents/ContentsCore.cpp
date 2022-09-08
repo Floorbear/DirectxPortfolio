@@ -84,12 +84,13 @@ void ContentsCore::Start()
 		}
 	}
 
-	//폴더 텍스처 로드
+	//아바타 텍스처 로드
 	{
 		GameEngineDirectory Dir;
 		Dir.MoveParentToExitsChildDirectory("ContentsResources");
 		Dir.Move("ContentsResources");
 		Dir.Move("FolderTexture");
+		Dir.Move("AvatarTexture");
 
 		std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
 		for (GameEngineDirectory Dir_i : Dirs)
@@ -97,6 +98,21 @@ void ContentsCore::Start()
 			GameEngineFolderTexture::Load(Dir_i.GetFullPath());
 		}
 	}
+
+	//UI 텍스처 로드
+	{
+		GameEngineDirectory Dir;
+		Dir.MoveParentToExitsChildDirectory("ContentsResources");
+		Dir.Move("ContentsResources");
+		Dir.Move("FolderTexture");
+		Dir.Move("UITexture");
+		std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
+		for (GameEngineDirectory Dir_i : Dirs)
+		{
+			GameEngineFolderTexture::Load(Dir_i.GetFullPath());
+		}
+	}
+
 
 	//Dir.Move("BlackSet");
 	//GameEngineFolderTexture::Load(Dir.GetFullPath());
