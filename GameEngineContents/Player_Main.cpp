@@ -8,6 +8,7 @@
 #include "DNFBackground.h"
 #include "DNFDebugGUI.h"
 
+#include <GameEngineBase/GameEngineRandom.h>
 #include <GameEngineCore/GameEngineLevel.h>
 #include <GameEngineCore/GameEngineUIRenderer.h>
 #include <GameEngineCore/GameEngineCollision.h>
@@ -85,8 +86,8 @@ void Player_Main::InitDefaultValue()
 	Value_.SuperArmorMul = 1000.0f;
 
 	//°ø°Ý·Â
-	Value_.UpperSlashAtt = 2;
-	Value_.AutoAttackAtt = 1;
+	Value_.UpperSlashAtt = 20000;
+	Value_.AutoAttackAtt = 10000;
 
 	//½ºÅÝ
 	MaxHP_ = 20;
@@ -485,7 +486,16 @@ bool Player_Main::IsPressMoveKey()
 
 int Player_Main::CalAtt(int _Value)
 {
-	return _Value;
+	int Value = _Value;
+	int IsCritical = GameEngineRandom::MainRandom.RandomInt(0, 1);
+	CurAttackData_.IsCritical = IsCritical;
+	if (IsCritical >= 1)
+	{
+		Value *= 2;
+	}
+	int RandomRange = Value / 2;
+	int CalDam = GameEngineRandom::MainRandom.RandomInt(_Value - RandomRange, _Value + RandomRange);
+	return CalDam;
 }
 
 Timer* Player_Main::CreateSkillCoolTime(std::string _Name, float Time_)

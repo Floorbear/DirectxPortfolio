@@ -9,7 +9,8 @@ DNFLevel::DNFLevel():
 	MainCamera_(nullptr),
 	IsStart_(false),
 	MapScale_(float4::ZERO),
-	Player_()
+	Player_(),
+	MonsterHP_()
 {
 }
 

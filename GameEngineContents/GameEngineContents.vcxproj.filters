@@ -163,6 +163,9 @@
     <ClInclude Include="DamageFont.h">
       <Filter>Global</Filter>
     </ClInclude>
+    <ClInclude Include="MonsterHP.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -267,6 +270,9 @@
     </ClCompile>
     <ClCompile Include="DamageFont.cpp">
       <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterHP.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

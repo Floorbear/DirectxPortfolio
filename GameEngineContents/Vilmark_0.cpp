@@ -4,6 +4,7 @@
 #include "Vilmark_0_Background.h"
 #include "Player_Main.h"
 #include "BloodLugaru.h"
+#include "MonsterHP.h"
 
 Vilmark_0::Vilmark_0()
 {
@@ -20,6 +21,7 @@ void Vilmark_0::Start()
 
 	InitCamera({ 0,0,-2000 }, 0.6f);
 	CreateBackground<Vilmark_0_Background>();
+	MonsterHP_ = CreateActor<MonsterHP>();
 }
 
 void Vilmark_0::Update(float _DeltaTime)
@@ -57,7 +59,9 @@ void Vilmark_0::DNFOnEvent()
 			GameEngineFolderTexture::Load(Dir_i.GetFullPath());
 		}
 	}
+	DNFGlobalValue::CurrentMonsterHP = MonsterHP_;
 
 	BloodLugaru* Monster = CreateActor<BloodLugaru>();
+	Monster->ID_ = 1;
 	Monster->GetTransform().SetWorldPosition({ 700,-400 });
 }

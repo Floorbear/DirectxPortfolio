@@ -35,9 +35,9 @@ struct Output
 
 cbuffer GaugeData : register(b2)
 {
-    int GaugeType; // 0 : 플레이어 체력, Mp바 , 1: 스킬 쿨타임
-    float Ratio; //게이지 비율
-    float Ratio2; //하얗게 칠해질 부분
+    int GaugeType; // 0 : 플레이어 체력, Mp바 , 1: 스킬 쿨타임, 2:몬스터 HP바
+    float Ratio; //
+    float Ratio2; //
     int a1;
 };
 
@@ -80,7 +80,7 @@ Texture2D Tex : register(t0);
 SamplerState Smp : register(s0);
 float4 Gauge_PS(Output _Input) : SV_Target0
 {
-    if (GaugeType == 0)
+    if (GaugeType == 0) // HP & MP 바
     {
         float ClipYPos = 1.0f - Ratio;
         if (_Input.Tex.y < ClipYPos)
@@ -89,7 +89,7 @@ float4 Gauge_PS(Output _Input) : SV_Target0
         }
         return (Tex.Sample(Smp, _Input.Tex.xy) * MulColor) + PlusColor;
     }
-    else if (GaugeType == 1)
+    else if (GaugeType == 1) //스킬 쿨타임
     {
         float ClipYPos = 1.0f - Ratio;
         if (_Input.Tex.y > ClipYPos)
@@ -99,6 +99,14 @@ float4 Gauge_PS(Output _Input) : SV_Target0
         else
         {
             return (Tex.Sample(Smp, _Input.Tex.xy) * MulColor) + PlusColor;
+        }
+    }
+    else if (GaugeType == 2) //몬스터 HP바
+    {
+        float ClipXPos = Ratio;
+        if (_Input.Tex.x > ClipXPos)
+        {
+            clip(-1);
         }
     }
 

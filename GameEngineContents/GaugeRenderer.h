@@ -23,6 +23,16 @@ public:
 
 	void SetTexture(const std::string& _Name);
 
+	void SetTexture(GameEngineTexture* _Texture);
+
+	void SetFolderTextureToIndex(const std::string& _Text, UINT _Index);
+
+	void ScaleToTexture();
+
+	void SetScaleRatio(float _Scale)
+	{
+		ScaleRatio = _Scale;
+	}
 
 	PixelData& GetColorData()
 	{

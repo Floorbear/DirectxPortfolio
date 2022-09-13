@@ -7,7 +7,7 @@
 
 #include "DNFContentsMinimal.h"
 #include "DNFBackground.h"
-
+#include "MonsterHP.h"
 #include "Player_Main.h"
 //Player_Utilty를 만들까?
 
@@ -26,7 +26,8 @@ BloodLugaru::BloodLugaru() :
 	Back_Timer_(3.0f),
 	Chase_Timer_(5.0f),
 	Hit_Timer_(1.0f),
-	AttackCol_()
+	AttackCol_(),
+	ID_(0)
 {
 	InitDefaultValue();
 }
@@ -58,6 +59,10 @@ void BloodLugaru::Update(float _DeltaTime)
 	if(Stiffness_ > 0.0f)
 	{
 		return;
+	}
+	if (ID_ == 0)
+	{
+		MsgBoxAssert("ID가 0입니다. ID를 세팅해주세요");
 	}
 	TimerCheck(_DeltaTime);
 	Force_.Update(_DeltaTime * (1 + (AirborneTime_ * AirborneTime_) * 0.01f));
@@ -675,6 +680,16 @@ bool BloodLugaru::CanHitAttack1()
 	return false;
 }
 
+void BloodLugaru::HPBarUpdate()
+{
+	MonsterHPData Data;
+	Data.CurHP = CurHP_;
+	Data.PerHP = PerHP_;
+	Data.ID = ID_;
+	Data.Type = MonsterType::BloodLugaruM;
+	DNFGlobalValue::CurrentMonsterHP->SetHPBar(Data);
+}
+
 void BloodLugaru::TimerCheck(float _DeltaTime)
 {
 	if (GodTime_.IsTimerOn() == true)
@@ -703,7 +718,8 @@ void BloodLugaru::InitDefaultValue()
 	Value_.Down_Time = 1.3f;
 	Value_.Down_God_Time = 0.48f;
 
-	MaxHP_ = 9999990;
+	MaxHP_ = 300000;
+	PerHP_ = 70000;
 	CurHP_ = MaxHP_;
 
 	HitEffectMovePos_ = { 0,-50,0 };

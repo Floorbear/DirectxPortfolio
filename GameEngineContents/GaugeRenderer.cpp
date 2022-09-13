@@ -14,6 +14,36 @@ void GaugeRenderer::SetTexture(const std::string& _Name)
 	CurTex = ShaderResources.SetTexture("Tex", _Name);
 }
 
+void GaugeRenderer::SetTexture(GameEngineTexture* _Texture)
+{
+	CurTex = _Texture;
+	ShaderResources.SetTexture("Tex", _Texture);
+}
+
+void GaugeRenderer::SetFolderTextureToIndex(const std::string& _Text, UINT _Index)
+{
+	GameEngineFolderTexture* FolderTexture = GameEngineFolderTexture::Find(_Text);
+
+	SetTexture(FolderTexture->GetTexture(_Index));
+}
+
+void GaugeRenderer::ScaleToTexture()
+{
+	float4 Scale = CurTex->GetScale();
+
+	if (0 > GetTransform().GetLocalScale().x)
+	{
+		Scale.x = -Scale.x;
+	}
+
+	if (0 > GetTransform().GetLocalScale().y)
+	{
+		Scale.y = -Scale.y;
+	}
+
+	GetTransform().SetLocalScale(Scale * ScaleRatio);
+}
+
 void GaugeRenderer::UpdateGauge(float _Ratio)
 {
 	GaugeDataInst.Ratio = _Ratio;

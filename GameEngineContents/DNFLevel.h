@@ -5,6 +5,7 @@
 class GameEngineCameraActor;
 class Player_Main;
 class DNFBackground;
+class MonsterHP;
 class DNFLevel : public GameEngineLevel
 {
 public:
@@ -57,15 +58,16 @@ protected:
 	void LevelStartEvent() override;
 	virtual void DNFOnEvent();
 	Player_Main* Player_;
+	MonsterHP* MonsterHP_;
 
 private:
 	//에러 체크용 Bool 함수
 	bool IsStart_;
 
-	//레벨에 있는 플레이어
-
 	//맵 스케일
 	float4 MapScale_;
+
+	//몬스터HPBar
 
 	DNFBackground* Background_;
 

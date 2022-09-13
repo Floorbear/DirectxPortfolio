@@ -21,12 +21,14 @@ enum class Effect
 	SlashSHori
 };
 
-
+class MonsterHP;
 class DNFGlobalValue
 {
 public:
 	//현재 레벨
 	static DNFLevel* CurrentLevel;
+
+	static MonsterHP* CurrentMonsterHP;
 
 	static float4 Temp1;
 };

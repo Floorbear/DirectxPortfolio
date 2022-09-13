@@ -213,16 +213,15 @@ bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
 
 	GiveAndRecevieStiffness(PrevHitData_, _Other);
 
-	//공격이펙트가 있으면 생성해라
+	HPBarUpdate();
+	//데이터에 공격이펙트가 있으면 생성해라
 	if (PrevHitData_.AttEffect != Effect::None)
 	{
 		SetEffect(PrevHitData_.AttEffect, GetTransform().GetWorldPosition()+ HitEffectMovePos_, _Other->GetDirX());
 	}
 
 	//데미지
-	int Damage = GameEngineRandom::MainRandom.RandomInt(1, 9999999);
-	int IsCritical = GameEngineRandom::MainRandom.RandomInt(0, 1);
-	SetDamageFont(Damage, GetTransform().GetWorldPosition() + DamageFontMovePos_ , IsCritical);
+	SetDamageFont(Data.Att, GetTransform().GetWorldPosition() + DamageFontMovePos_ , Data.IsCritical);
 
 	if (IsSuperArmor_ == true)
 	{

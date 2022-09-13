@@ -17,6 +17,8 @@ public:
 	BloodLugaru& operator=(const BloodLugaru& _Ohter) = delete;
 	BloodLugaru& operator=(const BloodLugaru&& _Other) noexcept = delete;
 
+	int ID_;
+
 protected:
 	void Start() override;
 	void Update(float _DeltaTime) override;
@@ -83,7 +85,9 @@ private:
 
 
 
-
+	//체력관련
+	int PerHP_;
+	void HPBarUpdate() override;
 
 	//타이머 
 	void TimerCheck(float _DeltaTime);

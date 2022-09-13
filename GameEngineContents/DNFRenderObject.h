@@ -21,6 +21,7 @@ struct AttackData
 	AttackType Type = AttackType::Above;
 	Effect AttEffect = Effect::None;
 	int Att = 0;
+	bool IsCritical = false;
 	float Stiffness = 0.f; //경직
 	float RStiffness =0.0f; //역경직
 	float YForce =0.f;
@@ -106,6 +107,8 @@ protected:
 
 	//Update에서 돌려줘야함
 	void ZSort();
+
+	virtual void HPBarUpdate(){}; //(지금당장은) 이 클래스를 상속받은 몬스터의 HPBarUpdate를 위한 함수
 
 	GameEngineTextureRenderer* MainRenderer_;
 	GameEngineTextureRenderer* ShadowRenderer_;
