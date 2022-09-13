@@ -8,8 +8,9 @@ enum MonsterType
 struct MonsterHPData //Cur , Per
 {
 	int ID; //인스턴스된 몬스터의 NUmber
-	float CurHP;
-	float PerHP;//HP바 한줄이 나타내는 HP의 양 ex현재 체력 1500 PerHP 1000 >> 화면에 나타나는것 2줄
+	int CurHP;
+	int PerHP;//HP바 한줄이 나타내는 HP의 양 ex현재 체력 1500 PerHP 1000 >> 화면에 나타나는것 2줄
+	int MaxHP;
 	MonsterType Type;
 };
 
@@ -41,7 +42,10 @@ private:
 	std::vector<GameEngineUIRenderer*> HPFont_;
 	
 	std::map<int,MonsterHPData> Data_; // 몬스터로부터 정보를 받아와야함
+	std::map<int, float> PrevHP_;
 	int CurID_;
+	float PlusValue_;
+	float LerpValue_;
 
 	struct DefaultValue
 	{

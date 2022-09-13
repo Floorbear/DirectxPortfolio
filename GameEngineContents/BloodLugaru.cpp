@@ -686,6 +686,7 @@ void BloodLugaru::HPBarUpdate()
 	Data.CurHP = CurHP_;
 	Data.PerHP = PerHP_;
 	Data.ID = ID_;
+	Data.MaxHP = MaxHP_;
 	Data.Type = MonsterType::BloodLugaruM;
 	DNFGlobalValue::CurrentMonsterHP->SetHPBar(Data);
 }

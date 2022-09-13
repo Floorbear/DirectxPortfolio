@@ -104,9 +104,17 @@ float4 Gauge_PS(Output _Input) : SV_Target0
     else if (GaugeType == 2) //몬스터 HP바
     {
         float ClipXPos = Ratio;
-        if (_Input.Tex.x > ClipXPos)
+        if (_Input.Tex.x > Ratio2)
         {
             clip(-1);
+        }
+        if (_Input.Tex.x > ClipXPos && _Input.Tex.x<Ratio2)
+        {
+            return (Tex.Sample(Smp, _Input.Tex.xy) * MulColor) + PlusColor;
+        }
+        else
+        {
+            return (Tex.Sample(Smp, _Input.Tex.xy));
         }
     }
 

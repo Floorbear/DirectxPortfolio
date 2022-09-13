@@ -45,6 +45,7 @@ public:
 	}
 
 	void UpdateGauge(float _Ratio); //비율만큼 게이지를 TexCoord좌표를 조절하는 함수
+	void UpdateMonsterHP(float _Ratio, float _PrevRatio);
 	void UpdateGauegeColor(float _Ratio, float4 _Color); //게이지 위에 _Color을 덮어씌우고 그 Color을 비율만큼 게이지처럼 보여주는 함수
 
 protected:

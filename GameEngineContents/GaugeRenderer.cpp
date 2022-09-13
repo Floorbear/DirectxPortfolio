@@ -49,6 +49,13 @@ void GaugeRenderer::UpdateGauge(float _Ratio)
 	GaugeDataInst.Ratio = _Ratio;
 }
 
+void GaugeRenderer::UpdateMonsterHP(float _Ratio , float _PrevRatio)
+{
+	GaugeDataInst.Ratio = _Ratio;
+	GaugeDataInst.Ratio2 = _PrevRatio;
+
+}
+
 void GaugeRenderer::UpdateGauegeColor(float _Ratio, float4 _Color)
 {
 	GaugeDataInst.Ratio = _Ratio;

@@ -7,7 +7,9 @@ MonsterHP::MonsterHP():
 	HPFrame_(),
 	Data_(),
 	Value_(),
-	CurID_(0)
+	CurID_(0),
+	PlusValue_(1.0f),
+	LerpValue_(0.0f)
 {
 	HPBar_.reserve(30);
 	HPFont_.reserve(3);
@@ -19,12 +21,26 @@ MonsterHP::~MonsterHP()
 
 void MonsterHP::SetHPBar(MonsterHPData _Data)
 {
-	Data_[_Data.ID] = _Data;
 	CurID_ = _Data.ID;
+	//HPBar
+	if (Data_[CurID_].CurHP != _Data.CurHP) //HP변화를 감지하면 변화하기 전값을 PrevHP에 저장한다.
+	{
+		PrevHP_[CurID_] = static_cast<float>(Data_[CurID_].CurHP);
+		PlusValue_ = 1.0f;
+		PlusValue_ -= 0.003f;
+		LerpValue_ = 0.0f;
+		if (PrevHP_[CurID_] <= 0) //PrevHP가 세팅되지 않아 0으로 설정되있는 경우, 즉 최초에는 MaxHP를 넣어준다
+		{
+			PrevHP_[CurID_] = static_cast<float>(_Data.MaxHP);
+		}
+	}
+
+	//데이타 복사
+	Data_[_Data.ID] = _Data;
+
 
 	//여기서 HPBar을 전부 Reset해야 한다.
 	ResetHP();
-
 }
 
 void MonsterHP::Start()
@@ -84,18 +100,56 @@ void MonsterHP::Start()
 
 void MonsterHP::Update(float DeltaTime_)
 {
-	float leftHP = Data_[CurID_].CurHP;
+	//HP바 하얗게 됬다가 어두워 지는거 파라미터 부분
+	if (PlusValue_ < 1.0f && PlusValue_> -1.7f)
+	{
+		PlusValue_ -= DeltaTime_ * 4.5f;
+	}
+
+	//어두워진 HP바 줄어들게 하기
+	if (PlusValue_ < -1.7f && LerpValue_ < 1.0f)
+	{
+		LerpValue_ += DeltaTime_ * 1.5f;
+		PrevHP_[CurID_] = GameEngineMath::LerpLimit(PrevHP_[CurID_], static_cast<float>(Data_[CurID_].CurHP), LerpValue_);
+	}
+
+	int leftHP = Data_[CurID_].CurHP;
+	int PrevHP = PrevHP_[CurID_];
 	//HP바 실시간 연동
 	int HPBarCount = 0;
-	for (; leftHP > 0; leftHP -= Data_[CurID_].PerHP)
+	for (; leftHP > 0; 
+		leftHP -= Data_[CurID_].PerHP,
+		PrevHP -= Data_[CurID_].PerHP
+		)
 	{
-		float CurHPRatio = leftHP / Data_[CurID_].PerHP;
+		float CurHPRatio = static_cast<float>(leftHP) / static_cast<float>(Data_[CurID_].PerHP);
+		float PrevHPRatio = static_cast<float>(PrevHP) / static_cast<float>(Data_[CurID_].PerHP);
 		if (CurHPRatio >= 1.0f)
 		{
 			CurHPRatio = 1.0f;
 		}
+		if (PrevHPRatio >= 1.0f)
+		{
+			PrevHPRatio = 1.0f;
+		}
+
+		//여기까지하면 현재 체력의 Ratio, 이전 체력의 Ratio를 알 수 있다.
+		//HPBar의 갯수도 기록하고 있다.
+
 		HPBar_[HPBarCount]->On();
-		HPBar_[HPBarCount]->UpdateGauge(CurHPRatio);
+		float AlphaValue = PlusValue_;
+		if (AlphaValue <= -1.0f)
+		{
+			AlphaValue += 1.0f;
+			AlphaValue = -AlphaValue;
+			HPBar_[HPBarCount]->GetColorData().PlusColor = { -0.5f * AlphaValue,-0.5f * AlphaValue,-0.5f * AlphaValue,0.5f };
+		}
+		else
+		{
+			HPBar_[HPBarCount]->GetColorData().PlusColor = { 1.0,1.0,1.0,AlphaValue };
+		}
+		
+		HPBar_[HPBarCount]->UpdateMonsterHP(CurHPRatio,PrevHPRatio);
 		HPBarCount++;
 	}
 	HPBarCount--;

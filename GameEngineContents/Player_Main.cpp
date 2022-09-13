@@ -86,8 +86,8 @@ void Player_Main::InitDefaultValue()
 	Value_.SuperArmorMul = 1000.0f;
 
 	//°ø°Ý·Â
-	Value_.UpperSlashAtt = 20000;
-	Value_.AutoAttackAtt = 10000;
+	Value_.UpperSlashAtt = 15000;
+	Value_.AutoAttackAtt = 7000;
 
 	//½ºÅÝ
 	MaxHP_ = 20;
