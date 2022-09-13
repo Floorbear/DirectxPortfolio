@@ -60,6 +60,7 @@ void Vilmark_0::DNFOnEvent()
 		}
 	}
 	DNFGlobalValue::CurrentMonsterHP = MonsterHP_;
+	MonsterHP_->Off();
 
 	BloodLugaru* Monster = CreateActor<BloodLugaru>();
 	Monster->ID_ = 1;

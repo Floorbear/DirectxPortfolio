@@ -46,6 +46,7 @@ private:
 	int CurID_;
 	float PlusValue_;
 	float LerpValue_;
+	float UIWaitingTime_;
 
 	struct DefaultValue
 	{

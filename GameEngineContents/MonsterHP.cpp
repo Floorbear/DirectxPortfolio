@@ -9,7 +9,8 @@ MonsterHP::MonsterHP():
 	Value_(),
 	CurID_(0),
 	PlusValue_(1.0f),
-	LerpValue_(0.0f)
+	LerpValue_(0.0f),
+	UIWaitingTime_(1.0f)
 {
 	HPBar_.reserve(30);
 	HPFont_.reserve(3);
@@ -38,6 +39,8 @@ void MonsterHP::SetHPBar(MonsterHPData _Data)
 	//데이타 복사
 	Data_[_Data.ID] = _Data;
 
+	//몬스터가 죽으면 UI가 꺼지는 시간을 초기화한다.
+	UIWaitingTime_ = 1.0f;
 
 	//여기서 HPBar을 전부 Reset해야 한다.
 	ResetHP();
@@ -100,6 +103,15 @@ void MonsterHP::Start()
 
 void MonsterHP::Update(float DeltaTime_)
 {
+	//몬스터가 죽으면 잠시후에 UI가 꺼진다.
+	if (Data_[CurID_].CurHP == 0)
+	{
+		UIWaitingTime_ -= DeltaTime_;
+		if (UIWaitingTime_ <= 0)
+		{
+			Off();
+		}
+	}
 	//HP바 하얗게 됬다가 어두워 지는거 파라미터 부분
 	if (PlusValue_ < 1.0f && PlusValue_> -1.7f)
 	{
@@ -113,9 +125,9 @@ void MonsterHP::Update(float DeltaTime_)
 		PrevHP_[CurID_] = GameEngineMath::LerpLimit(PrevHP_[CurID_], static_cast<float>(Data_[CurID_].CurHP), LerpValue_);
 	}
 
+	//HP바 업데이트
 	int leftHP = Data_[CurID_].CurHP;
 	int PrevHP = PrevHP_[CurID_];
-	//HP바 실시간 연동
 	int HPBarCount = 0;
 	for (; leftHP > 0; 
 		leftHP -= Data_[CurID_].PerHP,
