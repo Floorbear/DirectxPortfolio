@@ -10,7 +10,6 @@ public:
 	Player_Main();
 	~Player_Main();
 
-
 	Player_Main(const Player_Main& _Other) = delete;
 	Player_Main(const Player_Main&& _Other) noexcept = delete;
 	Player_Main& operator=(const Player_Main& _Ohter) = delete;
@@ -48,11 +47,9 @@ private:
 	//다음 공격키를 선입력 받는다.
 	// 다음 공격의 애니메이션을 Enum으로 알아오고, 다음 공격이 있다는 bool을 true로 변환, 그 결과를 bool로 return
 	bool CheckAttackKey();
-	int CalAtt(int _Value);	//현재 공격의 공격력 계산
 
 	//Hit관련
 	Timer Hit_Timer_;
-
 
 	//쿨타임 관련
 	std::map<std::string, Timer*> SkillCoolTime_;
@@ -71,15 +68,29 @@ private:
 	GameEngineCollision* BottomAttackCol_;
 	int AttackCount_;
 	void AttackEnd();
+	int CalAtt(int _Value);	//현재 공격의 공격력 계산
 
-	//"일단" 공격 1회가 끝나면 IsAttack_End == true > 이후 ReadyNextAttack 분기에 따라
-	bool  IsAttack_End_;
+	bool  IsAttack_End_; //"일단" 공격 1회가 끝나면 IsAttack_End == true > 이후 ReadyNextAttack 분기에 따라
 	bool IsReadyNextAttack_;
-	PlayerAnimations NextAttackAni_;
+	PlayerAnimations NextAttackAni_; // 선입력 받아서 다음에 공격할 행동
+
+	//마나
+	int CurMP_;
+	int MaxMP_;
+	int GetSkillMP_Consumption(PlayerAnimations _Skill);
+public:
+	inline int GetMaxMP()
+	{
+		return MaxMP_;
+	}
+	inline int GetCurMP()
+	{
+		return CurMP_;
+	}
+private:
 
 	//UI
 	GameEngineUIRenderer* UIRenderer_;
-
 
 	//아바타
 	GameEngineTextureRenderer* HairRenderer_a_;
@@ -95,7 +106,6 @@ private:
 	GameEngineTextureRenderer* CoatRenderer_b_;
 	GameEngineTextureRenderer* CoatRenderer_c_;
 	GameEngineTextureRenderer* CoatRenderer_d_;
-
 
 	GameEngineTextureRenderer* ShoesRenderer_a_;
 	GameEngineTextureRenderer* ShoesRenderer_b_;
@@ -114,17 +124,13 @@ private:
 	void StartSuperArmor(float _SuperArmorTime);
 	void CopyRendererUpdate(float _DeltaTime);
 
-
 	//내가 누른 방향키의 값을 리턴 아무키도 누르지 않으면 float4::zero리턴
 	float4 GetMoveDir();
-
 
 	//Flip이 된상태냐 아니냐
 	bool IsDirXPositive();
 
 	bool IsPressMoveKey();
-
-
 
 	void IdleStart(const StateInfo _Info);
 	void IdleUpdate(float _DeltaTime, const StateInfo _Info);
@@ -168,7 +174,13 @@ private:
 		//공격력
 		int UpperSlashAtt;
 		int AutoAttackAtt;
+
+		//마나, 체력
+		int Default_HP = 30000;
+		int Default_MP = 15000;
+
+		//마나 소비량
+		int UpperSlash_MP = 500;
 	};
 	DefaultValue Value_;
 };
-

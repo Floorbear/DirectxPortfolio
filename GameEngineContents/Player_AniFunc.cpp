@@ -51,6 +51,13 @@ bool Player_Main::CheckAttackKey()
 			IsReadyNextAttack_ = false;
 			return false;
 		}
+
+		//어퍼 슬래쉬를 사용할 MP가 없다면 False
+		if (CurMP_ < Value_.UpperSlash_MP)
+		{
+			IsReadyNextAttack_ = false;
+			return false;
+		}
 		IsReadyNextAttack_ = true;
 		NextAttackAni_ = PlayerAnimations::UpperSlash;
 		return true;
@@ -70,7 +77,7 @@ void Player_Main::InitAniFunc()
 				CheckAttackKey();
 			}
 
-			if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_0_Start + 3)
+			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_0_Start + 3)
 			{
 				SetAttackCol(Value_.AutoAttackPos, Value_.AutoAttackScale);
 				//Set Attack
@@ -84,14 +91,12 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.AttCount++;
 				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y);
 				CurAttackData_.AttEffect = Effect::SlashSHori;
-
-
 			}
-			else if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_0_Start + 7)
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_0_Start + 7)
 			{
 				AttackCol_->Off();
 			}
-			else if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_0_End)
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_0_End)
 			{
 				IsAttack_End_ = true;
 			}
@@ -106,7 +111,7 @@ void Player_Main::InitAniFunc()
 				CheckAttackKey();
 			}
 
-			if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_1_Start + 3)
+			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_1_Start + 3)
 			{
 				SetAttackCol(Value_.AutoAttackPos, Value_.AutoAttackScale);
 				//Set Attack
@@ -119,15 +124,13 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.AttCount++;
 				Force_.ForceX_ = 70.0f;
 				CurAttackData_.AttEffect = Effect::SlashSHori;
-
-
 			}
-			else if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_1_Start + 7)
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_1_Start + 7)
 			{
 				AttackCol_->Off();
 			}
-			else if (_Desc.Frames[_Desc.CurFrame-1] == AutoAttack_1_End)
-			{				
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_1_End)
+			{
 				IsAttack_End_ = true;
 			}
 		});
@@ -136,7 +139,6 @@ void Player_Main::InitAniFunc()
 	MainRenderer_->AnimationBindFrame("AutoAttack_2",
 		[&](const FrameAnimation_DESC& _Desc)
 		{
-
 			if (_Desc.Frames[_Desc.CurFrame - 1] >= AutoAttack_2_Start + 3)
 			{
 				CheckAttackKey();
@@ -155,7 +157,6 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.AttCount++;
 				Force_.ForceX_ = 70.0f;
 				CurAttackData_.AttEffect = Effect::SlashSRight;
-
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 7)
 			{
@@ -214,16 +215,11 @@ void Player_Main::InitAniFunc()
 				IsAttack_End_ = true;
 			}
 		});
-
-
 }
 
 void Player_Main::SetAttackCol(const float4& _Pos, const float4& _Scale)
 {
-
 	AttackCol_->On();
 	AttackCol_->GetTransform().SetLocalScale(_Scale);
 	AttackCol_->GetTransform().SetLocalPosition(_Pos);
 }
-
-

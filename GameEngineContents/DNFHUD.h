@@ -8,7 +8,6 @@ public:
 	DNFHUD();
 	~DNFHUD();
 
-
 	DNFHUD(const DNFHUD& _Other) = delete;
 	DNFHUD(const DNFHUD&& _Other) noexcept = delete;
 	DNFHUD& operator=(const DNFHUD& _Ohter) = delete;
@@ -20,7 +19,8 @@ protected:
 
 private:
 
-	void HPAndMPBarUpdate(float _DeltaTime);
+	void HPBarUpdate(float _DeltaTime);
+	void MPBarUpdate(float _DeltaTime);
 	void IconPosUpdate(float _DeltaTime);
 	void SkillRendererInit();
 	void SkillIconUpdate(float _DeltaTime);
@@ -38,7 +38,12 @@ private:
 	//HP바 관련
 	int PrevHp_;
 	float LerpHp_;
-	float GauageDelta_;
+	float GauageDelta_HP_;
+
+	//MP바 관련
+	int PrevMP_;
+	float LerpMP_;
+	float GauageDelta_MP_;
 
 	struct DefaultValue
 	{
@@ -48,4 +53,3 @@ private:
 	};
 	DefaultValue Value_;
 };
-

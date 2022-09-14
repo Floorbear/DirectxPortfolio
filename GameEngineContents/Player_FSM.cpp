@@ -5,8 +5,6 @@
 #include "DNFContentsMinimal.h"
 #include "Player_Main.h"
 
-
-
 void Player_Main::IdleStart(const StateInfo _Info)
 {
 	AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
@@ -145,6 +143,8 @@ void Player_Main::AutoAttackEnd(const StateInfo _Info)
 void Player_Main::UpperSlashStart(const StateInfo _Info)
 {
 	AvatarManager_.ChangeMotion(PlayerAnimations::UpperSlash);
+	//마나 소모
+	CurMP_ -= Value_.UpperSlash_MP;
 }
 
 void Player_Main::UpperSlashUpdate(float _DeltaTime, const StateInfo _Info)
@@ -210,4 +210,3 @@ void Player_Main::HitUpdate(float _DeltaTime, const StateInfo _Info)
 		return;
 	}
 }
-

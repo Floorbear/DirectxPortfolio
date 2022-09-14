@@ -44,19 +44,16 @@ void BloodLugaru::Start()
 
 	InitAniNState();
 
-
 	//Force
 	Force_.SetTransfrom(&GetTransform());
 	Force_.FrictionX_ = 700.0f;
 	Force_.Gravity_ = 1000.0f;
-
-
 }
 
 void BloodLugaru::Update(float _DeltaTime)
 {
 	StiffnessUpdate(_DeltaTime);
-	if(Stiffness_ > 0.0f)
+	if (Stiffness_ > 0.0f)
 	{
 		return;
 	}
@@ -66,7 +63,6 @@ void BloodLugaru::Update(float _DeltaTime)
 	}
 	TimerCheck(_DeltaTime);
 	Force_.Update(_DeltaTime * (1 + (AirborneTime_ * AirborneTime_) * 0.01f));
-
 
 	if (DNFGlobalValue::CurrentLevel != nullptr)
 	{
@@ -78,7 +74,6 @@ void BloodLugaru::Update(float _DeltaTime)
 	//제한된 범위 밖을 나가지 못하게
 	if (DNFGlobalValue::CurrentLevel != nullptr)
 	{
-
 		float4 MapScale = GetDNFLevel()->GetMapScale();
 		float4 PlayerPosBot = GetTransform().GetWorldPosition();
 		PlayerPosBot.y = -PlayerPosBot.y - BotPos_.y;
@@ -103,7 +98,6 @@ void BloodLugaru::Update(float _DeltaTime)
 			}
 		}
 
-
 		//이전위치와 차이가 있으면 PrevPos를 갱신한다.
 		if (DNFMath::Length(PrevPos_, GetTransform().GetWorldPosition()) >= 0.5f)
 		{
@@ -111,7 +105,6 @@ void BloodLugaru::Update(float _DeltaTime)
 		}
 	}
 	DNFUpdate();
-
 }
 
 void BloodLugaru::End()
@@ -130,18 +123,17 @@ void BloodLugaru::InitAniNState()
 	CreateDNFAnimation("Hit", FrameAnimation_DESC("bloodlugaru", Lugaru_Hit_Start, Lugaru_Hit_End, AniSpeed_, false));
 	CreateDNFAnimation("Down", FrameAnimation_DESC("bloodlugaru", Lugaru_Down_Start, Lugaru_Down_End, AniSpeed_, false));
 
-
 	//애니메이션 바인드
 	MainRenderer_->AnimationBindFrame("Attack_1",
 		[&](const FrameAnimation_DESC& _Desc)
 		{
 			if (_Desc.Frames[_Desc.CurFrame - 1] == Lugaru_Attack_1_Start + 1)
 			{
-
 				//Set Attack
 				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.AttackName = "Attack_1";
-				CurAttackData_.Att = 2;
+				CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
+				CurAttackData_.Font = 2;
 				CurAttackData_.XForce = 100.0f;
 				CurAttackData_.Stiffness = 0.15f;
 				CurAttackData_.RStiffness = 0.11f;
@@ -155,8 +147,8 @@ void BloodLugaru::InitAniNState()
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == Lugaru_Attack_1_Start + 3)
 			{
 				CurAttackData_.AttCount++;
+				CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
 				CurAttackData_.AttEffect = Effect::SlashSRight;
-
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == Lugaru_Attack_1_End)
 			{
@@ -165,9 +157,8 @@ void BloodLugaru::InitAniNState()
 				Attack_1_Timer_.StartTimer();
 				AttackCol_->Off();
 			}
-
 		}
-		);
+	);
 	MainRenderer_->AnimationBindEnd("Attack_1",
 		[&](const FrameAnimation_DESC&)
 		{
@@ -232,14 +223,12 @@ void BloodLugaru::InitCol()
 	HitAbove_->GetTransform().SetLocalScale({ 100.0f,40.0f,1.0f });
 	HitAbove_->ChangeOrder(ColOrder::MonsterHit);
 
-
 	//BottomHit
 	HitBelow_ = CreateComponent<GameEngineCollision>("Bottom");
 	HitBelow_->SetDebugSetting(CollisionType::CT_OBB2D, float4(0.0f, 1.0f, 0.0f, 0.5f));
 	HitBelow_->GetTransform().SetLocalPosition({ 0,-70.0f,-500.0f });
 	HitBelow_->GetTransform().SetLocalScale({ 100.0f,40.0f,1.0f });
 	HitBelow_->ChangeOrder(ColOrder::MonsterHit);
-
 }
 
 void BloodLugaru::IdleStart(const StateInfo _Info)
@@ -249,18 +238,17 @@ void BloodLugaru::IdleStart(const StateInfo _Info)
 
 	Idle_Timer_ = GameEngineRandom::MainRandom.RandomFloat(1.0f, 3.0f);
 	Idle_Timer_.StartTimer();
-
 }
 
-void BloodLugaru::IdleUpdate(float _DeltaTime,const StateInfo _Info )
+void BloodLugaru::IdleUpdate(float _DeltaTime, const StateInfo _Info)
 {
 	float4 PlayerPos = Player_->GetTransform().GetWorldPosition();
 	float4 thisPos = GetTransform().GetWorldPosition();
 
-	float length = DNFMath::Length(PlayerPos,thisPos);
+	float length = DNFMath::Length(PlayerPos, thisPos);
 
 	if (length > FindRange_)
-	{		
+	{
 		IsIdleFirst_ = true;
 		return;
 	}
@@ -335,7 +323,6 @@ void BloodLugaru::ChaseUpdate(float _DeltaTime, const StateInfo _Info)
 
 	float length = DNFMath::Length(PlayerPos, thisPos);
 
-
 	//공격범위 내에 접근하면 바로 공격
 	if (CanHitAttack1() == true)
 	{
@@ -374,7 +361,6 @@ void BloodLugaru::ChaseUpdate(float _DeltaTime, const StateInfo _Info)
 			return;
 		}
 	}
-
 
 	//Flip
 	float4 MoveDir = PlayerPos - thisPos;
@@ -429,10 +415,9 @@ void BloodLugaru::Attack_1_End(const StateInfo _Info)
 
 void BloodLugaru::BackStart(const StateInfo _Info)
 {
-
 	ChangeDNFAnimation("Move");
 
-	Back_Timer_ = GameEngineRandom::MainRandom.RandomFloat(1.0f,3.0f);
+	Back_Timer_ = GameEngineRandom::MainRandom.RandomFloat(1.0f, 3.0f);
 	Back_Timer_.StartTimer();
 
 	//후퇴 방향 정하기
@@ -500,8 +485,6 @@ void BloodLugaru::BackUpdate(float _DeltaTime, const StateInfo _Info)
 		}
 	}
 
-	
-
 	GetTransform().SetWorldMove(BackMoveDir_ * 100.0f * _DeltaTime);
 }
 
@@ -511,12 +494,10 @@ void BloodLugaru::HitStart(const StateInfo _Info)
 	ResetDNFAnimation();
 	ChangeHitColTrans("Hit");
 	Hit_Timer_.StartTimer();
-	
+
 	//플레이어를 마주보는 방향으로 Flip
 	FlipX(-Player_->GetDirX());
 	Force_.ForceX_ += -PrevHitData_.XForce;
-
-
 }
 
 void BloodLugaru::HitUpdate(float _DeltaTime, const StateInfo _Info)
@@ -547,7 +528,6 @@ void BloodLugaru::AirborneStart(const StateInfo _Info)
 	//플레이어를 마주보는 방향으로 Flip
 	FlipX(-Player_->GetDirX());
 	Force_.ForceX_ += -PrevHitData_.XForce;
-	
 
 	GetTransform().SetLocalMove(float4(0, Force_.ForceY_ * GameEngineTime::GetDeltaTime()));
 	Force_.OnGravity();
@@ -586,7 +566,6 @@ void BloodLugaru::DownStart(const StateInfo _Info)
 	Force_.ForceX_ += -PrevHitData_.XForce;
 
 	GetTransform().SetLocalMove(float4(0, Force_.ForceY_ * GameEngineTime::GetDeltaTime()));
-
 }
 
 void BloodLugaru::DownUpdate(float _DeltaTime, const StateInfo _Info)
@@ -601,7 +580,7 @@ void BloodLugaru::DownUpdate(float _DeltaTime, const StateInfo _Info)
 		ShadowUpdate();
 		//이전에 받은 공격 데이터 초기화
 		PrevHitData_ = {};
-		Down_Timer_ -= _DeltaTime * (1.f+AirborneTime_ * 0.1f);
+		Down_Timer_ -= _DeltaTime * (1.f + AirborneTime_ * 0.1f);
 		OnAir_ = false;
 		Force_.OffGravity();
 
@@ -635,8 +614,6 @@ void BloodLugaru::DieStart(const StateInfo _Info)
 void BloodLugaru::DieUpdate(float _DeltaTime, const StateInfo _Info)
 {
 }
-
-
 
 void BloodLugaru::ChangeHitColTrans(std::string _State)
 {
@@ -678,6 +655,14 @@ bool BloodLugaru::CanHitAttack1()
 		}
 	}
 	return false;
+}
+
+int BloodLugaru::CalAtt(int _Att)
+{
+	float Att = static_cast<float>(_Att);
+	float RandomRange = Att * 0.5f;
+	float CalDamge = GameEngineRandom::MainRandom.RandomFloat(Att - RandomRange, Att + RandomRange);
+	return static_cast<int>(CalDamge);
 }
 
 void BloodLugaru::HPBarUpdate()
@@ -726,4 +711,3 @@ void BloodLugaru::InitDefaultValue()
 
 	HitEffectMovePos_ = { 0,-50,0 };
 }
-

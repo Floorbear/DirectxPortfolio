@@ -11,7 +11,10 @@
 DNFHUD::DNFHUD() :
 	PrevHp_(-1),
 	LerpHp_(),
-	GauageDelta_(),
+	GauageDelta_HP_(),
+	PrevMP_(-1),
+	LerpMP_(),
+	GauageDelta_MP_(),
 	SkillIconBackground_(),
 	Value_()
 {
@@ -37,7 +40,7 @@ void DNFHUD::Start()
 	HPRenderer_ = CreateComponent<GaugeRenderer>(GetNameCopy());
 	HPRenderer_->SetTexture("HP.png");
 	HPRenderer_->GetTransform().SetLocalScale({ 56.0f,56.0f });
-	HPRenderer_->GetTransform().SetLocalMove(float4(-146,-323));
+	HPRenderer_->GetTransform().SetLocalMove(float4(-146, -323));
 
 	//MP렌더러
 	MPRenderer_ = CreateComponent<GaugeRenderer>(GetNameCopy());
@@ -60,7 +63,6 @@ void DNFHUD::Start()
 	Value_.SkillIconPos = { -100,-308 };
 	SkillRendererInit();
 
-
 	//스킬 숏컷 백그라운드
 	Value_.ShortCutPos = { -100,-308 };
 	for (size_t i = 0; i < 14; i++)
@@ -71,49 +73,81 @@ void DNFHUD::Start()
 		NewShortCutIcon->SetPivot(PIVOTMODE::CENTER);
 		ShortCut_.push_back(NewShortCutIcon);
 	}
-
-
 }
 
 void DNFHUD::Update(float _DeltaTime)
 {
+	if (DNFGlobalValue::CurrentLevel == nullptr)
+	{
+		return;
+	}
+
 	IconPosUpdate(_DeltaTime);
-	HPAndMPBarUpdate(_DeltaTime);
+	HPBarUpdate(_DeltaTime);
+	MPBarUpdate(_DeltaTime);
 	SkillIconUpdate(_DeltaTime);
 }
 
-void DNFHUD::HPAndMPBarUpdate(float _DeltaTime)
+void DNFHUD::HPBarUpdate(float _DeltaTime)
 {
-	if (DNFGlobalValue::CurrentLevel != nullptr)
+	Player_Main* Player = DNFGlobalValue::CurrentLevel->GetPlayer();
+	float MaxHP = static_cast<float>(Player->GetMaxHP());
+	float CurHP = static_cast<float>(Player->GetCurHP());
+
+	//가장 최초 HP 셋팅
+	if (PrevHp_ == -1)
 	{
-		Player_Main* Player = DNFGlobalValue::CurrentLevel->GetPlayer();
-		float MaxHP = static_cast<float>(Player->GetMaxHP());
-		float CurHP = static_cast<float>(Player->GetCurHP());
-
-		//가장 최초 HP 셋팅
-		if (PrevHp_ == -1)
-		{
-			PrevHp_ = Player->GetCurHP();
-			LerpHp_ = CurHP;
-		}
-
-		//HP 변화 감지
-		if (PrevHp_ != CurHP)
-		{
-			GauageDelta_ += _DeltaTime;
-			LerpHp_ = (GameEngineMath::LerpLimit(static_cast<float>(PrevHp_), CurHP, GauageDelta_));
-		}
-
-		if (static_cast<int>(LerpHp_) == CurHP)
-		{
-			GauageDelta_ = 0.f;
-			PrevHp_ = Player->GetCurHP();
-			LerpHp_ = CurHP;
-		}
-
-		float ratio = LerpHp_ / MaxHP;
-		HPRenderer_->UpdateGauge(ratio);
+		PrevHp_ = Player->GetCurHP();
+		LerpHp_ = CurHP;
 	}
+
+	//HP 변화 감지
+	if (PrevHp_ != CurHP)
+	{
+		GauageDelta_HP_ += _DeltaTime;
+		LerpHp_ = (GameEngineMath::LerpLimit(static_cast<float>(PrevHp_), CurHP, GauageDelta_HP_));
+	}
+
+	if (static_cast<int>(LerpHp_) == CurHP)
+	{
+		GauageDelta_HP_ = 0.f;
+		PrevHp_ = Player->GetCurHP();
+		LerpHp_ = CurHP;
+	}
+
+	float ratio = LerpHp_ / MaxHP;
+	HPRenderer_->UpdateGauge(ratio);
+}
+
+void DNFHUD::MPBarUpdate(float _DeltaTime)
+{
+	Player_Main* Player = DNFGlobalValue::CurrentLevel->GetPlayer();
+	float MaxMP = static_cast<float>(Player->GetMaxMP());
+	float CurMP = static_cast<float>(Player->GetCurMP());
+
+	//가장 최초 HP 셋팅
+	if (PrevMP_ == -1)
+	{
+		PrevMP_ = Player->GetCurMP();
+		LerpMP_ = CurMP;
+	}
+
+	//HP 변화 감지
+	if (PrevMP_ != CurMP)
+	{
+		GauageDelta_MP_ += _DeltaTime;
+		LerpMP_ = (GameEngineMath::LerpLimit(static_cast<float>(PrevMP_), CurMP, GauageDelta_MP_));
+	}
+
+	if (static_cast<int>(LerpMP_) == CurMP)
+	{
+		GauageDelta_MP_ = 0.f;
+		PrevMP_ = Player->GetCurMP();
+		LerpMP_ = CurMP;
+	}
+
+	float ratio = LerpMP_ / MaxMP;
+	MPRenderer_->UpdateGauge(ratio);
 }
 
 void DNFHUD::IconPosUpdate(float _DeltaTime)
@@ -161,7 +195,7 @@ void DNFHUD::SkillRendererInit()
 
 	SkillIcon_[13]->On();
 	SkillIcon_[13]->SetTexture("UpperSlash.png");
-	SkillIcon_[13]->GetTransform().SetLocalScale({28,28});
+	SkillIcon_[13]->GetTransform().SetLocalScale({ 28,28 });
 }
 
 void DNFHUD::SkillIconUpdate(float _DeltaTime)
@@ -180,7 +214,6 @@ void DNFHUD::SkillIconUpdate(float _DeltaTime)
 			float ratio = CurTime / MaxTime;
 			float4 Black = { 0.f,0.f,0.f,1.0f };
 			SkillIcon_[13]->UpdateGauegeColor(ratio, Black);
-
 		}
 		else
 		{
@@ -192,14 +225,6 @@ void DNFHUD::SkillIconUpdate(float _DeltaTime)
 			}
 			SkillIcon_[13]->SetTexture("UpperSlash.png");
 		}
-
-
-
-
-
-
-
-
 
 		std::list<GaugeRenderer*>::iterator StartIter = FlashSkillIcon_.begin();
 		for (; StartIter != FlashSkillIcon_.end(); StartIter++)
@@ -215,6 +240,3 @@ void DNFHUD::SkillIconUpdate(float _DeltaTime)
 		}
 	}
 }
-
-
-

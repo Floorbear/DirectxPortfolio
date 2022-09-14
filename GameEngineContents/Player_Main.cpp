@@ -13,7 +13,6 @@
 #include <GameEngineCore/GameEngineUIRenderer.h>
 #include <GameEngineCore/GameEngineCollision.h>
 
-
 Player_Main::Player_Main() :
 	UIRenderer_(nullptr),
 	WeaponRenderer_b_(),
@@ -67,21 +66,20 @@ Player_Main::Player_Main() :
 	AllCopyRenderer_.reserve(20);
 }
 
-
 void Player_Main::InitDefaultValue()
 {
 	//Scale
-	Value_.HitAbovePos =  { -20,-15.0f,-500.0f };
-	Value_.HitAboveScale  = { 50.0f,70.0f,1.0f };
-	Value_.HitBelowPos =  { -20,-55.0f,-500.0f };
-	Value_.HitBelowScale  = { 50.0f,70.0f,1.0f };
+	Value_.HitAbovePos = { -20,-15.0f,-500.0f };
+	Value_.HitAboveScale = { 50.0f,70.0f,1.0f };
+	Value_.HitBelowPos = { -20,-55.0f,-500.0f };
+	Value_.HitBelowScale = { 50.0f,70.0f,1.0f };
 
 	Value_.AutoAttackPos = float4(50, 0, -500);
 	Value_.AutoAttackScale = float4(120, 55, 1);
 	Value_.UpperSlashPos = float4(75, -45, -500);
-	Value_.UpeerSlashScale = float4(120,100, 1);
+	Value_.UpeerSlashScale = float4(120, 100, 1);
 
-	Value_.SuperArmorPos = {1.0f,1.0f };
+	Value_.SuperArmorPos = { 1.0f,1.0f };
 	Value_.SuperArmorScale = { 528.0f,513.0f };
 	Value_.SuperArmorMul = 1000.0f;
 
@@ -90,8 +88,11 @@ void Player_Main::InitDefaultValue()
 	Value_.AutoAttackAtt = 7000;
 
 	//스텟
-	MaxHP_ = 20;
+	MaxHP_ = Value_.Default_HP;
 	CurHP_ = MaxHP_;
+
+	MaxMP_ = Value_.Default_MP;
+	CurMP_ = MaxMP_;
 
 	HitEffectMovePos_ = { 0,-30,0 };
 }
@@ -133,15 +134,12 @@ void Player_Main::Start()
 	InitAniFunc();
 
 	InitSkillCoolTime();
-	
-
 
 	Force_.FrictionX_ = 700.0f;
 	Force_.Gravity_ = 700.0f;
 	Force_.SetTransfrom(&GetTransform());
 
 	//DNFDebugGUI::AddMutableValue("MulColoer", &DNFGlobalValue::Temp1);
-
 }
 
 void Player_Main::Update(float _DeltaTime)
@@ -166,13 +164,10 @@ void Player_Main::Update(float _DeltaTime)
 		IsSuperArmor_ = false;
 	}
 
-
 	DNFUpdate();
 	HitColCheck(ColOrder::MonsterAttack);
 	StateManager_.Update(_DeltaTime);
 	Force_.Update(_DeltaTime);
-
-
 
 	//제한된 범위 밖으로 못나가는 카메라& 캐릭터
 	if (DNFGlobalValue::CurrentLevel != nullptr)
@@ -181,13 +176,11 @@ void Player_Main::Update(float _DeltaTime)
 		ChaseCamera();
 	}
 	ShadowUpdate();
-
 }
 
 void Player_Main::End()
 {
 }
-
 
 void Player_Main::ChaseCamera()
 {
@@ -198,12 +191,11 @@ void Player_Main::ChaseCamera()
 	float4 CameraPos;
 	CameraPos.z = -500;
 
-
 	CameraPos.x = GetTransform().GetWorldPosition().x;
 	//왼쪽
 	if (CurPos.x - 640 * Zoom < 0.0f)
 	{
-		CameraPos.x =  640 * Zoom;
+		CameraPos.x = 640 * Zoom;
 	}
 	//오른쪽
 	if (CurPos.x + 640 * Zoom > MapScale.x)
@@ -220,9 +212,8 @@ void Player_Main::ChaseCamera()
 	//위
 	if (CurPos.y + 360 * Zoom > 0.0f)
 	{
-		CameraPos.y =  - 360 * Zoom;
+		CameraPos.y = -360 * Zoom;
 	}
-
 
 	GetLevel()->GetMainCameraActorTransform().SetWorldPosition(CameraPos);
 }
@@ -252,26 +243,22 @@ void Player_Main::CheckColMap()
 			GetTransform().SetWorldPosition(PrevPos_);
 		}
 	}
-	
 
 	//이전위치와 차이가 있으면 PrevPos를 갱신한다.
 	if (DNFMath::Length(PrevPos_, GetTransform().GetWorldPosition()) >= 0.5f)
 	{
 		PrevPos_ = GetTransform().GetWorldPosition();
 	}
-
 }
 
 void Player_Main::InitCol()
 {
-
 	//MiddleHit
 	HitAbove_ = CreateComponent<GameEngineCollision>("Middle");
 	HitAbove_->SetDebugSetting(CollisionType::CT_OBB2D, float4(1.0f, 0.0f, 0.0f, 0.5f));
 	HitAbove_->GetTransform().SetLocalPosition(Value_.HitAbovePos);
 	HitAbove_->GetTransform().SetLocalScale(Value_.HitAboveScale);
 	HitAbove_->ChangeOrder(ColOrder::PlayerHit);
-
 
 	//BottomHit
 	HitBelow_ = CreateComponent<GameEngineCollision>("Bottom");
@@ -285,8 +272,6 @@ void Player_Main::InitCol()
 	AttackCol_->SetDebugSetting(CollisionType::CT_OBB2D, float4(0, 1.0f, 0, 0.5f));
 	AttackCol_->ChangeOrder(ColOrder::PlayerAttack);
 	AttackCol_->Off();
-
-
 }
 
 void Player_Main::InitState()
@@ -321,7 +306,6 @@ void Player_Main::StartSuperArmor(float _SuperArmorTime)
 		i->Off();
 	}
 
-
 	int count = 0;
 	for (auto i : AvatarManager_.GetRenderList())
 	{
@@ -339,8 +323,6 @@ void Player_Main::StartSuperArmor(float _SuperArmorTime)
 		//SetPos.x = i.second->GetTransform().GetLocalPosition().x + 20;
 		AllCopyRenderer_[count]->GetTransform().SetLocalPosition(SetPos);
 
-
-
 		//스케일
 		SuperArmorScale_ = { 730,730 };
 		AllCopyRenderer_[count]->GetTransform().SetLocalScale({ SuperArmorScale_ });
@@ -354,7 +336,6 @@ void Player_Main::StartSuperArmor(float _SuperArmorTime)
 	}
 	IsSuperArmor_ = true;
 	SuperArmorTimer_.StartTimer(_SuperArmorTime);
-	
 }
 
 void Player_Main::CopyRendererUpdate(float _DeltaTime)
@@ -396,13 +377,13 @@ void Player_Main::CopyRendererUpdate(float _DeltaTime)
 		{
 			SuperArmorMulTime_ += _DeltaTime;
 			AllCopyRenderer_[count]->GetPixelData().MulColor = float4(0, 0, 0, 0.0f);
-			AllCopyRenderer_[count]->GetPixelData().PlusColor = float4(1, SuperArmorMulTime_/5.0f,0, 1.f);
+			AllCopyRenderer_[count]->GetPixelData().PlusColor = float4(1, SuperArmorMulTime_ / 5.0f, 0, 1.f);
 		}
 		else if (SuperArmorMulTime_ >= 5.0 && SuperArmorMulTime_ < 10.0)
 		{
 			SuperArmorMulTime_ += _DeltaTime;
-			AllCopyRenderer_[count]->GetPixelData().MulColor = float4(0,0,0,0.0f);
-			AllCopyRenderer_[count]->GetPixelData().PlusColor = float4(1, 1-(SuperArmorMulTime_-5.0f)/5, 0, 1.f);
+			AllCopyRenderer_[count]->GetPixelData().MulColor = float4(0, 0, 0, 0.0f);
+			AllCopyRenderer_[count]->GetPixelData().PlusColor = float4(1, 1 - (SuperArmorMulTime_ - 5.0f) / 5, 0, 1.f);
 		}
 		//else if (SuperArmorMulTime_ >= 10.0f && SuperArmorMulTime_ < 15.0f)
 		//{
@@ -440,7 +421,6 @@ float4 Player_Main::GetMoveDir()
 	if (GameEngineInput::GetInst()->IsPress("Up") == true)
 	{
 		MoveDir += float4::UP;
-
 	}
 	if (GameEngineInput::GetInst()->IsPress("Down") == true)
 	{
@@ -471,7 +451,6 @@ bool Player_Main::IsDirXPositive()
 	}
 }
 
-
 bool Player_Main::IsPressMoveKey()
 {
 	if (GetMoveDir().Length() > 0.01f)
@@ -486,16 +465,30 @@ bool Player_Main::IsPressMoveKey()
 
 int Player_Main::CalAtt(int _Value)
 {
-	int Value = _Value;
+	float Value = static_cast<float>(_Value);
+	//크리티컬 확률
 	int IsCritical = GameEngineRandom::MainRandom.RandomInt(0, 1);
-	CurAttackData_.IsCritical = IsCritical;
+	CurAttackData_.Font = IsCritical;
 	if (IsCritical >= 1)
 	{
-		Value *= 2;
+		Value = Value * 2.f;
 	}
-	int RandomRange = Value / 2;
-	int CalDam = GameEngineRandom::MainRandom.RandomInt(_Value - RandomRange, _Value + RandomRange);
-	return CalDam;
+	float CalDam = GameEngineRandom::MainRandom.RandomFloat(Value * 0.7f, Value * 1.3f);
+	return static_cast<int>(CalDam);
+}
+
+int Player_Main::GetSkillMP_Consumption(PlayerAnimations _Skill)
+{
+	switch (_Skill)
+	{
+	case PlayerAnimations::UpperSlash:
+		return Value_.UpperSlash_MP;
+		break;
+	default:
+		MsgBoxAssert("잘못된 파라미터가 들어왔습니다");
+		break;
+	}
+	return 0;
 }
 
 Timer* Player_Main::CreateSkillCoolTime(std::string _Name, float Time_)
@@ -524,7 +517,6 @@ void Player_Main::CoolTimeUpdate(float _DeltaTime)
 			}
 		}
 	}
-	
 }
 
 void Player_Main::AttackEnd()
@@ -534,5 +526,3 @@ void Player_Main::AttackEnd()
 	IsAttack_End_ = false;
 	IsReadyNextAttack_ = false;
 }
-
-

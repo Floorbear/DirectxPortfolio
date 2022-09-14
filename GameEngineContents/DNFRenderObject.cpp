@@ -12,14 +12,14 @@
 
 #include "DNFDebugGUI.h"
 
-DNFRenderObject::DNFRenderObject():
+DNFRenderObject::DNFRenderObject() :
 	MainRenderer_(nullptr),
 	ShadowRenderer_(),
 	IsStart_(false),
 	ShadowPos_(),
 	ShadowRot_(),
 	BotCol_(),
-	BotPos_({0,-88.0f}),
+	BotPos_({ 0,-88.0f }),
 	PrevPos_(),
 	OnAir_(false),
 	GroundYPos_(),
@@ -39,7 +39,6 @@ DNFRenderObject::DNFRenderObject():
 {
 	AllDNFRenderer_.push_back(&MainRenderer_);
 	AllDNFRenderer_.push_back(&ShadowRenderer_);
-
 }
 
 DNFRenderObject::~DNFRenderObject()
@@ -129,13 +128,12 @@ void DNFRenderObject::ShadowUpdate()
 		ShadowRenderer_->GetTransform().SetLocalRotation(ShadowRot);
 	}
 
-
 	//체공상태면 그림자고정
 	if (OnAir_ == true)
 	{
 		float4 GroundPos = GetTransform().GetWorldPosition();
 		GroundPos += ShadowPos_;
-		GroundPos.y = GroundYPos_-40.0f;
+		GroundPos.y = GroundYPos_ - 40.0f;
 		ShadowRenderer_->GetTransform().SetWorldPosition(GroundPos);
 	}
 }
@@ -153,14 +151,22 @@ void DNFRenderObject::CalHP(int _Value)
 	}
 }
 
-void DNFRenderObject::SetDamageFont(int _Value, float4 _WorldPos, bool _IsCritical)
+int DNFRenderObject::ShakeDamage(int _Value, float _Seed)
+{
+	float Value = static_cast<float>(_Value) + _Seed;
+	float Left = Value * 0.9f;
+	float Right = Value * 1.1f;
+	float CalDmg = GameEngineRandom::MainRandom.RandomFloat(Left, Right);
+	return static_cast<int>(CalDmg);
+}
+
+void DNFRenderObject::SetDamageFont(int _Value, float4 _WorldPos, int _FontType)
 {
 	DamageFont* NewDamageFont = GetLevel()->CreateActor<DamageFont>();
 	NewDamageFont->GetTransform().SetWorldPosition(_WorldPos);
 	NewDamageFont->GetTransform().SetLocalMove({ 0,0,-1000 });
 
-
-	NewDamageFont->SetDamageFont(_Value,_IsCritical);
+	NewDamageFont->SetDamageFont(_Value, _FontType);
 }
 
 void DNFRenderObject::HitColCheck(ColOrder _Order)
@@ -185,21 +191,8 @@ bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
 {
 	AttackData Data = _Other->CurAttackData_;
 
-	//Hit충돌체와 공격타입이 불일치하면 리턴
-	if (_Type != Data.Type)
-	{
-		return false;
-	}
-
-
-	//같은 공격에 여러번 충돌 방지
-	if (Data.AttackName == PrevHitData_.AttackName && Data.AttCount <= PrevHitData_.AttCount)
-	{
-		return false;
-	}
-
-	//z축 차이(y축)가 나면 충돌 방지
-	if (IsZPosHit(Data.ZPos) == false)
+	//충돌을 했으나 Hit처리하지 않는 경우
+	if (IsHit(_Type, Data) == false)
 	{
 		return false;
 	}
@@ -209,7 +202,8 @@ bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
 	//현재 받은 공격을 저장
 	PrevHitData_ = Data;
 
-	CalHP(-Data.Att);
+	int Damage = ShakeDamage(Data.Att, GetTransform().GetWorldPosition().x);
+	CalHP(-Damage);
 
 	GiveAndRecevieStiffness(PrevHitData_, _Other);
 
@@ -217,11 +211,11 @@ bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
 	//데이터에 공격이펙트가 있으면 생성해라
 	if (PrevHitData_.AttEffect != Effect::None)
 	{
-		SetEffect(PrevHitData_.AttEffect, GetTransform().GetWorldPosition()+ HitEffectMovePos_, _Other->GetDirX());
+		SetEffect(PrevHitData_.AttEffect, GetTransform().GetWorldPosition() + HitEffectMovePos_, _Other->GetDirX());
 	}
 
 	//데미지
-	SetDamageFont(Data.Att, GetTransform().GetWorldPosition() + DamageFontMovePos_ , Data.IsCritical);
+	SetDamageFont(Damage, GetTransform().GetWorldPosition() + DamageFontMovePos_, Data.Font);
 
 	if (IsSuperArmor_ == true)
 	{
@@ -229,7 +223,6 @@ bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
 	}
 
 	FlipX(-_Other->GetDirX());
-
 
 	//공중공격이 아닌 경우
 	if (OnAir_ == false && Data.YForce <= 0.0f)
@@ -314,7 +307,29 @@ bool DNFRenderObject::IsZPosHit(int _ZPos)
 	return true;
 }
 
-EffectActor* DNFRenderObject::SetEffect(Effect _Effect, float4 _WorldPos , float4 _Dir)
+bool DNFRenderObject::IsHit(AttackType _Type, AttackData _Data)
+{
+	//Hit충돌체와 공격타입이 불일치하면 리턴
+	if (_Type != _Data.Type)
+	{
+		return false;
+	}
+
+	//같은 공격에 여러번 충돌 방지
+	if (_Data.AttackName == PrevHitData_.AttackName && _Data.AttCount <= PrevHitData_.AttCount)
+	{
+		return false;
+	}
+
+	//z축 차이(y축)가 나면 충돌 방지
+	if (IsZPosHit(_Data.ZPos) == false)
+	{
+		return false;
+	}
+	return true;
+}
+
+EffectActor* DNFRenderObject::SetEffect(Effect _Effect, float4 _WorldPos, float4 _Dir)
 {
 	EffectActor* NewEffect = GetLevel()->CreateActor<EffectActor>();
 	NewEffect->GetTransform().SetWorldPosition(_WorldPos);
@@ -329,8 +344,6 @@ EffectActor* DNFRenderObject::SetEffect(Effect _Effect, float4 _WorldPos , float
 	NewEffect->InitEffect(_Effect);
 	return NewEffect;
 }
-
-
 
 bool DNFRenderObject::CanMove(const float4& _MoveValue)
 {
@@ -358,7 +371,6 @@ bool DNFRenderObject::CanMove(const float4& _MoveValue)
 			return false;
 		}
 	}
-
 
 	return true;
 }
@@ -405,7 +417,7 @@ void DNFRenderObject::DNFStart()
 	PrevPos_ = GetTransform().GetWorldPosition();
 
 	ShadowRenderer_->GetPixelData().MulColor = float4(0, 0, 0, 0.6f);
-	ShadowPos_ = { -10,-45,500};
+	ShadowPos_ = { -10,-45,500 };
 	ShadowRot_ = { -60,0,5 };
 	IsStart_ = true;
 }

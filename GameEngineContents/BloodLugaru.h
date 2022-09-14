@@ -11,7 +11,6 @@ public:
 	BloodLugaru();
 	~BloodLugaru();
 
-
 	BloodLugaru(const BloodLugaru& _Other) = delete;
 	BloodLugaru(const BloodLugaru&& _Other) noexcept = delete;
 	BloodLugaru& operator=(const BloodLugaru& _Ohter) = delete;
@@ -37,9 +36,8 @@ private:
 
 	void InitCol();
 
-
 	void IdleStart(const StateInfo _Info);
-	void IdleUpdate(float _DeltaTime,const StateInfo _Info);
+	void IdleUpdate(float _DeltaTime, const StateInfo _Info);
 
 	void ChaseStart(const StateInfo _Info);
 	void ChaseUpdate(float _DeltaTime, const StateInfo _Info);
@@ -63,13 +61,8 @@ private:
 	void DieStart(const StateInfo _Info);
 	void DieUpdate(float _DeltaTime, const StateInfo _Info);
 
-
-
 	void ChangeHitColTrans(std::string _State);
 
-
-
-	
 	//Idle 관련 변수들
 	bool IsIdleFirst_;
 
@@ -79,17 +72,16 @@ private:
 	bool IsAttack_1_End_;
 	GameEngineCollision* AttackCol_;
 	bool CanHitAttack1();
+	int CalAtt(int _Att);
 
 	//Back 관련 변수들
 	float4 BackMoveDir_;
-
-
 
 	//체력관련
 	int PerHP_;
 	void HPBarUpdate() override;
 
-	//타이머 
+	//타이머
 	void TimerCheck(float _DeltaTime);
 	Timer Attack_1_Timer_;
 	Timer Idle_Timer_;
@@ -97,7 +89,6 @@ private:
 	Timer Chase_Timer_;
 	Timer Hit_Timer_;
 	Timer Down_Timer_;
-
 
 	//DefaultVales
 	void InitDefaultValue();
@@ -116,8 +107,8 @@ private:
 
 		float Down_Time;
 		float Down_God_Time;
+
+		int Attack_1_Att = 1200;
 	};
 	DefaultValue Value_;
-
 };
-
