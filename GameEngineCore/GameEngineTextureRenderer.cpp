@@ -3,7 +3,7 @@
 #include "GameEngineTexture.h"
 #include "GameEngineFolderTexture.h"
 
-void FrameAnimation::PauseSwtich()
+void FrameAnimation::PauseSwtich() 
 {
 	Pause = !Pause;
 }
@@ -14,7 +14,7 @@ void FrameAnimation::Reset()
 	Info.CurFrame = 0;
 }
 
-void FrameAnimation::Update(float _Delta)
+void FrameAnimation::Update(float _Delta) 
 {
 	if (false == Pause)
 	{
@@ -57,6 +57,7 @@ void FrameAnimation::Update(float _Delta)
 
 			if (Info.CurFrame >= Info.Frames.size())
 			{
+
 				if (true == Info.Loop)
 				{
 					Info.CurFrame = 0;
@@ -69,6 +70,7 @@ void FrameAnimation::Update(float _Delta)
 			Info.FrameTime -= Info.Inter;
 		}
 	}
+
 
 	if (nullptr != Texture)
 	{
@@ -108,9 +110,10 @@ void FrameAnimation::Update(float _Delta)
 	{
 		MsgBoxAssert("텍스처가 세팅되지 않은 애니메이션 입니다.");
 	}
+
 }
 
-GameEngineTextureRenderer::GameEngineTextureRenderer()
+GameEngineTextureRenderer::GameEngineTextureRenderer() 
 	: CurAni(nullptr)
 	, CurTex(nullptr)
 	, PivotMode(PIVOTMODE::CUSTOM)
@@ -119,12 +122,13 @@ GameEngineTextureRenderer::GameEngineTextureRenderer()
 {
 }
 
-GameEngineTextureRenderer::~GameEngineTextureRenderer()
+GameEngineTextureRenderer::~GameEngineTextureRenderer() 
 {
 }
 
 void GameEngineTextureRenderer::SetTextureRendererSetting()
 {
+
 	SetPipeLine("TextureAtlas");
 
 	AtlasDataInst.FrameData.PosX = 0.0f;
@@ -135,6 +139,7 @@ void GameEngineTextureRenderer::SetTextureRendererSetting()
 
 	ShaderResources.SetConstantBufferLink("AtlasData", AtlasDataInst);
 	ShaderResources.SetConstantBufferLink("PixelData", PixelDataInst);
+	
 }
 
 void GameEngineTextureRenderer::CurAnimationPauseSwitch()
@@ -142,7 +147,7 @@ void GameEngineTextureRenderer::CurAnimationPauseSwitch()
 	CurAni->PauseSwtich();
 }
 
-void GameEngineTextureRenderer::Start()
+void GameEngineTextureRenderer::Start() 
 {
 	GameEngineDefaultRenderer::Start();
 
@@ -206,13 +211,19 @@ void GameEngineTextureRenderer::SetPivot(PIVOTMODE _Mode)
 	PivotMode = _Mode;
 }
 
-void GameEngineTextureRenderer::SetPivotToVector(const float4& _Value)
+void GameEngineTextureRenderer::SetPivotToVector(const float4& _Value) 
 {
 	GetTransform().SetLocalPosition(_Value);
 }
 
 void GameEngineTextureRenderer::SetTexture(GameEngineTexture* _Texture)
 {
+	if (nullptr == _Texture)
+	{
+		MsgBoxAssert("존재하지 않는 텍스처를 사용하려고 했습니다.");
+		return;
+	}
+
 	CurTex = _Texture;
 	ShaderResources.SetTexture("Tex", _Texture);
 }
@@ -306,7 +317,7 @@ void GameEngineTextureRenderer::CreateFrameAnimationCutTexture(const std::string
 	NewAni.FolderTexture = nullptr;
 }
 
-void GameEngineTextureRenderer::ChangeFrameAnimation(const std::string& _AnimationName)
+void GameEngineTextureRenderer::ChangeFrameAnimation(const std::string& _AnimationName, bool _Force /*= false*/)
 {
 	std::string Name = GameEngineString::ToUpperReturn(_AnimationName);
 
@@ -316,7 +327,7 @@ void GameEngineTextureRenderer::ChangeFrameAnimation(const std::string& _Animati
 		return;
 	}
 
-	if (CurAni != &FrameAni[Name])
+	if (CurAni != &FrameAni[Name] || true == _Force)
 	{
 		CurAni = &FrameAni[Name];
 		CurAni->Reset();
@@ -328,7 +339,7 @@ void GameEngineTextureRenderer::ChangeFrameAnimation(const std::string& _Animati
 				ScaleToCutTexture(CurAni->Info.CurFrame);
 			}
 		}
-		else if (nullptr != CurAni->FolderTexture)
+		else if(nullptr != CurAni->FolderTexture)
 		{
 			SetTexture(CurAni->FolderTexture->GetTexture(CurAni->Info.Frames[CurAni->Info.CurFrame]));
 			if (ScaleMode == SCALEMODE::IMAGE)
@@ -341,8 +352,9 @@ void GameEngineTextureRenderer::ChangeFrameAnimation(const std::string& _Animati
 
 void GameEngineTextureRenderer::FrameDataReset()
 {
-	AtlasDataInst.FrameData = { 0.0f , 0.0f, 1.0f, 1.0f };
+	AtlasDataInst.FrameData = { 0.0f , 0.0f, 1.0f, 1.0f};
 }
+
 
 void GameEngineTextureRenderer::Update(float _Delta)
 {
@@ -351,6 +363,8 @@ void GameEngineTextureRenderer::Update(float _Delta)
 		CurAni->Update(_Delta);
 	}
 }
+
+
 
 void GameEngineTextureRenderer::ScaleToCutTexture(int _Index)
 {
@@ -398,17 +412,17 @@ void GameEngineTextureRenderer::CurAnimationSetStartPivotFrame(int SetFrame)
 	CurAni->Info.CurFrame = SetFrame;
 }
 
-void GameEngineTextureRenderer::CurAnimationPauseOn()
+void GameEngineTextureRenderer::CurAnimationPauseOn() 
 {
 	CurAni->Pause = true;
 }
 
-void GameEngineTextureRenderer::CurAnimationPauseOff()
+void GameEngineTextureRenderer::CurAnimationPauseOff() 
 {
 	CurAni->Pause = false;
 }
 
-bool GameEngineTextureRenderer::IsCurAnimationPause()
+bool GameEngineTextureRenderer::IsCurAnimationPause() 
 {
 	return CurAni->Pause;
 }

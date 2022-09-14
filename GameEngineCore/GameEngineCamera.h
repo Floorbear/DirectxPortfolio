@@ -12,7 +12,6 @@ enum class CAMERAPROJECTIONMODE
 
 class RenderingInstancing
 {
-
 };
 
 // Ό³Έν :
@@ -20,7 +19,6 @@ class GameEngineLevel;
 class GameEngineCamera;
 class GameEngineRenderTarget;
 class GameEngineRenderingPipeLine;
-class GameEngineRenderer;
 class GameEngineCamera : public GameEngineTransformComponent
 {
 	friend GameEngineLevel;
@@ -61,7 +59,7 @@ public:
 
 	float4 GetMouseWorldPositionToActor();
 
-	inline float4x4 GetView() 
+	inline float4x4 GetView()
 	{
 		return View;
 	}
@@ -75,7 +73,7 @@ public:
 		return MouseDir;
 	}
 
-	inline void SetProjectionSize(const float4& _Value) 
+	inline void SetProjectionSize(const float4& _Value)
 	{
 		Size = _Value;
 		// return float4();
@@ -126,4 +124,3 @@ private:
 	// Perspective
 	float Fov;
 };
-

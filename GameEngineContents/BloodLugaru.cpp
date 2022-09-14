@@ -630,6 +630,7 @@ void BloodLugaru::DieUpdate(float _DeltaTime, const StateInfo _Info)
 		//¿©±â¼­ Á×¿©
 		DieEffect* NewDieEffect = GetLevel()->CreateActor<DieEffect>();
 		NewDieEffect->GetTransform().SetWorldPosition(GetTransform().GetWorldPosition() + Value_.DieEffectAddPos);
+		IsDieEffect_ = true;
 	}
 	MainRenderer_->GetPixelData().MulColor = { 1.0f,1.0f,1.0f,DieAlpha_ };
 	MainRenderer_->GetPixelData().PlusColor = { 1.0f,1.0f,1.0f,DieAlpha_ };
