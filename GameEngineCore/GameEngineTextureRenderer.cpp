@@ -57,7 +57,6 @@ void FrameAnimation::Update(float _Delta)
 
 			if (Info.CurFrame >= Info.Frames.size())
 			{
-
 				if (true == Info.Loop)
 				{
 					Info.CurFrame = 0;
@@ -70,7 +69,6 @@ void FrameAnimation::Update(float _Delta)
 			Info.FrameTime -= Info.Inter;
 		}
 	}
-
 
 	if (nullptr != Texture)
 	{
@@ -110,7 +108,6 @@ void FrameAnimation::Update(float _Delta)
 	{
 		MsgBoxAssert("텍스처가 세팅되지 않은 애니메이션 입니다.");
 	}
-
 }
 
 GameEngineTextureRenderer::GameEngineTextureRenderer()
@@ -128,7 +125,6 @@ GameEngineTextureRenderer::~GameEngineTextureRenderer()
 
 void GameEngineTextureRenderer::SetTextureRendererSetting()
 {
-
 	SetPipeLine("TextureAtlas");
 
 	AtlasDataInst.FrameData.PosX = 0.0f;
@@ -139,7 +135,6 @@ void GameEngineTextureRenderer::SetTextureRendererSetting()
 
 	ShaderResources.SetConstantBufferLink("AtlasData", AtlasDataInst);
 	ShaderResources.SetConstantBufferLink("PixelData", PixelDataInst);
-
 }
 
 void GameEngineTextureRenderer::CurAnimationPauseSwitch()
@@ -333,7 +328,7 @@ void GameEngineTextureRenderer::ChangeFrameAnimation(const std::string& _Animati
 				ScaleToCutTexture(CurAni->Info.CurFrame);
 			}
 		}
-		else if(nullptr != CurAni->FolderTexture)
+		else if (nullptr != CurAni->FolderTexture)
 		{
 			SetTexture(CurAni->FolderTexture->GetTexture(CurAni->Info.Frames[CurAni->Info.CurFrame]));
 			if (ScaleMode == SCALEMODE::IMAGE)
@@ -346,9 +341,8 @@ void GameEngineTextureRenderer::ChangeFrameAnimation(const std::string& _Animati
 
 void GameEngineTextureRenderer::FrameDataReset()
 {
-	AtlasDataInst.FrameData = { 0.0f , 0.0f, 1.0f, 1.0f};
+	AtlasDataInst.FrameData = { 0.0f , 0.0f, 1.0f, 1.0f };
 }
-
 
 void GameEngineTextureRenderer::Update(float _Delta)
 {
@@ -357,8 +351,6 @@ void GameEngineTextureRenderer::Update(float _Delta)
 		CurAni->Update(_Delta);
 	}
 }
-
-
 
 void GameEngineTextureRenderer::ScaleToCutTexture(int _Index)
 {

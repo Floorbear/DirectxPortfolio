@@ -90,6 +90,10 @@ private:
 	Timer Hit_Timer_;
 	Timer Down_Timer_;
 
+	//»ç¸Á
+	float DieAlpha_;
+	bool IsDieEffect_;
+
 	//DefaultVales
 	void InitDefaultValue();
 	struct DefaultValue
@@ -104,6 +108,7 @@ private:
 		float4 DownAboveColScale;
 		float4 DownBelowColPos;
 		float4 DownBelowColScale;
+		float4 DieEffectAddPos = { 0,-40 };
 
 		float Down_Time;
 		float Down_God_Time;

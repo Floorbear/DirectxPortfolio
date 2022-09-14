@@ -9,6 +9,7 @@
 #include "DNFBackground.h"
 #include "MonsterHP.h"
 #include "Player_Main.h"
+#include "DieEffect.h"
 //Player_Utilty를 만들까?
 
 BloodLugaru::BloodLugaru() :
@@ -27,7 +28,9 @@ BloodLugaru::BloodLugaru() :
 	Chase_Timer_(5.0f),
 	Hit_Timer_(1.0f),
 	AttackCol_(),
-	ID_(0)
+	ID_(0),
+	DieAlpha_(1.0f),
+	IsDieEffect_(false)
 {
 	InitDefaultValue();
 }
@@ -122,6 +125,7 @@ void BloodLugaru::InitAniNState()
 	CreateDNFAnimation("Attack_1", FrameAnimation_DESC("bloodlugaru", Lugaru_Attack_1_Start, Lugaru_Attack_1_End, AniSpeed_, false));
 	CreateDNFAnimation("Hit", FrameAnimation_DESC("bloodlugaru", Lugaru_Hit_Start, Lugaru_Hit_End, AniSpeed_, false));
 	CreateDNFAnimation("Down", FrameAnimation_DESC("bloodlugaru", Lugaru_Down_Start, Lugaru_Down_End, AniSpeed_, false));
+	CreateDNFAnimation("Die", FrameAnimation_DESC("bloodlugaru", Lugaru_Down_Start, Lugaru_Down_Start, AniSpeed_, false));
 
 	//애니메이션 바인드
 	MainRenderer_->AnimationBindFrame("Attack_1",
@@ -573,6 +577,13 @@ void BloodLugaru::DownUpdate(float _DeltaTime, const StateInfo _Info)
 	AirborneTime_ += 5.0f * _DeltaTime;
 	float CurYPos = GetTransform().GetWorldPosition().y;
 
+	//사망검사
+	if (CurHP_ == 0)
+	{
+		StateManager_.ChangeState("Die");
+		return;
+	}
+
 	if (CurYPos <= GroundYPos_)
 	{
 		//GroundYPos 아래로 떨어지지 않게 고정시키기
@@ -584,12 +595,6 @@ void BloodLugaru::DownUpdate(float _DeltaTime, const StateInfo _Info)
 		OnAir_ = false;
 		Force_.OffGravity();
 
-		//사망검사
-		if (CurHP_ == 0)
-		{
-			StateManager_.ChangeState("Die");
-			return;
-		}
 		//기상검사
 		if (Down_Timer_.IsTimerOn() == false)
 		{
@@ -607,14 +612,28 @@ void BloodLugaru::DownUpdate(float _DeltaTime, const StateInfo _Info)
 
 void BloodLugaru::DieStart(const StateInfo _Info)
 {
-	ChangeDNFAnimation("Down");
-	Death(2.0f);
+	ChangeDNFAnimation("Die");
+	ShadowRenderer_->Off();
+	Force_.OffGravity();
+	Force_.ForceX_ = 0;
+	MainRenderer_->GetPixelData().PlusColor = { 1.0f,1.0f,1.0f,1.0f };
+	Death(1.5f);
 }
 
 void BloodLugaru::DieUpdate(float _DeltaTime, const StateInfo _Info)
 {
+	DieAlpha_ -= _DeltaTime * 5.0f;
+	if (DieAlpha_ <= 0.0f)
+		DieAlpha_ = 0;
+	if (IsDieEffect_ == false && DieAlpha_ < 0.2f)
+	{
+		//여기서 죽여
+		DieEffect* NewDieEffect = GetLevel()->CreateActor<DieEffect>();
+		NewDieEffect->GetTransform().SetWorldPosition(GetTransform().GetWorldPosition() + Value_.DieEffectAddPos);
+	}
+	MainRenderer_->GetPixelData().MulColor = { 1.0f,1.0f,1.0f,DieAlpha_ };
+	MainRenderer_->GetPixelData().PlusColor = { 1.0f,1.0f,1.0f,DieAlpha_ };
 }
-
 void BloodLugaru::ChangeHitColTrans(std::string _State)
 {
 	if (_State == "Hit")
@@ -705,8 +724,11 @@ void BloodLugaru::InitDefaultValue()
 	Value_.Down_Time = 1.3f;
 	Value_.Down_God_Time = 0.48f;
 
-	MaxHP_ = 300000;
-	PerHP_ = 70000;
+	MaxHP_ = 20000;
+	PerHP_ = 10000;
+
+	//MaxHP_ = 300000;
+	//PerHP_ = 70000;
 	CurHP_ = MaxHP_;
 
 	HitEffectMovePos_ = { 0,-50,0 };
