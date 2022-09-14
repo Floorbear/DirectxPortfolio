@@ -12,7 +12,6 @@ public:
 	DNFLevel();
 	~DNFLevel();
 
-
 	DNFLevel(const DNFLevel& _Other) = delete;
 	DNFLevel(const DNFLevel&& _Other) noexcept = delete;
 	DNFLevel& operator=(const DNFLevel& _Ohter) = delete;
@@ -74,4 +73,3 @@ private:
 	//·¹º§ÀÇ ZoomRate
 	float Zoom_;
 };
-

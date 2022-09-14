@@ -3,14 +3,18 @@
 #include "MonsterHP.h"
 
 #include "GaugeRenderer.h"
-MonsterHP::MonsterHP():
+MonsterHP::MonsterHP() :
 	HPFrame_(),
 	Data_(),
 	Value_(),
 	CurID_(0),
 	PlusValue_(1.0f),
 	LerpValue_(0.0f),
-	UIWaitingTime_(1.0f)
+	UIWaitingTime_(1.8f),
+	MonsterHead_(),
+	MonsterDead_(),
+	DeadHeadTime_(Value_.DeadHeadTime),
+	MonsterCategory_()
 {
 	HPBar_.reserve(30);
 	HPFont_.reserve(3);
@@ -39,10 +43,8 @@ void MonsterHP::SetHPBar(MonsterHPData _Data)
 	//데이타 복사
 	Data_[_Data.ID] = _Data;
 
-	//몬스터가 죽으면 UI가 꺼지는 시간을 초기화한다.
-	UIWaitingTime_ = 1.0f;
+	CheckType(_Data.Type);
 
-	//여기서 HPBar을 전부 Reset해야 한다.
 	ResetHP();
 }
 
@@ -76,6 +78,7 @@ void MonsterHP::Start()
 		GameEngineUIRenderer* NewFontImage = CreateComponent<GameEngineUIRenderer>();
 		HPFont_.push_back(NewFontImage);
 	}
+	//폰트 이미지 Set
 	{
 		HPFont_[0]->SetFolderTextureToIndex("MonsterHP", 16);
 		HPFont_[0]->ScaleToTexture();
@@ -97,21 +100,66 @@ void MonsterHP::Start()
 			HPFont_[i]->Off();
 		}
 	}
-	//DNFDebugGUI::AddMutableValue("HP",&Data_.CurHP);
 
+	//몬스터 초상화 & Dead 초상화 Set
+	{
+		MonsterHead_ = CreateComponent<GameEngineUIRenderer>();
+		MonsterHead_->SetPivot(PIVOTMODE::LEFTTOP);
+		MonsterHead_->GetTransform().SetLocalPosition(Value_.MonsterHeadPos);
+		MonsterHead_->Off();
+
+		MonsterDead_ = CreateComponent<GameEngineUIRenderer>();
+		MonsterDead_->SetFolderTextureToIndex("MonsterHead", 0);
+		MonsterDead_->ScaleToTexture();
+		MonsterDead_->SetPivot(PIVOTMODE::LEFTTOP);
+		MonsterDead_->GetTransform().SetLocalPosition(Value_.MonsterHeadPos);
+		MonsterDead_->Off();
+	}
+
+	//몬스터 카테고리
+	{
+		MonsterCategory_ = CreateComponent<GameEngineUIRenderer>();
+		MonsterCategory_->SetScaleRatio(1.5f);
+		MonsterCategory_->SetPivot(PIVOTMODE::LEFTTOP);
+		MonsterCategory_->GetTransform().SetLocalPosition(Value_.CategoryPos);
+	}
+
+	//DNFDebugGUI::AddMutableValue("Pos", &Value_.CategoryPos);
+}
+void MonsterHP::End()
+{
 }
 
 void MonsterHP::Update(float DeltaTime_)
 {
+	MonsterDeadCheck(DeltaTime_);
+	HPBarUpdate(DeltaTime_);
+}
+void MonsterHP::MonsterDeadCheck(float _DeltaTime)
+{
 	//몬스터가 죽으면 잠시후에 UI가 꺼진다.
 	if (Data_[CurID_].CurHP == 0)
 	{
-		UIWaitingTime_ -= DeltaTime_;
+		UIWaitingTime_ -= _DeltaTime;
+		SwitchDeadHead(_DeltaTime);
 		if (UIWaitingTime_ <= 0)
 		{
 			Off();
 		}
 	}
+}
+void MonsterHP::SwitchDeadHead(float _DeltaTime)
+{
+	DeadHeadTime_ -= _DeltaTime;
+	if (DeadHeadTime_ < 0.0f)
+	{
+		MonsterDead_->OnOffSwitch();
+		DeadHeadTime_ = Value_.DeadHeadTime;
+	}
+}
+
+void MonsterHP::HPBarUpdate(float DeltaTime_)
+{
 	//HP바 하얗게 됬다가 어두워 지는거 파라미터 부분
 	if (PlusValue_ < 1.0f && PlusValue_> -1.7f)
 	{
@@ -129,7 +177,7 @@ void MonsterHP::Update(float DeltaTime_)
 	int leftHP = Data_[CurID_].CurHP;
 	int PrevHP = PrevHP_[CurID_];
 	int HPBarCount = 0;
-	for (; leftHP > 0; 
+	for (; leftHP > 0;
 		leftHP -= Data_[CurID_].PerHP,
 		PrevHP -= Data_[CurID_].PerHP
 		)
@@ -160,8 +208,8 @@ void MonsterHP::Update(float DeltaTime_)
 		{
 			HPBar_[HPBarCount]->GetColorData().PlusColor = { 1.0,1.0,1.0,AlphaValue };
 		}
-		
-		HPBar_[HPBarCount]->UpdateMonsterHP(CurHPRatio,PrevHPRatio);
+
+		HPBar_[HPBarCount]->UpdateMonsterHP(CurHPRatio, PrevHPRatio);
 		HPBarCount++;
 	}
 	HPBarCount--;
@@ -188,15 +236,15 @@ void MonsterHP::Update(float DeltaTime_)
 			HPFont_[1]->SetFolderTextureToIndex("MonsterHP", (HPBarCount % 10) + 6);
 		}
 	}
-
 }
-
-void MonsterHP::End()
-{
-}
-
 void MonsterHP::ResetHP()
 {
+	//몬스터가 죽으면 UI가 꺼지는 시간을 초기화한다.
+	UIWaitingTime_ = 1.8f;
+
+	MonsterDead_->Off();
+	DeadHeadTime_ = Value_.DeadHeadTime;
+
 	for (int i = 0; i < 30; i++)
 	{
 		HPBar_[i]->Off();
@@ -205,5 +253,22 @@ void MonsterHP::ResetHP()
 	for (auto i : HPFont_)
 	{
 		i->Off();
+	}
+}
+
+void MonsterHP::CheckType(MonsterType _Type)
+{
+	switch (_Type)
+	{
+	case BloodLugaruM:
+		MonsterHead_->SetFolderTextureToIndex("MonsterHead", 1);
+		MonsterHead_->ScaleToTexture();
+		MonsterHead_->On();
+
+		MonsterCategory_->SetFolderTextureToIndex("Category", 1);
+		MonsterCategory_->ScaleToTexture();
+		break;
+	default:
+		break;
 	}
 }
