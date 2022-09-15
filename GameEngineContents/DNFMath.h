@@ -7,16 +7,14 @@ public:
 	DNFMath();
 	~DNFMath();
 
-
 	DNFMath(const DNFMath& _Other) = delete;
 	DNFMath(const DNFMath&& _Other) noexcept = delete;
 	DNFMath& operator=(const DNFMath& _Ohter) = delete;
 	DNFMath& operator=(const DNFMath&& _Other) noexcept = delete;
 
-	//x,y로만 계산함 
+	//x,y로만 계산함
 	static float Length(const float4& _Left, const float4& _Right)
 	{
-
 		float4 LengthVector = _Left - _Right;
 		LengthVector.z = 0;
 
@@ -49,14 +47,12 @@ public:
 			IsTimerOn_ = false;
 		}
 		return *this;
-
 	}
 
 	Timer& operator+=(float _Value)
 	{
 		Iter_Time_ += _Value;
 		return *this;
-
 	}
 
 	bool IsTimerOn()
@@ -92,7 +88,6 @@ public:
 			Iter_Time_ = 0.0f;
 			IsTimerOn_ = false;
 		}
-
 	}
 
 	inline float* GetIterTime()
@@ -104,60 +99,60 @@ public:
 
 	bool IsSet; //타이머가 끝난 후 한번만 뭘 호출하고 싶을 때 사용하려고
 
-	private:
-		//실제 시간
-		float Iter_Time_;
+private:
+	//실제 시간
+	float Iter_Time_;
 
-		bool IsTimerOn_;
+	bool IsTimerOn_;
 
-		void On()
+	void On()
+	{
+		IsTimerOn_ = true;
+	}
+
+	void Off()
+	{
+		IsTimerOn_ = false;
+	}
+
+	void Reset()
+	{
+		Iter_Time_ = Default_Time_;
+	}
+
+	void SetDefaultTime(float _Value)
+	{
+		if (_Value <= 0.0f)
 		{
-			IsTimerOn_ = true;
+			MsgBoxAssert("잘못된 _Value!");
 		}
+		Default_Time_ = _Value;
+	}
 
-		void Off()
+	bool IsTimeZero()
+	{
+		if (Iter_Time_ <= 0.0f)
 		{
-			IsTimerOn_ = false;
+			return true;
 		}
+		else
+		{
+			return false;
+		}
+	}
 
-		void Reset()
+	//DefaultTime이상이냐
+	bool IsTimeOver()
+	{
+		if (Iter_Time_ >= Default_Time_)
 		{
-			Iter_Time_ = Default_Time_;
+			return true;
 		}
-
-		void SetDefaultTime(float _Value)
+		else
 		{
-			if (_Value <= 0.0f)
-			{
-				MsgBoxAssert("잘못된 _Value!");
-			}
-			Default_Time_ = _Value;
+			return false;
 		}
-
-		bool IsTimeZero()
-		{
-			if (Iter_Time_ <= 0.0f)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		//DefaultTime이상이냐
-		bool IsTimeOver()
-		{
-			if (Iter_Time_ >= Default_Time_)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+	}
 };
 
 class Force
@@ -204,6 +199,11 @@ public:
 		Transform_ = _Trans;
 	}
 
+	inline GameEngineTransform* GetTransform()
+	{
+		return Transform_;
+	}
+
 	inline float4 GetDirX()
 	{
 		if (Transform_->GetLocalScale().x > 0)
@@ -226,10 +226,8 @@ public:
 	float FrictionX_;
 	float Gravity_;
 
-
 private:
 	GameEngineTransform* Transform_;
 
 	bool IsGravityOn_;
-
 };
