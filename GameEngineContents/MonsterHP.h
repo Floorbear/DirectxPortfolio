@@ -1,10 +1,6 @@
 #pragma once
 #include <GameEngineCore/GameEngineActor.h>
 
-enum MonsterType
-{
-	BloodLugaruM
-};
 struct MonsterHPData //Cur , Per
 {
 	int ID; //인스턴스된 몬스터의 NUmber

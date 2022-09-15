@@ -3,7 +3,8 @@
 
 #include "Vilmark_0_Background.h"
 #include "Player_Main.h"
-#include "BloodLugaru.h"
+#include "DNFMonster.h"
+#include "Bloodlugaru.h"
 #include "MonsterHP.h"
 
 Vilmark_0::Vilmark_0()
@@ -62,11 +63,11 @@ void Vilmark_0::DNFOnEvent()
 	DNFGlobalValue::CurrentMonsterHP = MonsterHP_;
 	MonsterHP_->Off();
 
-	BloodLugaru* Monster = CreateActor<BloodLugaru>();
+	Bloodlugaru* Monster = CreateActor<Bloodlugaru>();
 	Monster->ID_ = 1;
 	Monster->GetTransform().SetWorldPosition({ 700,-400 });
 
-	BloodLugaru* Monster2 = CreateActor<BloodLugaru>();
+	Bloodlugaru* Monster2 = CreateActor<Bloodlugaru>();
 	Monster2->ID_ = 2;
 	Monster2->GetTransform().SetWorldPosition({ 800,-430 });
 }

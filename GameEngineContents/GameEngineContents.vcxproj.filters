@@ -121,7 +121,7 @@
     <ClInclude Include="DNFBackground.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="BloodLugaru.h">
+    <ClInclude Include="DNFMonster.h">
       <Filter>Monster</Filter>
     </ClInclude>
     <ClInclude Include="DNFMath.h">
@@ -146,6 +146,9 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="DieEffect.h">
+      <Filter>Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="Bloodlugaru.h">
       <Filter>Monster</Filter>
     </ClInclude>
   </ItemGroup>
@@ -217,7 +220,7 @@
     <ClCompile Include="DNFBackground.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="BloodLugaru.cpp">
+    <ClCompile Include="DNFMonster.cpp">
       <Filter>Monster</Filter>
     </ClCompile>
     <ClCompile Include="DNFMath.cpp">
@@ -245,6 +248,9 @@
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="DieEffect.cpp">
+      <Filter>Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="Bloodlugaru.cpp">
       <Filter>Monster</Filter>
     </ClCompile>
   </ItemGroup>

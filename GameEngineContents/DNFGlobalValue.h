@@ -1,6 +1,10 @@
 #pragma once
 
 #include "DNFLevel.h"
+enum MonsterType
+{
+	BloodLugaruM
+};
 
 enum class ColOrder
 {
@@ -32,6 +36,3 @@ public:
 
 	static float4 Temp1;
 };
-
-
-
