@@ -142,6 +142,12 @@ private:
 	void JumpUpdate(float _DeltaTime, const StateInfo _Info);
 	void JumpEnd(const StateInfo _Info);
 
+	void AirborneStart(const StateInfo _Info);
+	void AirborneUpdate(float _DeltaTime, const StateInfo _Info);
+
+	void DownStart(const StateInfo _Info);
+	void DownUpdate(float _DeltaTime, const StateInfo _Info);
+
 	void AutoAttackStart(const StateInfo _Info);
 	void AutoAttackUpdate(float _DeltaTime, const StateInfo _Info);
 	void AutoAttackEnd(const StateInfo _Info);
@@ -181,6 +187,9 @@ private:
 
 		//마나 소비량
 		int UpperSlash_MP = 500;
+
+		float Down_Time = 1.3f;
+		float Down_God_Time = 0.48f;
 	};
 	DefaultValue Value_;
 };

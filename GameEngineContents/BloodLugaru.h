@@ -88,7 +88,6 @@ private:
 	Timer Back_Timer_;
 	Timer Chase_Timer_;
 	Timer Hit_Timer_;
-	Timer Down_Timer_;
 
 	//»ç¸Á
 	float DieAlpha_;

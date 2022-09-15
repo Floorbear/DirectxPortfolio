@@ -5,7 +5,7 @@
 #include "DNFDefineList.h"
 #include "DNFDebugGUI.h"
 
-AvatarManager::AvatarManager():
+AvatarManager::AvatarManager() :
 	LayerOffset_(-5.0f),
 	WeaponRenderer_b_(),
 	WeaponRenderer_c_(),
@@ -45,8 +45,6 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	float Idle_Iter = 0.2f;
 	float Attack_Iter = 0.08f;
 
-
-
 	//Shadow
 	//_Player->ShadowRenderer_ = _Player->CreateComponent<GameEngineTextureRenderer>("ShadowRenderer_");
 	ShadowRenderer_ = _Player->ShadowRenderer_;
@@ -64,8 +62,7 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	_Player->HairRenderer_a_ = _Player->CreateComponent<GameEngineTextureRenderer>("HairRenderer_a_");
 	HairRenderer_a_ = _Player->HairRenderer_a_;
 	HairRenderer_a_->GetTransform().SetLocalScale({ 500,500,1 });
-	HairRenderer_a_->GetTransform().SetLocalMove({ 0,0,LayerOffset_-9 });
-
+	HairRenderer_a_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 9 });
 
 	_Player->HairRenderer_d_ = _Player->CreateComponent<GameEngineTextureRenderer>("HairRenderer_d_");
 	HairRenderer_d_ = _Player->HairRenderer_d_;
@@ -78,7 +75,6 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	PantsRenderer_a_ = _Player->PantsRenderer_a_;
 	PantsRenderer_a_->GetTransform().SetLocalScale({ 500,500,1 });
 	PantsRenderer_a_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 6 });
-
 
 	_Player->PantsRenderer_b_ = _Player->CreateComponent<GameEngineTextureRenderer>("PantsRenderer_b_");
 	PantsRenderer_b_ = _Player->PantsRenderer_b_;
@@ -108,7 +104,7 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	CoatRenderer_c_->GetTransform().SetLocalScale({ 500,500,1 });
 	CoatRenderer_c_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 6 });
 	CoatRenderer_c_->Off();
-	
+
 	_Player->CoatRenderer_d_ = _Player->CreateComponent<GameEngineTextureRenderer>("CoatRenderer_d_");
 	CoatRenderer_d_ = _Player->CoatRenderer_d_;
 	CoatRenderer_d_->GetTransform().SetLocalScale({ 500,500,1 });
@@ -169,21 +165,15 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	WeaponRenderer_c_->GetTransform().SetLocalScale({ 500,500,1 });
 	WeaponRenderer_c_->GetTransform().SetLocalMove({ 0,0,LayerOffset_ - 14 });
 
-
-
-
-
 	//아바타 생성 부분
 
 	CreateAvatar("sm_body0000", AvatarParts::Skin, AvatarType::None, AvatarLayer::A);
 	CreateAvatar("sm_body0000", AvatarParts::Shadow, AvatarType::None, AvatarLayer::A);
 
-
 	CreateAvatar("sm_hair0000a", AvatarParts::Hair, AvatarType::Default, AvatarLayer::A);
 
 	CreateAvatar("A_sm_hair13000", AvatarParts::Hair, AvatarType::Job, AvatarLayer::A);
 	CreateAvatar("D_sm_hair13000", AvatarParts::Hair, AvatarType::Job, AvatarLayer::D);
-
 
 	CreateAvatar("A_sm_pants0000", AvatarParts::Pants, AvatarType::Default, AvatarLayer::A);
 	CreateAvatar("B_sm_pants0000", AvatarParts::Pants, AvatarType::Default, AvatarLayer::B);
@@ -209,8 +199,6 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	CreateAvatar("sm_coat16300c", AvatarParts::Coat, AvatarType::Dog, AvatarLayer::C);
 	CreateAvatar("sm_coat16300d", AvatarParts::Coat, AvatarType::Dog, AvatarLayer::D);
 
-
-
 	CreateAvatar("sm_belt12100c", AvatarParts::Belt, AvatarType::Dog, AvatarLayer::C);
 	CreateAvatar("sm_belt12100d", AvatarParts::Belt, AvatarType::Dog, AvatarLayer::D);
 
@@ -223,14 +211,10 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	CreateAvatar("sm_cap15100b", AvatarParts::Cap, AvatarType::Dog, AvatarLayer::B);
 	CreateAvatar("sm_cap15100c", AvatarParts::Cap, AvatarType::Dog, AvatarLayer::C);
 
-
-
-
 	CreateAvatar("lswd3400b", AvatarParts::Weapon, AvatarType::Job, AvatarLayer::B);
 	CreateAvatar("lswd3400c", AvatarParts::Weapon, AvatarType::Job, AvatarLayer::C);
 	CreateAvatar("club0000b", AvatarParts::Weapon, AvatarType::Default, AvatarLayer::B);
 	CreateAvatar("club0000c", AvatarParts::Weapon, AvatarType::Default, AvatarLayer::C);
-
 
 	//렌더 리스트에 넣어줌
 	RenderList_.insert(std::make_pair(AvatarParts::Shadow, ShadowRenderer_));
@@ -252,8 +236,6 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 	CurAvatar_.insert(std::make_pair(AvatarParts::Coat, AvatarType::Default));
 	CurAvatar_.insert(std::make_pair(AvatarParts::Shoes, AvatarType::Default));
 	CurAvatar_.insert(std::make_pair(AvatarParts::Weapon, AvatarType::Default));
-
-
 }
 
 void AvatarManager::ChangeMotion(PlayerAnimations _Animation)
@@ -268,7 +250,7 @@ void AvatarManager::ChangeMotion(PlayerAnimations _Animation)
 		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Hair);
 		for (; StartIter != EndIter; StartIter++)
 		{
-			StartIter->second->ChangeFrameAnimation(AniName+ PartName);
+			StartIter->second->ChangeFrameAnimation(AniName + PartName);
 		}
 	}
 	//피부
@@ -351,7 +333,6 @@ void AvatarManager::ChangeMotion(PlayerAnimations _Animation)
 			StartIter->second->ChangeFrameAnimation(AniName + PartName);
 		}
 	}
-		
 }
 
 void AvatarManager::ChangeAvatar(AvatarType _Type, AvatarParts _Parts)
@@ -377,8 +358,6 @@ void AvatarManager::ChangeAvatar(AvatarType _Type, AvatarParts _Parts)
 	}
 	RenderList_.clear();
 
-
-
 	//모든 렌더러를 꺼버리고 필요한 렌더러만 킴
 	//피부, 그림자 등도 켜야하니 피부, 그림자에 더미 레이어를 추가해서 GetRendererLayer에 들어가게 하자
 	for (auto pair : CurAvatar_)
@@ -390,7 +369,7 @@ void AvatarManager::ChangeAvatar(AvatarType _Type, AvatarParts _Parts)
 			Renderer->On();
 		}
 	}
-	
+
 	//모자압이나 댕댕압같은 다른 렌더러를 꺼버리는 아바타의 예외처리
 	for (auto pair : CurAvatar_)
 	{
@@ -400,7 +379,6 @@ void AvatarManager::ChangeAvatar(AvatarType _Type, AvatarParts _Parts)
 			i->Off();
 		}
 	}
-
 
 	ChangeMotion(PlayerAnimations::ChangeAvatar);
 }
@@ -414,33 +392,32 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 	//아바타 이름 선택
 	std::string Name = EnumToString(_Type);
 
-
 	float Iter_0 = 0.2f;
 	float Iter_1 = 0.08f;
 	float Iter_2 = 0.027f;
 
-
 	//아바타 애니메이션 생성
 	CurRenderer->CreateFrameAnimationFolder("Idle" + Name, FrameAnimation_DESC(_AvatarFolderName, Idle_Start, Idle_End, Iter_0));
-	CurRenderer->CreateFrameAnimationFolder("ChangeAvatar" + Name, FrameAnimation_DESC(_AvatarFolderName, Idle_Start, Idle_End, Iter_0,false));
+	CurRenderer->CreateFrameAnimationFolder("ChangeAvatar" + Name, FrameAnimation_DESC(_AvatarFolderName, Idle_Start, Idle_End, Iter_0, false));
 	//ChangeAvatar 애니상태면 다음프레임에 Idle로 이동한다.
-	CurRenderer->AnimationBindFrame("ChangeAvatar" + Name, [&](const FrameAnimation_DESC& _Desc) 
+	CurRenderer->AnimationBindFrame("ChangeAvatar" + Name, [&](const FrameAnimation_DESC& _Desc)
 		{
 			if (_Desc.Frames[_Desc.CurFrame] == Idle_Start + 1)
 			{
 				ChangeMotion(PlayerAnimations::Idle);
 			}
 		});
-	
+
 	CurRenderer->CreateFrameAnimationFolder("Move" + Name, FrameAnimation_DESC(_AvatarFolderName, Move_Start, Move_End, Iter_1));
-	CurRenderer->CreateFrameAnimationFolder("AutoAttack_0"+ Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_0_Start, AutoAttack_0_End, Iter_2,false));
+	CurRenderer->CreateFrameAnimationFolder("AutoAttack_0" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_0_Start, AutoAttack_0_End, Iter_2, false));
 	CurRenderer->CreateFrameAnimationFolder("AutoAttack_1" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_1_Start, AutoAttack_1_End, Iter_2, false));
 	CurRenderer->CreateFrameAnimationFolder("AutoAttack_2" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_2_Start, AutoAttack_2_End, Iter_2, false));
 	CurRenderer->CreateFrameAnimationFolder("UpperSlash" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_2_Start, AutoAttack_2_End, Iter_2, false));
-	CurRenderer->CreateFrameAnimationFolder("Buff" + Name, FrameAnimation_DESC(_AvatarFolderName, BuffOn_Start, BuffOn_End, Iter_1,false));
+	CurRenderer->CreateFrameAnimationFolder("Buff" + Name, FrameAnimation_DESC(_AvatarFolderName, BuffOn_Start, BuffOn_End, Iter_1, false));
 	CurRenderer->CreateFrameAnimationFolder("Hit" + Name, FrameAnimation_DESC(_AvatarFolderName, Hit_Start, Hit_End, 0.04f, false));
+	CurRenderer->CreateFrameAnimationFolder("Down" + Name, FrameAnimation_DESC(_AvatarFolderName, Down_Start, Down_End, 0.04f, false));
 	CurRenderer->CreateFrameAnimationFolder("Jump_Start" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Start, Jump_Motion_Middle, 0.06f, false));
-	CurRenderer->CreateFrameAnimationFolder("Jump_End" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Middle+1, Jump_Motion_End, 0.06f, false));
+	CurRenderer->CreateFrameAnimationFolder("Jump_End" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Middle + 1, Jump_Motion_End, 0.06f, false));
 }
 
 std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
@@ -460,7 +437,7 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 	case PlayerAnimations::Move:
 		return "Move";
 		break;
-	case PlayerAnimations::AutoAttack: //Enum To String State전이용 
+	case PlayerAnimations::AutoAttack: //Enum To String State전이용
 		return "AutoAttack";
 		break;
 	case PlayerAnimations::AutoAttack_0:
@@ -483,6 +460,9 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 		break;
 	case PlayerAnimations::Hit:
 		return "Hit";
+		break;
+	case PlayerAnimations::Down:
+		return "Down";
 		break;
 	default:
 		break;

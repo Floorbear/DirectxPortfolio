@@ -38,6 +38,7 @@ enum class PlayerAnimations
 	Idle,
 	Move,
 	Buff,
+	Down,
 	NoneAttack,
 	AutoAttack,
 	AutoAttack_0,

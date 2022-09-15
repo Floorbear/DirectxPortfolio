@@ -9,7 +9,6 @@
 #define AutoAttack_2_Start 33
 #define AutoAttack_2_End 41
 
-
 #define Idle_Start 176
 #define Idle_End 179
 
@@ -26,6 +25,8 @@
 #define Hit_Start 98
 #define Hit_End 99
 
+#define Down_Start 100
+#define Down_End 103
 
 //·ç°¡·ç
 #define Lugaru_Attack_1_Start 0
@@ -38,7 +39,3 @@
 #define Lugaru_Hit_End 16
 #define Lugaru_Down_Start 17
 #define Lugaru_Down_End 19
-
-
-
-

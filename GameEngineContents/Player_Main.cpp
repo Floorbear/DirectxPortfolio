@@ -296,6 +296,12 @@ void Player_Main::InitState()
 
 	StateManager_.CreateStateMember("Hit", std::bind(&Player_Main::HitUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::HitStart, this, std::placeholders::_1));
+
+	StateManager_.CreateStateMember("Airborne", std::bind(&Player_Main::AirborneUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::AirborneStart, this, std::placeholders::_1));
+
+	StateManager_.CreateStateMember("Down", std::bind(&Player_Main::DownUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::DownStart, this, std::placeholders::_1));
 }
 
 void Player_Main::StartSuperArmor(float _SuperArmorTime)
@@ -505,6 +511,10 @@ void Player_Main::InitSkillCoolTime()
 
 void Player_Main::CoolTimeUpdate(float _DeltaTime)
 {
+	if (GodTime_.IsTimerOn() == true)
+	{
+		GodTime_ -= _DeltaTime;
+	}
 	for (auto i : SkillCoolTime_)
 	{
 		Timer* CurTimer = i.second;

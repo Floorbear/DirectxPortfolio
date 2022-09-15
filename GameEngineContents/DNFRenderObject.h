@@ -136,6 +136,7 @@ protected:
 	bool OnAir_; //Jump중?
 	float AirborneTime_;
 	float GroundYPos_;
+	Timer Down_Timer_;
 
 	//경직 관련
 	float Stiffness_;

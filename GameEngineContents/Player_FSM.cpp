@@ -99,6 +99,92 @@ void Player_Main::JumpEnd(const StateInfo _Info)
 	OnAir_ = false;
 }
 
+void Player_Main::AirborneStart(const StateInfo _Info)
+{
+	AvatarManager_.ChangeMotion(PlayerAnimations::Hit);
+	ResetDNFAnimation();
+	//ChangeHitColTrans("Hit");
+	//플레이어를 마주보는 방향으로 Flip
+	//FlipX(-Player_->GetDirX());
+	Force_.ForceX_ += -PrevHitData_.XForce;
+
+	GetTransform().SetLocalMove(float4(0, Force_.ForceY_ * GameEngineTime::GetDeltaTime()));
+	Force_.OnGravity();
+	OnAir_ = true;
+}
+
+void Player_Main::AirborneUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	//경직
+	//추락
+	AirborneTime_ += _DeltaTime;
+	float CurYPos = GetTransform().GetWorldPosition().y;
+
+	if (CurYPos <= GroundYPos_)
+	{
+		GetTransform().SetWorldPosition(float4(GetTransform().GetWorldPosition().x, GroundYPos_, GroundYPos_));
+		ShadowUpdate();
+		//Down 상태 Bounce
+		OnAir_ = true;
+		Force_.ForceY_ = 200.0f;
+		Force_.ForceX_ += -140.0f;
+		AirborneTime_ = 0.0f;
+		Force_.OnGravity();
+		PrevHitData_ = {};
+		GodTime_.StartTimer(Value_.Down_God_Time);
+		StateManager_.ChangeState("Down");
+		return;
+	}
+}
+
+void Player_Main::DownStart(const StateInfo _Info)
+{
+	AvatarManager_.ChangeMotion(PlayerAnimations::Down);
+	//ChangeHitColTrans("Down");
+	Down_Timer_.StartTimer(Value_.Down_Time);
+	Force_.ForceX_ += -PrevHitData_.XForce;
+
+	GetTransform().SetLocalMove(float4(0, Force_.ForceY_ * GameEngineTime::GetDeltaTime()));
+}
+
+void Player_Main::DownUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	AirborneTime_ += 5.0f * _DeltaTime;
+	float CurYPos = GetTransform().GetWorldPosition().y;
+
+	//사망검사
+	if (CurHP_ == 0)
+	{
+		//StateManager_.ChangeState("Die");
+		return;
+	}
+
+	if (CurYPos <= GroundYPos_)
+	{
+		//GroundYPos 아래로 떨어지지 않게 고정시키기
+		GetTransform().SetWorldPosition(float4(GetTransform().GetWorldPosition().x, GroundYPos_, GroundYPos_));
+		ShadowUpdate();
+		//이전에 받은 공격 데이터 초기화
+		PrevHitData_ = {};
+		Down_Timer_ -= _DeltaTime * (1.f + AirborneTime_ * 0.1f);
+		OnAir_ = false;
+		Force_.OffGravity();
+
+		//기상검사
+		if (Down_Timer_.IsTimerOn() == false)
+		{
+			OnAir_ = false;
+			Force_.ForceY_ = 0.0f;
+			AirborneTime_ = 0.0f;
+			Force_.OffGravity();
+			GodTime_.StartTimer(Value_.Down_God_Time);
+			PrevHitData_ = {};
+			StateManager_.ChangeState("Idle");
+			return;
+		}
+	}
+}
+
 void Player_Main::AutoAttackStart(const StateInfo _Info)
 {
 	AvatarManager_.ChangeMotion(PlayerAnimations::AutoAttack_0);

@@ -139,6 +139,7 @@ void BloodLugaru::InitAniNState()
 				CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
 				CurAttackData_.Font = 2;
 				CurAttackData_.XForce = 100.0f;
+				CurAttackData_.YForce = 300.0f;
 				CurAttackData_.Stiffness = 0.15f;
 				CurAttackData_.RStiffness = 0.11f;
 				CurAttackData_.AttCount = 0;
@@ -727,11 +728,8 @@ void BloodLugaru::InitDefaultValue()
 	Value_.Down_Time = 1.3f;
 	Value_.Down_God_Time = 0.48f;
 
-	MaxHP_ = 20000;
-	PerHP_ = 10000;
-
-	//MaxHP_ = 300000;
-	//PerHP_ = 70000;
+	MaxHP_ = 300000;
+	PerHP_ = 70000;
 	CurHP_ = MaxHP_;
 
 	HitEffectMovePos_ = { 0,-50,0 };

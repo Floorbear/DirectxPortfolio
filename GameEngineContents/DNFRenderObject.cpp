@@ -176,10 +176,16 @@ void DNFRenderObject::HitColCheck(ColOrder _Order)
 		return;
 	}
 
-	if (CurHP_ == 0)
+	//if (CurHP_ == 0)
+	//{
+	//	return;
+	//}
+
+	if (StateManager_.GetCurStateStateName() == "Die")
 	{
 		return;
 	}
+
 	HitBelow_->IsCollision(CollisionType::CT_OBB2D, _Order, CollisionType::CT_OBB2D,
 		std::bind(&DNFRenderObject::BelowHitCheck, this, std::placeholders::_1, std::placeholders::_2));
 
