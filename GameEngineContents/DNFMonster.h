@@ -103,6 +103,10 @@ protected:
 		int HitZRange;
 
 		float4 MonsterTextureSize_ = { 315,315,1 };
+		float4 IdleAboveColPos;
+		float4 IdleAboveColScale;
+		float4 IdleBelowColPos;
+		float4 IdleBelowColScale;
 		float4 HitAboveColPos;
 		float4 HitAboveColScale;
 		float4 HitBelowColPos;
@@ -124,4 +128,8 @@ protected:
 		float4 DieParticleSize;
 	};
 	DefaultValue Value_;
+
+	//디버그 관련
+	void StartDebug();
+	void UpdateDebug();
 };

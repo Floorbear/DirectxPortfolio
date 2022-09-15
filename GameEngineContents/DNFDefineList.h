@@ -39,3 +39,15 @@
 #define Lugaru_Hit_End 16
 #define Lugaru_Down_Start 17
 #define Lugaru_Down_End 19
+
+//¿Ãπ›
+#define Ivan_Attack_1_Start 1
+#define Ivan_Attack_1_End 4
+#define Ivan_Idle_Start 0
+#define Ivan_Idle_End 0
+#define Ivan_Move_Start 11
+#define Ivan_Move_End 16
+#define Ivan_Hit_Start 5
+#define Ivan_Hit_End 6
+#define Ivan_Down_Start 7
+#define Ivan_Down_End 9

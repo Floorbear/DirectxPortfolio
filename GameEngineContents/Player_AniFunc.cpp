@@ -89,7 +89,7 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.RStiffness = 0.11f;
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.AttCount++;
-				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y);
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y) + BotPos_.y;
 				CurAttackData_.AttEffect = Effect::SlashSHori;
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_0_Start + 7)
@@ -120,7 +120,7 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.XForce = 140.0f;
 				CurAttackData_.Stiffness = 0.15f;
 				CurAttackData_.RStiffness = 0.11f;
-				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y);
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y) + BotPos_.y;
 				CurAttackData_.AttCount++;
 				Force_.ForceX_ = 70.0f;
 				CurAttackData_.AttEffect = Effect::SlashSHori;
@@ -151,7 +151,7 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.XForce = 140.0f;
 				CurAttackData_.YForce = 300.0f;
-				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y);
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y) + BotPos_.y;
 				CurAttackData_.Stiffness = 0.15f;
 				CurAttackData_.RStiffness = 0.11f;
 				CurAttackData_.AttCount++;
@@ -193,7 +193,7 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.XForce = 140.0f;
 				CurAttackData_.Stiffness = 0.25f;
 				CurAttackData_.RStiffness = 0.21f;
-				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y);
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y) + BotPos_.y;
 				CurAttackData_.YForce = 550.0f;
 				CurAttackData_.AttCount++;
 				CurAttackData_.AttEffect = Effect::SlashSRight;

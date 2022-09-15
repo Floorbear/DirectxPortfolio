@@ -16,7 +16,7 @@ DNFRenderObject::DNFRenderObject() :
 	MainRenderer_(nullptr),
 	ShadowRenderer_(),
 	IsStart_(false),
-	ShadowPos_(),
+	ShadowPos_({ -10,-45,500 }),
 	ShadowRot_(),
 	BotCol_(),
 	BotPos_({ 0,-88.0f }),
@@ -302,8 +302,8 @@ bool DNFRenderObject::BelowHitCheck(GameEngineCollision* _this, GameEngineCollis
 bool DNFRenderObject::IsZPosHit(int _ZPos)
 {
 	//z축 차이(y축)가 나면 충돌 방지
-	int ZLength = abs(static_cast<int>(GetTransform().GetWorldPosition().y) - _ZPos);
-	if (ZLength > 15) //상대방과 15이상 거리차가 나면 공격을 무시한다.
+	int ZLength = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y) - _ZPos;
+	if (ZLength > 10 || ZLength < -40) //상대방과 일정이상 거리차가 나면 공격을 무시한다.
 	{
 		if (_ZPos != 0 && Force_.IsGravity() == false) //ZPos ==0 : 이 공격은 z축의 영향을 받지 않는다 && 공중에 뜸 상태에서는 z축 차이를 계산하지 않는다.
 		{
@@ -423,7 +423,6 @@ void DNFRenderObject::DNFStart()
 	PrevPos_ = GetTransform().GetWorldPosition();
 
 	ShadowRenderer_->GetPixelData().MulColor = float4(0, 0, 0, 0.6f);
-	ShadowPos_ = { -10,-45,500 };
 	ShadowRot_ = { -60,0,5 };
 	IsStart_ = true;
 }

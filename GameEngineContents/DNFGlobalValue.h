@@ -3,7 +3,8 @@
 #include "DNFLevel.h"
 enum MonsterType
 {
-	BloodLugaruM
+	BloodLugaruM,
+	CrazyIvanM
 };
 
 enum class ColOrder

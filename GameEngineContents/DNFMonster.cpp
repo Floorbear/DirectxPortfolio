@@ -175,7 +175,7 @@ void DNFMonster::InitCol()
 	AttackCol_->ChangeOrder(ColOrder::MonsterAttack);
 	AttackCol_->Off();
 
-	//MiddleHit
+	//AboveHit
 	HitAbove_ = CreateComponent<GameEngineCollision>("Middle");
 	HitAbove_->SetDebugSetting(CollisionType::CT_OBB2D, float4(1.0f, 0.0f, 0.0f, 0.5f));
 	HitAbove_->GetTransform().SetLocalPosition(Value_.HitAboveColPos);
@@ -604,10 +604,10 @@ void DNFMonster::ChangeHitColTrans(std::string _State)
 	}
 	else if (_State == "Idle")
 	{
-		HitAbove_->GetTransform().SetLocalPosition({ 0,-30.0f,-500.0f });
-		HitAbove_->GetTransform().SetLocalScale({ 100.0f,40.0f,1.0f });
-		HitBelow_->GetTransform().SetLocalPosition({ 0,-70.0f,-500.0f });
-		HitBelow_->GetTransform().SetLocalScale({ 100.0f,40.0f,1.0f });
+		HitAbove_->GetTransform().SetLocalPosition(Value_.IdleAboveColPos);
+		HitAbove_->GetTransform().SetLocalScale(Value_.IdleAboveColScale);
+		HitBelow_->GetTransform().SetLocalPosition(Value_.IdleBelowColPos);
+		HitBelow_->GetTransform().SetLocalScale(Value_.IdleBelowColScale);
 		return;
 	}
 	else if (_State == "Down")
@@ -679,6 +679,12 @@ void DNFMonster::InitDefaultValue()
 	Value_.DownBelowColPos = { 0,-80.0f,-500.0f };
 	Value_.DownBelowColScale = { 80.0f,20.0f,1.0f };
 
+	//
+	Value_.IdleAboveColPos = { 0,-30.0f,-500.0f };
+	Value_.IdleAboveColScale = { 100.0f,40.0f,1.0f };
+	Value_.IdleBelowColPos = { 0,-70.0f,-500.0f };
+	Value_.IdleBelowColScale = { 100.0f,40.0f,1.0f };
+
 	Value_.Down_Time = 1.3f;
 	Value_.Down_God_Time = 0.48f;
 
@@ -687,4 +693,36 @@ void DNFMonster::InitDefaultValue()
 	CurHP_ = MaxHP_;
 
 	HitEffectMovePos_ = { 0,-50,0 };
+}
+
+void DNFMonster::StartDebug()
+{
+	DNFDebugGUI::AddMutableValue("ShadowPos", &ShadowPos_);
+	DNFDebugGUI::AddMutableValue("BotPos", &BotPos_);
+
+	DNFDebugGUI::AddMutableValue("Attack_1_Pos", &Attack_1_Pos_);
+	DNFDebugGUI::AddMutableValue("Attack_1_Scale", &Attack_1_Scale_);
+
+	DNFDebugGUI::AddMutableValue("IdleAboveColPos", &Value_.IdleAboveColPos);
+	DNFDebugGUI::AddMutableValue("IdleAboveColScl", &Value_.IdleAboveColScale);
+	DNFDebugGUI::AddMutableValue("IdleBelowColPos", &Value_.IdleBelowColPos);
+	DNFDebugGUI::AddMutableValue("IdleBelowColscl", &Value_.IdleBelowColScale);
+
+	DNFDebugGUI::AddMutableValue("HitAboveColPos", &Value_.HitAboveColPos);
+	DNFDebugGUI::AddMutableValue("HitAboveColScl", &Value_.HitAboveColScale);
+	DNFDebugGUI::AddMutableValue("HitBelowColPos", &Value_.HitBelowColPos);
+	DNFDebugGUI::AddMutableValue("HitBelowColscl", &Value_.HitBelowColScale);
+
+	DNFDebugGUI::AddMutableValue("DownAboveColPos", &Value_.DownAboveColPos);
+	DNFDebugGUI::AddMutableValue("DownAboveColScl", &Value_.DownAboveColScale);
+	DNFDebugGUI::AddMutableValue("DownBelowColPos", &Value_.DownBelowColPos);
+	DNFDebugGUI::AddMutableValue("DownBelowColscl", &Value_.DownBelowColScale);
+}
+
+void DNFMonster::UpdateDebug()
+{
+	AttackRangeCol_->GetTransform().SetLocalScale(Attack_1_Scale_);
+	AttackRangeCol_->GetTransform().SetLocalPosition(Attack_1_Pos_);
+	AttackCol_->GetTransform().SetLocalScale(Attack_1_Scale_);
+	AttackCol_->GetTransform().SetLocalPosition(Attack_1_Pos_);
 }

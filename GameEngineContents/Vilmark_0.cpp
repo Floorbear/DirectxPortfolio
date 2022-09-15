@@ -4,9 +4,10 @@
 #include "Vilmark_0_Background.h"
 #include "Player_Main.h"
 #include "DNFMonster.h"
-#include "Bloodlugaru.h"
 #include "MonsterHP.h"
 
+#include "Bloodlugaru.h"
+#include "CrazyIvan.h"
 Vilmark_0::Vilmark_0()
 {
 }
@@ -47,6 +48,17 @@ void Vilmark_0::DNFOnEvent()
 		GameEngineFolderTexture::Load(Dir.GetFullPath());
 	}
 
+	//크레이지 이반 텍스처 로드
+	{
+		GameEngineDirectory Dir;
+		Dir.MoveParentToExitsChildDirectory("ContentsResources");
+		Dir.Move("ContentsResources");
+		Dir.Move("FolderTexture");
+		Dir.Move("MonsterTexture");
+		Dir.Move("crazyivan");
+		GameEngineFolderTexture::Load(Dir.GetFullPath());
+	}
+
 	//이펙트 텍스처 로드
 	{
 		GameEngineDirectory Dir;
@@ -67,7 +79,11 @@ void Vilmark_0::DNFOnEvent()
 	Monster->ID_ = 1;
 	Monster->GetTransform().SetWorldPosition({ 700,-400 });
 
-	Bloodlugaru* Monster2 = CreateActor<Bloodlugaru>();
-	Monster2->ID_ = 2;
-	Monster2->GetTransform().SetWorldPosition({ 800,-430 });
+	//Bloodlugaru* Monster2 = CreateActor<Bloodlugaru>();
+	//Monster2->ID_ = 2;
+	//Monster2->GetTransform().SetWorldPosition({ 800,-430 });
+
+	CrazyIvan* Monster3 = CreateActor<CrazyIvan>();
+	Monster3->ID_ = 3;
+	Monster3->GetTransform().SetWorldPosition({ 1000,-330 });
 }
