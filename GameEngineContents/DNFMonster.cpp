@@ -161,8 +161,7 @@ void DNFMonster::InitCol()
 	//콜라이더 추가
 	AttackRangeCol_ = CreateComponent<GameEngineCollision>("Col");
 	AttackRangeCol_->SetDebugSetting(CollisionType::CT_OBB2D, float4(0, 0.0f, 1.0f, 0.2f));
-	Attack_1_Scale_ = float4(120, 50, 1);
-	Attack_1_Pos_ = float4(40, -45, -500);
+
 	AttackRangeCol_->GetTransform().SetLocalScale(Attack_1_Scale_);
 	AttackRangeCol_->GetTransform().SetLocalPosition(Attack_1_Pos_);
 	AttackRangeCol_->ChangeOrder(ColOrder::MonsterRange);
@@ -626,7 +625,7 @@ bool DNFMonster::CanHitAttack1()
 	if (AttackRangeCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::PlayerHit, CollisionType::CT_OBB2D)
 		== true && Attack_1_Timer_.IsTimerOn() == false)
 	{
-		if (IsZPosHit(static_cast<int>(Player_->GetTransform().GetWorldPosition().y)) == true)
+		if (IsZPosHit(static_cast<int>(Player_->GetTransform().GetWorldPosition().y) + BotPos_.y) == true)
 		{
 			return true;
 		}
@@ -693,6 +692,9 @@ void DNFMonster::InitDefaultValue()
 	CurHP_ = MaxHP_;
 
 	HitEffectMovePos_ = { 0,-50,0 };
+
+	Attack_1_Scale_ = float4(120, 50, 1);
+	Attack_1_Pos_ = float4(40, -45, -500);
 }
 
 void DNFMonster::StartDebug()
@@ -717,6 +719,8 @@ void DNFMonster::StartDebug()
 	DNFDebugGUI::AddMutableValue("DownAboveColScl", &Value_.DownAboveColScale);
 	DNFDebugGUI::AddMutableValue("DownBelowColPos", &Value_.DownBelowColPos);
 	DNFDebugGUI::AddMutableValue("DownBelowColscl", &Value_.DownBelowColScale);
+
+	DNFDebugGUI::AddMutableValue("HitEffectPos", &HitEffectMovePos_);
 }
 
 void DNFMonster::UpdateDebug()

@@ -8,9 +8,13 @@
 
 CrazyIvan::CrazyIvan()
 {
+	//MaxHP_ = 3000000;
+	//CurHP_ = MaxHP_;
+	//PerHP_ = 900000;
+
 	Value_.Type = MonsterType::CrazyIvanM;
 	Value_.MonsterTextureSize_ = { 200.0f,200.0f,1.0f };
-	Value_.DieParticleName = "DieParticleRed";
+	Value_.DieParticleName = "DieParticleGreen";
 	Value_.DieParticleSize = { 0.7f,0.7f,0.7f };
 	Value_.IdleAboveColPos = { 0,0,-500.0f };
 	Value_.IdleAboveColScale = { 60,47,1 };
@@ -20,12 +24,14 @@ CrazyIvan::CrazyIvan()
 	Value_.HitAboveColScale = { 60,47,1 };
 	Value_.HitBelowColPos = { 0, -30, -500 };
 	Value_.HitBelowColScale = { 60,47,1 };
-	//Value_.DownAboveColPos;
-	//Value_.DownAboveColScale;
-	//Value_.DownBelowColPos;
-	//Value_.DownBelowColScale;
+	Value_.DownAboveColPos = { -25,-30,-500 };
+	Value_.DownAboveColScale = { 80,20,1 };
+	Value_.DownBelowColPos = { -25,-50,-500 };
+	Value_.DownBelowColScale = { 80,20,1 };
 
-	Attack_1_Pos_ = { 40.0f,-15.0f,-500.0f };
+	HitEffectMovePos_ = { 0,-20,0 }; //Hit파티클이 생기는 위치
+
+	Attack_1_Pos_ = { 40.0f,0.0f,-500.0f };
 	Attack_1_Scale_ = { 120.0f,50.0f,1.0f };
 	ShadowPos_ = { -10.f,-28.f,500.f,1.f };
 	BotPos_ = { 0,-58.f,0 };
