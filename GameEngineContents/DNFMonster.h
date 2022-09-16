@@ -1,6 +1,7 @@
 #pragma once
 #include "DNFRenderObject.h"
 #include "DNFMath.h"
+#include "DNFTransition.h"
 #include <GameEngineCore/GameEngineStateManager.h>
 
 class Player_Main;
@@ -132,4 +133,10 @@ protected:
 	//디버그 관련
 	void StartDebug();
 	void UpdateDebug();
+
+	//전이 관련
+	std::map<std::string, DNFTransition> Transition_;
+private:
+	void InitTransition();
+protected:
 };

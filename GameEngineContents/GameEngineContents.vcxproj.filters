@@ -154,6 +154,9 @@
     <ClInclude Include="CrazyIvan.h">
       <Filter>Monster</Filter>
     </ClInclude>
+    <ClInclude Include="DNFTransition.h">
+      <Filter>Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -257,6 +260,9 @@
       <Filter>Monster</Filter>
     </ClCompile>
     <ClCompile Include="CrazyIvan.cpp">
+      <Filter>Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="DNFTransition.cpp">
       <Filter>Monster</Filter>
     </ClCompile>
   </ItemGroup>

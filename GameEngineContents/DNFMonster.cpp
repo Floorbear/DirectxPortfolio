@@ -33,6 +33,7 @@ DNFMonster::DNFMonster() :
 	IsDieEffect_(false)
 {
 	InitDefaultValue();
+	InitTransition();
 }
 
 DNFMonster::~DNFMonster()
@@ -215,22 +216,7 @@ void DNFMonster::IdleUpdate(float _DeltaTime, const StateInfo _Info)
 	if (IsIdleFirst_ == true)
 	{
 		IsIdleFirst_ = false;
-		int Random = GameEngineRandom::MainRandom.RandomInt(0, 100);
-		if (Random <= 70)
-		{
-			StateManager_.ChangeState("Chase");
-			return;
-		}
-		else if (Random <= 90)
-		{
-			StateManager_.ChangeState("Back");
-			return;
-		}
-		else
-		{
-			StateManager_.ChangeState("Idle");
-			return;
-		}
+		StateManager_.ChangeState(Transition_["Idle"].Decide());
 	}
 
 	//상태 판단
@@ -248,22 +234,7 @@ void DNFMonster::IdleUpdate(float _DeltaTime, const StateInfo _Info)
 	}
 	else
 	{
-		int Random = GameEngineRandom::MainRandom.RandomInt(0, 100);
-		if (Random <= 70)
-		{
-			StateManager_.ChangeState("Chase");
-			return;
-		}
-		else if (Random <= 90)
-		{
-			StateManager_.ChangeState("Back");
-			return;
-		}
-		else
-		{
-			StateManager_.ChangeState("Idle");
-			return;
-		}
+		StateManager_.ChangeState(Transition_["Idle"].Decide());
 	}
 }
 
@@ -302,22 +273,7 @@ void DNFMonster::ChaseUpdate(float _DeltaTime, const StateInfo _Info)
 	}
 	else
 	{
-		int Random = GameEngineRandom::MainRandom.RandomInt(0, 100);
-		if (Random <= 60)
-		{
-			StateManager_.ChangeState("Chase");
-			return;
-		}
-		else if (Random <= 80)
-		{
-			StateManager_.ChangeState("Back");
-			return;
-		}
-		else
-		{
-			StateManager_.ChangeState("Idle");
-			return;
-		}
+		StateManager_.ChangeState(Transition_["Chase"].Decide());
 	}
 
 	//Flip
@@ -344,22 +300,7 @@ void DNFMonster::Attack_1_Update(float _DeltaTime, const StateInfo _Info)
 {
 	if (IsAttack_1_End_ == true)
 	{
-		int Random = GameEngineRandom::MainRandom.RandomInt(0, 100);
-		if (Random <= 40)
-		{
-			StateManager_.ChangeState("Chase");
-			return;
-		}
-		else if (Random <= 80)
-		{
-			StateManager_.ChangeState("Back");
-			return;
-		}
-		else
-		{
-			StateManager_.ChangeState("Idle");
-			return;
-		}
+		StateManager_.ChangeState(Transition_["Attack_1"].Decide());
 	}
 }
 
@@ -425,22 +366,7 @@ void DNFMonster::BackUpdate(float _DeltaTime, const StateInfo _Info)
 	}
 	else
 	{
-		int Random = GameEngineRandom::MainRandom.RandomInt(0, 100);
-		if (Random <= 60)
-		{
-			StateManager_.ChangeState("Chase");
-			return;
-		}
-		else if (Random <= 90)
-		{
-			StateManager_.ChangeState("Idle");
-			return;
-		}
-		else
-		{
-			StateManager_.ChangeState("Back");
-			return;
-		}
+		StateManager_.ChangeState(Transition_["Back"].Decide());
 	}
 
 	GetTransform().SetWorldMove(BackMoveDir_ * 100.0f * _DeltaTime);
@@ -729,4 +655,39 @@ void DNFMonster::UpdateDebug()
 	AttackRangeCol_->GetTransform().SetLocalPosition(Attack_1_Pos_);
 	AttackCol_->GetTransform().SetLocalScale(Attack_1_Scale_);
 	AttackCol_->GetTransform().SetLocalPosition(Attack_1_Pos_);
+}
+
+void DNFMonster::InitTransition()
+{
+	{
+		DNFTransition Idle;
+		Idle.AddValue("Chase", 70);
+		Idle.AddValue("Back", 20);
+		Idle.AddValue("Idle", -1);
+		Transition_.insert(std::make_pair("Idle", Idle));
+	}
+
+	{
+		DNFTransition Chase;
+		Chase.AddValue("Chase", 60);
+		Chase.AddValue("Back", 20);
+		Chase.AddValue("Idle", -1);
+		Transition_.insert(std::make_pair("Chase", Chase));
+	}
+
+	{
+		DNFTransition Attack_1;
+		Attack_1.AddValue("Chase", 50);
+		Attack_1.AddValue("Back", 30);
+		Attack_1.AddValue("Idle", -1);
+		Transition_.insert(std::make_pair("Attack_1", Attack_1));
+	}
+
+	{
+		DNFTransition Back;
+		Back.AddValue("Chase", 60);
+		Back.AddValue("Idle", 30);
+		Back.AddValue("Back", -1);
+		Transition_.insert(std::make_pair("Back", Back));
+	}
 }
