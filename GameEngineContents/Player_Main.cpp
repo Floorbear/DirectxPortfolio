@@ -139,7 +139,7 @@ void Player_Main::Start()
 	Force_.Gravity_ = 700.0f;
 	Force_.SetTransfrom(&GetTransform());
 
-	//DNFDebugGUI::AddMutableValue("MulColoer", &DNFGlobalValue::Temp1);
+	DNFDebugGUI::AddMutableValue("Pos", &Value_.GoreCrossPos);
 }
 
 void Player_Main::Update(float _DeltaTime)
@@ -293,6 +293,10 @@ void Player_Main::InitState()
 	StateManager_.CreateStateMember("UpperSlash", std::bind(&Player_Main::UpperSlashUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::UpperSlashStart, this, std::placeholders::_1),
 		std::bind(&Player_Main::UpperSlashEnd, this, std::placeholders::_1));
+
+	StateManager_.CreateStateMember("GoreCross", std::bind(&Player_Main::GoreCrossUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::GoreCrossStart, this, std::placeholders::_1),
+		std::bind(&Player_Main::GoreCrossEnd, this, std::placeholders::_1));
 
 	StateManager_.CreateStateMember("Hit", std::bind(&Player_Main::HitUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::HitStart, this, std::placeholders::_1));

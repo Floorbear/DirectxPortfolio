@@ -264,6 +264,44 @@ void Player_Main::UpperSlashEnd(const StateInfo _Info)
 	AttackEnd();
 }
 
+void Player_Main::GoreCrossStart(const StateInfo _Info)
+{
+	AvatarManager_.ChangeMotion(PlayerAnimations::GoreCross_0);
+	//마나 소모
+	//CurMP_ -= Value_.UpperSlash_MP;
+}
+
+void Player_Main::GoreCrossUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	//평소에는 False
+	if (IsAttack_End_ == true)
+	{
+		if (IsReadyNextAttack_ == true)
+		{
+			AvatarManager_.ChangeMotion(NextAttackAni_);
+			IsAttack_End_ = false;
+			IsReadyNextAttack_ = false;
+			return;
+		}
+
+		if (IsPressMoveKey() == false)
+		{
+			StateManager_.ChangeState("Idle");
+			return;
+		}
+		else
+		{
+			StateManager_.ChangeState("Move");
+			return;
+		}
+	}
+}
+
+void Player_Main::GoreCrossEnd(const StateInfo _Info)
+{
+	AttackEnd();
+}
+
 void Player_Main::HitStart(const StateInfo _Info)
 {
 	AvatarManager_.ChangeMotion(PlayerAnimations::Hit);

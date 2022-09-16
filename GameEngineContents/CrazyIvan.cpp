@@ -31,7 +31,7 @@ CrazyIvan::CrazyIvan()
 
 	HitEffectMovePos_ = { 0,-20,0 }; //Hit파티클이 생기는 위치
 
-	Attack_1_Pos_ = { 40.0f,0.0f,-500.0f };
+	Attack_1_Pos_ = { 40.0f,-30.0f,-500.0f };
 	Attack_1_Scale_ = { 120.0f,50.0f,1.0f };
 	ShadowPos_ = { -10.f,-28.f,500.f,1.f };
 	BotPos_ = { 0,-58.f,0 };
@@ -44,13 +44,13 @@ CrazyIvan::~CrazyIvan()
 void CrazyIvan::Start()
 {
 	InitMonster();
-	StartDebug();
+	//StartDebug();
 }
 
 void CrazyIvan::Update(float _DeltaTime)
 {
 	UpdateMonster(_DeltaTime);
-	UpdateDebug();
+	//UpdateDebug();
 }
 
 void CrazyIvan::End()

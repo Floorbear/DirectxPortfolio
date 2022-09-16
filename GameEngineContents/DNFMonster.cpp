@@ -470,7 +470,7 @@ void DNFMonster::DownUpdate(float _DeltaTime, const StateInfo _Info)
 		GetTransform().SetWorldPosition(float4(GetTransform().GetWorldPosition().x, GroundYPos_, GroundYPos_));
 		ShadowUpdate();
 		//이전에 받은 공격 데이터 초기화
-		PrevHitData_ = {};
+		//PrevHitData_ = {};
 		Down_Timer_ -= _DeltaTime * (1.f + AirborneTime_ * 0.1f);
 		OnAir_ = false;
 		Force_.OffGravity();
@@ -551,7 +551,7 @@ bool DNFMonster::CanHitAttack1()
 	if (AttackRangeCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::PlayerHit, CollisionType::CT_OBB2D)
 		== true && Attack_1_Timer_.IsTimerOn() == false)
 	{
-		if (IsZPosHit(static_cast<int>(Player_->GetTransform().GetWorldPosition().y) + BotPos_.y) == true)
+		if (IsZPosHit(static_cast<int>(Player_->GetTransform().GetWorldPosition().y + BotPos_.y)) == true)
 		{
 			return true;
 		}

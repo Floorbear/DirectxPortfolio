@@ -43,6 +43,9 @@
     <Filter Include="Monster">
       <UniqueIdentifier>{d6649308-f3a2-4e66-9380-dd073a6a7f1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Player\Skill">
+      <UniqueIdentifier>{ca517adc-047c-40e0-b462-7b5a6a67e218}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ContentsCore.h">
@@ -157,6 +160,9 @@
     <ClInclude Include="DNFTransition.h">
       <Filter>Monster</Filter>
     </ClInclude>
+    <ClInclude Include="GoreCross.h">
+      <Filter>Player\Skill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -264,6 +270,9 @@
     </ClCompile>
     <ClCompile Include="DNFTransition.cpp">
       <Filter>Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="GoreCross.cpp">
+      <Filter>Player\Skill</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

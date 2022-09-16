@@ -3,6 +3,8 @@
 #include "DNFMath.h"
 #include "AvatarManager.h"
 
+#include <GameEngineCore/GameEngineCollision.h>
+
 class Player_Main : public DNFRenderObject
 {
 	friend AvatarManager;
@@ -19,6 +21,25 @@ public:
 	int GetAttackCount()
 	{
 		return AttackCount_;
+	}
+
+	inline float GetStiffness() //스킬등 플레이어의 경직을 알아야하는놈 때문에
+	{
+		return Stiffness_;
+	}
+
+	inline AttackData& GetAttData()
+	{
+		return CurAttackData_;
+	}
+	inline GameEngineTransform& GetAttColTrans()
+	{
+		return AttackCol_->GetTransform();
+	}
+	inline void CurAttEnd()
+	{
+		IsReadyNextAttack_ = false;
+		IsAttack_End_ = true;
 	}
 	//아바타 관련 변수들
 	AvatarManager AvatarManager_;
@@ -156,6 +177,10 @@ private:
 	void UpperSlashUpdate(float _DeltaTime, const StateInfo _Info);
 	void UpperSlashEnd(const StateInfo _Info);
 
+	void GoreCrossStart(const StateInfo _Info);
+	void GoreCrossUpdate(float _DeltaTime, const StateInfo _Info);
+	void GoreCrossEnd(const StateInfo _Info);
+
 	void HitStart(const StateInfo _Info);
 	void HitUpdate(float _DeltaTime, const StateInfo _Info);
 
@@ -175,11 +200,14 @@ private:
 
 		float4 SuperArmorPos;
 		float4 SuperArmorScale;
+
+		float4 GoreCrossPos = { 50,-23,0 };
 		float SuperArmorMul;
 
 		//공격력
 		int UpperSlashAtt;
 		int AutoAttackAtt;
+		int GoreCrossAtt = 15000;
 
 		//마나, 체력
 		int Default_HP = 30000;

@@ -418,6 +418,9 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 	CurRenderer->CreateFrameAnimationFolder("Down" + Name, FrameAnimation_DESC(_AvatarFolderName, Down_Start, Down_End, 0.04f, false));
 	CurRenderer->CreateFrameAnimationFolder("Jump_Start" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Start, Jump_Motion_Middle, 0.06f, false));
 	CurRenderer->CreateFrameAnimationFolder("Jump_End" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Middle + 1, Jump_Motion_End, 0.06f, false));
+
+	CurRenderer->CreateFrameAnimationFolder("GoreCross_0" + Name, FrameAnimation_DESC(_AvatarFolderName, GoreCross_0_Start, GoreCross_0_End, GoreCrossIter, false));
+	CurRenderer->CreateFrameAnimationFolder("GoreCross_1" + Name, FrameAnimation_DESC(_AvatarFolderName, GoreCross_1_Start, GoreCross_1_End, GoreCrossIter, false));
 }
 
 std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
@@ -464,6 +467,16 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 	case PlayerAnimations::Down:
 		return "Down";
 		break;
+	case PlayerAnimations::GoreCross: //State ÀüÀÌ¿כ
+		return "GoreCross";
+		break;
+	case PlayerAnimations::GoreCross_0:
+		return "GoreCross_0";
+		break;
+	case PlayerAnimations::GoreCross_1:
+		return "GoreCross_1";
+		break;
+
 	default:
 		break;
 	}

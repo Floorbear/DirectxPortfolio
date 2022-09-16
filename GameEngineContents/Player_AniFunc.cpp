@@ -5,6 +5,8 @@
 #include "DNFContentsMinimal.h"
 #include "Player_Main.h"
 
+#include "GoreCross.h"
+
 bool Player_Main::CheckAttackKey()
 {
 	if (GameEngineInput::GetInst()->IsPress("X") == true)
@@ -63,6 +65,32 @@ bool Player_Main::CheckAttackKey()
 		return true;
 	}
 
+	if (GameEngineInput::GetInst()->IsPress("A") == true)
+	{
+		//아예 다른 공격
+		if (CurAttackData_.AttackName != "GoreCross")
+		{
+			NextAttackAni_ = PlayerAnimations::GoreCross;
+			return true;
+		}
+		//같은 공격의 선입력을 받으면 무시한다.
+		if (CurAttackData_.AttackName == "GoreCross")
+		{
+			IsReadyNextAttack_ = false;
+			return false;
+		}
+
+		//어퍼 슬래쉬를 사용할 MP가 없다면 False
+		if (CurMP_ < Value_.UpperSlash_MP)
+		{
+			IsReadyNextAttack_ = false;
+			return false;
+		}
+		IsReadyNextAttack_ = true;
+		NextAttackAni_ = PlayerAnimations::GoreCross_0;
+		return true;
+	}
+
 	return false;
 }
 
@@ -89,7 +117,7 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.RStiffness = 0.11f;
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.AttCount++;
-				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y) + BotPos_.y;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
 				CurAttackData_.AttEffect = Effect::SlashSHori;
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_0_Start + 7)
@@ -120,7 +148,7 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.XForce = 140.0f;
 				CurAttackData_.Stiffness = 0.15f;
 				CurAttackData_.RStiffness = 0.11f;
-				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y) + BotPos_.y;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
 				CurAttackData_.AttCount++;
 				Force_.ForceX_ = 70.0f;
 				CurAttackData_.AttEffect = Effect::SlashSHori;
@@ -151,7 +179,7 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.XForce = 140.0f;
 				CurAttackData_.YForce = 300.0f;
-				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y) + BotPos_.y;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
 				CurAttackData_.Stiffness = 0.15f;
 				CurAttackData_.RStiffness = 0.11f;
 				CurAttackData_.AttCount++;
@@ -186,14 +214,14 @@ void Player_Main::InitAniFunc()
 			{
 				SetAttackCol(Value_.UpperSlashPos, Value_.UpeerSlashScale);
 				//Set Attack
-				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.AttackName = "UpperSlash";
+				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.Att = CalAtt(Value_.UpperSlashAtt);
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.XForce = 140.0f;
 				CurAttackData_.Stiffness = 0.25f;
 				CurAttackData_.RStiffness = 0.21f;
-				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y) + BotPos_.y;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
 				CurAttackData_.YForce = 550.0f;
 				CurAttackData_.AttCount++;
 				CurAttackData_.AttEffect = Effect::SlashSRight;
@@ -213,6 +241,54 @@ void Player_Main::InitAniFunc()
 			{
 				IsReadyNextAttack_ = false;
 				IsAttack_End_ = true;
+			}
+		});
+
+	//GoreCross_0
+	MainRenderer_->AnimationBindFrame("GoreCross_0",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.Frames[_Desc.CurFrame - 1] == GoreCross_0_Start + 1)
+			{
+				SetAttackCol(Value_.UpperSlashPos, Value_.UpeerSlashScale);
+				CurAttackData_.AttackName = "GoreCross";
+				CurAttackData_.Type = AttackType::Below;
+				CurAttackData_.Att = CalAtt(Value_.GoreCrossAtt);
+				CurAttackData_.AttCount = 0;
+				CurAttackData_.XForce = 140.0f;
+				CurAttackData_.Stiffness = 0.19f;
+				CurAttackData_.RStiffness = 0.11f;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
+				//CurAttackData_.YForce = 550.0f;
+				CurAttackData_.AttCount++;
+				CurAttackData_.AttEffect = Effect::SlashSHori;
+
+				//고어크로스 액터 생성
+				GoreCross* New = GetLevel()->CreateActor<GoreCross>();
+				float4 SpawnPos = GetTransform().GetWorldPosition();
+				float4 MovePos = Value_.GoreCrossPos;
+				MovePos.x = GetDirX().x * MovePos.x;
+				New->GetTransform().SetWorldPosition(SpawnPos + MovePos);
+				New->GetTransform().SetLocalScale({ GetDirX().x,1,1 });
+			}
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == GoreCross_0_End)
+			{
+				AvatarManager_.ChangeMotion(PlayerAnimations::GoreCross_1);
+			}
+		});
+	//GoreCross_1
+	MainRenderer_->AnimationBindFrame("GoreCross_1",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.Frames[_Desc.CurFrame - 1] == GoreCross_1_Start + 1)
+			{
+				CurAttackData_.Att = CalAtt(Value_.GoreCrossAtt);
+				CurAttackData_.AttCount++;
+				CurAttackData_.AttEffect = Effect::SlashSRight;
+				CurAttackData_.XForce = 70.0f;
+			}
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == GoreCross_1_End)
+			{
 			}
 		});
 }

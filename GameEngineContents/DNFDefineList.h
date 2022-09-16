@@ -28,6 +28,12 @@
 #define Down_Start 100
 #define Down_End 103
 
+#define GoreCrossIter 0.037f //0.027
+#define GoreCross_0_Start 10
+#define GoreCross_0_End 20
+#define GoreCross_1_Start 199
+#define GoreCross_1_End 203
+
 //·ç°¡·ç
 #define Lugaru_Attack_1_Start 0
 #define Lugaru_Attack_1_End 5

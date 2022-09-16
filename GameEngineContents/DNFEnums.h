@@ -47,5 +47,8 @@ enum class PlayerAnimations
 	Jump_Start,
 	Jump_End,
 	UpperSlash,
-	Hit
+	Hit,
+	GoreCross,
+	GoreCross_0,
+	GoreCross_1
 };

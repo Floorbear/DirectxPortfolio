@@ -13,18 +13,17 @@
 
 #pragma comment(lib, "GameEngineBase.lib")
 
-ContentsCore::ContentsCore() 
+ContentsCore::ContentsCore()
 	: GameEngineCore()
 {
 }
 
-ContentsCore::~ContentsCore() 
+ContentsCore::~ContentsCore()
 {
 }
 
 void ContentsCore::Start()
 {
-
 	{
 		//GameEngineDirectory Dir;
 		//Dir.MoveParentToExitsChildDirectory("ConstantResources");
@@ -48,22 +47,18 @@ void ContentsCore::Start()
 	GameEngineInput::GetInst()->CreateKey("5", 0x35);
 	GameEngineInput::GetInst()->CreateKey("6", 0x36);
 
-
-
 	GameEngineInput::GetInst()->CreateKey("Z", 'Z');
 	GameEngineInput::GetInst()->CreateKey("X", 'X');
 	GameEngineInput::GetInst()->CreateKey("C", 'C');
+	GameEngineInput::GetInst()->CreateKey("A", 'A');
 	GameEngineInput::GetInst()->CreateKey("Q", 'Q');
 	GameEngineInput::GetInst()->CreateKey("W", 'W');
 	GameEngineInput::GetInst()->CreateKey("E", 'E');
-
-
 
 	GameEngineInput::GetInst()->CreateKey("Left", VK_LEFT);
 	GameEngineInput::GetInst()->CreateKey("Right", VK_RIGHT);
 	GameEngineInput::GetInst()->CreateKey("Up", VK_UP);
 	GameEngineInput::GetInst()->CreateKey("Down", VK_DOWN);
-
 
 	//노말 텍스처 로드
 	{
@@ -113,7 +108,6 @@ void ContentsCore::Start()
 		}
 	}
 
-
 	//Dir.Move("BlackSet");
 	//GameEngineFolderTexture::Load(Dir.GetFullPath());
 
@@ -135,14 +129,13 @@ void ContentsCore::Start()
 			GameEngineShader::AutoCompile(Shaders[i].GetFullPath());
 		}
 	}
-	
+
 	//랜파생성
 	{
 		GameEngineRenderingPipeLine* NewPipe = GameEngineRenderingPipeLine::Create("Gauge");
 		NewPipe->SetVertexShader("Gauge.hlsl");
 		NewPipe->SetPixelShader("Gauge.hlsl");
 	}
-
 
 	//CreateLevel<SeriaRoom>("SeriaRoom");
 	//CreateLevel<Elvenguard>("Elvenguard");
@@ -154,17 +147,13 @@ void ContentsCore::Start()
 	//CreateLevel<State1>("Title");
 	ChangeLevel("Vilmark_0");
 
-
-
 	GameEngineGUI::CreateGUIWindow<GameEngineStatusWindow>("EngineStatus", nullptr);
 	GameEngineGUI::CreateGUIWindow<DNFDebugGUI>("DNFDebug", nullptr);
 	GameEngineGUI::CreateGUIWindow<DNFAvatarGUI>("DNFAvatar", nullptr);
-
 }
 
 void ContentsCore::Update(float _DeltaTime)
 {
-	
 }
 
 void ContentsCore::End()
