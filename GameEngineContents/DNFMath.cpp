@@ -9,7 +9,7 @@ DNFMath::~DNFMath()
 {
 }
 
-Timer::Timer():
+Timer::Timer() :
 	Iter_Time_(),
 	Default_Time_(),
 	IsTimerOn_(false),
@@ -21,7 +21,7 @@ Timer::~Timer()
 {
 }
 
-Timer::Timer(float _Value):
+Timer::Timer(float _Value) :
 	Iter_Time_(_Value),
 	Default_Time_(_Value),
 	IsTimerOn_(false),
@@ -29,7 +29,7 @@ Timer::Timer(float _Value):
 {
 }
 
-Force::Force():
+Force::Force() :
 	Transform_(),
 	IsGravityOn_(false)
 {
@@ -61,7 +61,6 @@ void Force::Update(float _DeltaTime)
 			}
 		}
 
-
 		Transform_->SetLocalMove(GetDirX() * ForceX_ * _DeltaTime);
 	}
 
@@ -71,7 +70,4 @@ void Force::Update(float _DeltaTime)
 
 		Transform_->SetLocalMove(float4::UP * ForceY_ * _DeltaTime);
 	}
-
-
-
 }

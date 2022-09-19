@@ -79,6 +79,9 @@ void Player_Main::InitDefaultValue()
 	Value_.UpperSlashPos = float4(75, -45, -500);
 	Value_.UpeerSlashScale = float4(120, 100, 1);
 
+	Value_.GoreCrossSpawnPos = float4(75, -45, -500);
+	Value_.GoreCrossScale = float4(140, 120, 1);
+
 	Value_.SuperArmorPos = { 1.0f,1.0f };
 	Value_.SuperArmorScale = { 528.0f,513.0f };
 	Value_.SuperArmorMul = 1000.0f;
@@ -95,6 +98,9 @@ void Player_Main::InitDefaultValue()
 	CurMP_ = MaxMP_;
 
 	HitEffectMovePos_ = { 0,-30,0 };
+
+	MPConsumption_.insert(std::make_pair("UpperSlash", Value_.UpperSlash_MP));
+	MPConsumption_.insert(std::make_pair("GoreCross", Value_.GoreCross_MP));
 }
 
 Player_Main::~Player_Main()
@@ -486,20 +492,6 @@ int Player_Main::CalAtt(int _Value)
 	return static_cast<int>(CalDam);
 }
 
-int Player_Main::GetSkillMP_Consumption(PlayerAnimations _Skill)
-{
-	switch (_Skill)
-	{
-	case PlayerAnimations::UpperSlash:
-		return Value_.UpperSlash_MP;
-		break;
-	default:
-		MsgBoxAssert("잘못된 파라미터가 들어왔습니다");
-		break;
-	}
-	return 0;
-}
-
 Timer* Player_Main::CreateSkillCoolTime(std::string _Name, float Time_)
 {
 	Timer* NewCoolTime = new Timer(Time_);
@@ -509,7 +501,8 @@ Timer* Player_Main::CreateSkillCoolTime(std::string _Name, float Time_)
 
 void Player_Main::InitSkillCoolTime()
 {
-	CreateSkillCoolTime("UpperSlash", 1.5f);
+	CreateSkillCoolTime("UpperSlash", 2.0f);
+	CreateSkillCoolTime("GoreCross", 3.0f);
 }
 
 void Player_Main::CoolTimeUpdate(float _DeltaTime)

@@ -48,14 +48,20 @@ void DNFMonster::InitMonster()
 
 	InitAniNState();
 
+	//슈퍼아머 & 잔상 렌더러
+	SuperArmorRenderer_ = CreateComponent<GameEngineTextureRenderer>();
+	SuperArmorRenderer_->GetTransform().SetLocalScale(MainRenderer_->GetTransform().GetLocalScale());
+	SuperArmorRenderer_->Off();
+
 	//Force
 	Force_.SetTransfrom(&GetTransform());
-	Force_.FrictionX_ = 700.0f;
+	Force_.FrictionX_ = Value_.Default_Frction;
 	Force_.Gravity_ = 1000.0f;
 }
 
 void DNFMonster::UpdateMonster(float _DeltaTime)
 {
+	CopyRendererUpdate(_DeltaTime);
 	StiffnessUpdate(_DeltaTime);
 	if (Stiffness_ > 0.0f)
 	{
@@ -64,6 +70,12 @@ void DNFMonster::UpdateMonster(float _DeltaTime)
 	if (ID_ == 0)
 	{
 		MsgBoxAssert("ID가 0입니다. ID를 세팅해주세요");
+	}
+	if (IsSuperArmor_ == true && CurHP_ <= 0) //슈퍼아머상태에서는 Idle상태에서도 HP =0 이 될수있으므로 그것에 대한 예외처리
+	{
+		SuperArmorRenderer_->Off();
+		IsSuperArmor_ = false;
+		StateManager_.ChangeState("Die");
 	}
 	TimerCheck(_DeltaTime);
 	Force_.Update(_DeltaTime * (1 + (AirborneTime_ * AirborneTime_) * 0.01f));
@@ -216,10 +228,20 @@ void DNFMonster::IdleUpdate(float _DeltaTime, const StateInfo _Info)
 	if (IsIdleFirst_ == true)
 	{
 		IsIdleFirst_ = false;
+
 		StateManager_.ChangeState(Transition_["Idle"].Decide());
+		return;
 	}
 
 	//상태 판단
+
+	//자식 클래스에서 추가 패턴의 조건을 확인하고 조건을 만족하면, 그 상태로 이동한다.
+	std::string AdditionalPattern = CheckAdditionalPattern();
+	if (AdditionalPattern != "")
+	{
+		StateManager_.ChangeState(AdditionalPattern);
+		return;
+	}
 
 	//공격범위 내에 접근하면 바로 공격
 	if (CanHitAttack1() == true)
@@ -251,6 +273,14 @@ void DNFMonster::ChaseUpdate(float _DeltaTime, const StateInfo _Info)
 	float4 thisPos = GetTransform().GetWorldPosition();
 
 	float length = DNFMath::Length(PlayerPos, thisPos);
+
+	//자식 클래스에서 추가 패턴의 조건을 확인하고 조건을 만족하면, 그 상태로 이동한다.
+	std::string AdditionalPattern = CheckAdditionalPattern();
+	if (AdditionalPattern != "")
+	{
+		StateManager_.ChangeState(AdditionalPattern);
+		return;
+	}
 
 	//공격범위 내에 접근하면 바로 공격
 	if (CanHitAttack1() == true)
@@ -288,7 +318,7 @@ void DNFMonster::ChaseUpdate(float _DeltaTime, const StateInfo _Info)
 	{
 		GetTransform().PixLocalNegativeX();
 	}
-	GetTransform().SetWorldMove(MoveDir * 100.0f * _DeltaTime);
+	GetTransform().SetWorldMove(MoveDir * Value_.Speed * _DeltaTime);
 }
 
 void DNFMonster::Attack_1_Start(const StateInfo _Info)
@@ -353,6 +383,14 @@ void DNFMonster::BackUpdate(float _DeltaTime, const StateInfo _Info)
 	}
 
 	//상태 판단
+	//
+	// 	//자식 클래스에서 추가 패턴의 조건을 확인하고 조건을 만족하면, 그 상태로 이동한다.
+	std::string AdditionalPattern = CheckAdditionalPattern();
+	if (AdditionalPattern != "")
+	{
+		StateManager_.ChangeState(AdditionalPattern);
+		return;
+	}
 	//공격범위 내에 접근하면 바로 공격
 	if (CanHitAttack1() == true)
 	{
@@ -369,7 +407,7 @@ void DNFMonster::BackUpdate(float _DeltaTime, const StateInfo _Info)
 		StateManager_.ChangeState(Transition_["Back"].Decide());
 	}
 
-	GetTransform().SetWorldMove(BackMoveDir_ * 100.0f * _DeltaTime);
+	GetTransform().SetWorldMove(BackMoveDir_ * Value_.Speed * _DeltaTime);
 }
 
 void DNFMonster::HitStart(const StateInfo _Info)
@@ -413,6 +451,11 @@ void DNFMonster::AirborneStart(const StateInfo _Info)
 	FlipX(-Player_->GetDirX());
 	Force_.ForceX_ += -PrevHitData_.XForce;
 
+	StartYForce();
+}
+
+void DNFMonster::StartYForce()
+{
 	GetTransform().SetLocalMove(float4(0, Force_.ForceY_ * GameEngineTime::GetDeltaTime()));
 	Force_.OnGravity();
 	OnAir_ = true;
@@ -589,6 +632,17 @@ void DNFMonster::TimerCheck(float _DeltaTime)
 	{
 		Attack_1_Timer_ -= _DeltaTime;
 	}
+
+	if (SuperArmorTimer_.IsTimerOn() == true)
+	{
+		SuperArmorTimer_.Update(_DeltaTime);
+	}
+	else
+	{
+		SuperArmorRenderer_->Off();
+
+		IsSuperArmor_ = false;
+	}
 }
 
 void DNFMonster::InitDefaultValue()
@@ -690,4 +744,74 @@ void DNFMonster::InitTransition()
 		Back.AddValue("Back", -1);
 		Transition_.insert(std::make_pair("Back", Back));
 	}
+}
+
+void DNFMonster::StartSuperArmor(float _SuperArmorTime)
+{
+	//Clear 해야함
+	SuperArmorRenderer_->Off();
+
+	//슈퍼아머 Z Set & On
+	SuperArmorRenderer_->On();
+	float4 SetPos = SuperArmorRenderer_->GetTransform().GetLocalPosition();
+	SetPos.z = SuperArmorRenderer_->GetTransform().GetLocalPosition().z + 20;
+	SuperArmorRenderer_->GetTransform().SetLocalPosition(SetPos);
+
+	//스케일 Set
+	SuperArmorScale_ = Value_.StartSuperArmorScale;
+	SuperArmorRenderer_->GetTransform().SetLocalScale({ SuperArmorScale_ });
+	SuperArmorRenderer_->SetTexture(MainRenderer_->GetCurTexture());
+
+	SuperArmorRenderer_->GetPixelData().MulColor = float4(99999.f, 0, 0, 0.6f);
+
+	IsSuperArmor_ = true;
+	SuperArmorTimer_.StartTimer(_SuperArmorTime);
+}
+
+void DNFMonster::CopyRendererUpdate(float _DeltaTime)
+{
+	//크기 커졌다가 작아지는 것
+	if (SuperArmorScale_.x > Value_.SuperArmorScale.x)
+	{
+		SuperArmorScale_.x -= _DeltaTime * 100.f;
+	}
+	else
+	{
+		SuperArmorScale_.x = Value_.SuperArmorScale.x;
+	}
+	if (SuperArmorScale_.y > Value_.SuperArmorScale.y)
+	{
+		SuperArmorScale_.y -= _DeltaTime * 100.f;
+	}
+	else
+	{
+		SuperArmorScale_.y = Value_.SuperArmorScale.y;
+	}
+	SuperArmorRenderer_->SetTexture(MainRenderer_->GetCurTexture());
+	SuperArmorRenderer_->GetTransform().SetLocalScale(SuperArmorScale_);
+
+	//색깔
+	if (SuperArmorMulTime_ < 5.0f)
+	{
+		SuperArmorMulTime_ += _DeltaTime;
+		SuperArmorRenderer_->GetPixelData().MulColor = float4(0, 0, 0, 0.0f);
+		SuperArmorRenderer_->GetPixelData().PlusColor = float4(1, SuperArmorMulTime_ / 5.0f, 0, 1.f);
+	}
+	else if (SuperArmorMulTime_ >= 5.0 && SuperArmorMulTime_ < 10.0)
+	{
+		SuperArmorMulTime_ += _DeltaTime;
+		SuperArmorRenderer_->GetPixelData().MulColor = float4(0, 0, 0, 0.0f);
+		SuperArmorRenderer_->GetPixelData().PlusColor = float4(1, 1 - (SuperArmorMulTime_ - 5.0f) / 5, 0, 1.f);
+	}
+	else
+	{
+		SuperArmorMulTime_ = 0.0f;
+	}
+
+	//Pos
+	float4 SetPos;
+	SetPos.x = Value_.SuperArmorPos.x;
+	SetPos.y = Value_.SuperArmorPos.y;
+	SetPos.z = 20;
+	SuperArmorRenderer_->GetTransform().SetLocalPosition(SetPos);
 }

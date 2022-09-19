@@ -45,6 +45,9 @@ void CrazyIvan::Start()
 {
 	InitMonster();
 	//StartDebug();
+	StartSuperArmor(9999999.0f);
+	DNFDebugGUI::AddMutableValue("Sclae", &Value_.SuperArmorScale);
+	DNFDebugGUI::AddMutableValue("Pos", &Value_.SuperArmorPos);
 }
 
 void CrazyIvan::Update(float _DeltaTime)
@@ -84,7 +87,7 @@ void CrazyIvan::CreateMonsterAniFunc()
 				CurAttackData_.RStiffness = 0.11f;
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.AttCount++;
-				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y) + BotPos_.y;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
 				CurAttackData_.AttEffect = Effect::SlashSHori;
 				Force_.ForceX_ = 70.0f;
 				AttackCol_->On();

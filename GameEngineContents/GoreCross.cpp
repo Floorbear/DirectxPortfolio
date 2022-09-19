@@ -153,7 +153,7 @@ void GoreCross::Update(float _DeltaTime)
 		MoveTimer_.Update(_DeltaTime);
 		GetTransform().SetLocalMove(float4::RIGHT * GetDirX() * Speed_ * _DeltaTime);
 		//도중에 공격 딱 한번 더하는거 추가
-		if (*MoveTimer_.GetIterTime() < 0.02f && IsAttCountPlus_ == false)
+		if (*MoveTimer_.GetIterTime() < 0.08f && IsAttCountPlus_ == false)
 		{
 			Player_Main* Player = DNFGlobalValue::CurrentLevel->GetPlayer();
 			Player->GetAttData().AttCount++;

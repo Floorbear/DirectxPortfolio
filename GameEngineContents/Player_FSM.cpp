@@ -229,6 +229,10 @@ void Player_Main::AutoAttackEnd(const StateInfo _Info)
 void Player_Main::UpperSlashStart(const StateInfo _Info)
 {
 	AvatarManager_.ChangeMotion(PlayerAnimations::UpperSlash);
+	//CoolTime Set
+	SkillCoolTime_["UpperSlash"]->StartTimer();
+	//슈퍼아머 set
+	StartSuperArmor(0.7f);
 	//마나 소모
 	CurMP_ -= Value_.UpperSlash_MP;
 }
@@ -267,8 +271,8 @@ void Player_Main::UpperSlashEnd(const StateInfo _Info)
 void Player_Main::GoreCrossStart(const StateInfo _Info)
 {
 	AvatarManager_.ChangeMotion(PlayerAnimations::GoreCross_0);
-	//마나 소모
-	//CurMP_ -= Value_.UpperSlash_MP;
+	SkillCoolTime_["GoreCross"]->StartTimer();
+	CurMP_ -= Value_.GoreCross_MP;
 }
 
 void Player_Main::GoreCrossUpdate(float _DeltaTime, const StateInfo _Info)

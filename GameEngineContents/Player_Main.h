@@ -69,6 +69,8 @@ private:
 	// 다음 공격의 애니메이션을 Enum으로 알아오고, 다음 공격이 있다는 bool을 true로 변환, 그 결과를 bool로 return
 	bool CheckAttackKey();
 
+	bool CheckCanUsingSkill(std::string _SkillName, PlayerAnimations _ChangeStateEnum);
+
 	//Hit관련
 	Timer Hit_Timer_;
 
@@ -80,7 +82,7 @@ public:
 		return SkillCoolTime_;
 	}
 private:
-	Timer* CreateSkillCoolTime(std::string _Name, float Time_); //새로운 스킬쿨타임을 동적으로 생성한다.
+	Timer* CreateSkillCoolTime(std::string _Name, float Time_); //새로운 스킬쿨타임을 새로 생성한다.
 	void InitSkillCoolTime(); //여러 스킬쿨타임들을 초기화 한다.
 	void CoolTimeUpdate(float _DeltaTime); //스킬 쿨타임을 업데이트한다.
 
@@ -98,7 +100,7 @@ private:
 	//마나
 	int CurMP_;
 	int MaxMP_;
-	int GetSkillMP_Consumption(PlayerAnimations _Skill);
+	std::map<std::string, int> MPConsumption_;
 public:
 	inline int GetMaxMP()
 	{
@@ -197,11 +199,13 @@ private:
 		float4 AutoAttackScale;
 		float4 UpperSlashPos;
 		float4 UpeerSlashScale;
+		float4 GoreCrossPos;
+		float4 GoreCrossScale;
 
 		float4 SuperArmorPos;
 		float4 SuperArmorScale;
 
-		float4 GoreCrossPos = { 50,-23,0 };
+		float4 GoreCrossSpawnPos = { 50,-23,0 };
 		float SuperArmorMul;
 
 		//공격력
@@ -214,7 +218,8 @@ private:
 		int Default_MP = 15000;
 
 		//마나 소비량
-		int UpperSlash_MP = 500;
+		int UpperSlash_MP = 250;
+		int GoreCross_MP = 500;
 
 		float Down_Time = 1.3f;
 		float Down_God_Time = 0.48f;

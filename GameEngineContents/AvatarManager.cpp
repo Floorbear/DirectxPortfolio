@@ -25,7 +25,8 @@ AvatarManager::AvatarManager() :
 	BeltRenderer_d_(),
 	ShoesRenderer_a_(),
 	ShoesRenderer_b_(),
-	ShadowRenderer_()
+	ShadowRenderer_(),
+	SkinRenderer_()
 {
 }
 

@@ -34,6 +34,7 @@ private:
 	std::vector<GaugeRenderer*> SkillIcon_; //13: 어퍼 슬래쉬
 	std::vector<GameEngineUIRenderer*> ShortCut_;
 	std::list<GaugeRenderer*> FlashSkillIcon_; //쿨타임이 다 돌면 번쩍일 녀석들을 보관
+	std::map<std::string, int> StringToInt_;
 
 	//HP바 관련
 	int PrevHp_;

@@ -175,7 +175,7 @@ void MonsterHP::HPBarUpdate(float DeltaTime_)
 
 	//HP바 업데이트
 	int leftHP = Data_[CurID_].CurHP;
-	int PrevHP = PrevHP_[CurID_];
+	int PrevHP = static_cast<int>(PrevHP_[CurID_]);
 	int HPBarCount = 0;
 	for (; leftHP > 0;
 		leftHP -= Data_[CurID_].PerHP,

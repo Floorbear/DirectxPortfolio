@@ -38,6 +38,9 @@ protected:
 	virtual void CreateMonsterAni() {};
 	virtual void CreateMonsterAniFunc() {};
 
+	//추가 패턴
+	virtual std::string CheckAdditionalPattern() { return ""; }
+
 	void InitCol();
 
 	void IdleStart(const StateInfo _Info);
@@ -57,6 +60,7 @@ protected:
 	void HitUpdate(float _DeltaTime, const StateInfo _Info);
 
 	void AirborneStart(const StateInfo _Info);
+	void StartYForce();
 	void AirborneUpdate(float _DeltaTime, const StateInfo _Info);
 
 	void DownStart(const StateInfo _Info);
@@ -66,6 +70,13 @@ protected:
 	void DieUpdate(float _DeltaTime, const StateInfo _Info);
 
 	void ChangeHitColTrans(std::string _State);
+
+	//슈퍼아머 관련
+	GameEngineTextureRenderer* SuperArmorRenderer_;
+	float4 SuperArmorScale_;
+	float SuperArmorMulTime_;
+	void StartSuperArmor(float _SuperArmorTime);
+	void CopyRendererUpdate(float _DeltaTime);
 
 	//Idle 관련 변수들
 	bool IsIdleFirst_;
@@ -121,12 +132,23 @@ protected:
 		float Down_Time;
 		float Down_God_Time;
 
+		float Default_Frction = 700.0f;
+
 		int Attack_1_Att = 1200;
 
 		MonsterType Type;
 
 		std::string DieParticleName;
 		float4 DieParticleSize;
+
+		//스피드
+		float Speed = 135.0f;
+
+		//슈퍼아머
+		float4 SuperArmorPos = { 0.0f,0.0f };
+		float4 SuperArmorScale = { 216.0f,206.0f }; //슈퍼아머 상태
+		float4 StartSuperArmorScale = { 300.f,300.f };
+		float SuperArmorMul = 1000.0f;
 	};
 	DefaultValue Value_;
 

@@ -37,6 +37,12 @@
 //·ç°¡·ç
 #define Lugaru_Attack_1_Start 0
 #define Lugaru_Attack_1_End 5
+
+#define Lugaru_Attack_2_Wait_Start 6
+#define Lugaru_Attack_2_Wait_End 6
+#define Lugaru_Attack_2_Start 7
+#define Lugaru_Attack_2_End 11
+
 #define Lugaru_Idle_Start 33
 #define Lugaru_Idle_End 36
 #define Lugaru_Move_Start 21

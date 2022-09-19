@@ -118,6 +118,7 @@ private:
 	void Reset()
 	{
 		Iter_Time_ = Default_Time_;
+		IsSet = false;
 	}
 
 	void SetDefaultTime(float _Value)

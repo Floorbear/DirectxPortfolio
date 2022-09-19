@@ -8,6 +8,9 @@
 #include "GaugeRenderer.h"
 #include <GameEngineCore/GameEngineUIRenderer.h>
 
+#define UpperSlash_Icon 13
+#define GoreCross_Icon 7
+
 DNFHUD::DNFHUD() :
 	PrevHp_(-1),
 	LerpHp_(),
@@ -20,6 +23,9 @@ DNFHUD::DNFHUD() :
 {
 	SkillIconBackground_.reserve(14);
 	ShortCut_.reserve(14);
+
+	StringToInt_.insert(std::make_pair("UpperSlash", UpperSlash_Icon));
+	StringToInt_.insert(std::make_pair("GoreCross", GoreCross_Icon));
 }
 
 DNFHUD::~DNFHUD()
@@ -63,7 +69,7 @@ void DNFHUD::Start()
 	Value_.SkillIconPos = { -100,-308 };
 	SkillRendererInit();
 
-	//스킬 숏컷 백그라운드
+	//빨간 글씨 백그라운드
 	Value_.ShortCutPos = { -100,-308 };
 	for (size_t i = 0; i < 14; i++)
 	{
@@ -193,9 +199,13 @@ void DNFHUD::SkillRendererInit()
 		SkillIcon_.push_back(NewSkillIcon);
 	}
 
-	SkillIcon_[13]->On();
-	SkillIcon_[13]->SetTexture("UpperSlash.png");
-	SkillIcon_[13]->GetTransform().SetLocalScale({ 28,28 });
+	SkillIcon_[UpperSlash_Icon]->On();
+	SkillIcon_[UpperSlash_Icon]->SetTexture("UpperSlash.png");
+	SkillIcon_[UpperSlash_Icon]->GetTransform().SetLocalScale({ 28,28 });
+
+	SkillIcon_[GoreCross_Icon]->On();
+	SkillIcon_[GoreCross_Icon]->SetTexture("GoreCross.png");
+	SkillIcon_[GoreCross_Icon]->GetTransform().SetLocalScale({ 28,28 });
 }
 
 void DNFHUD::SkillIconUpdate(float _DeltaTime)
@@ -206,25 +216,47 @@ void DNFHUD::SkillIconUpdate(float _DeltaTime)
 
 		//어퍼슬래쉬
 		std::map<std::string, Timer*> CoolTimeMap = Player->GetSkillCoolTimeList();
-		if (CoolTimeMap["UpperSlash"]->IsTimerOn() == true) //쿨타임 도는 것을 보여준다.
+		for (auto i : CoolTimeMap)
 		{
-			SkillIcon_[13]->SetTexture("UpperSlashCool.png");
-			float MaxTime = CoolTimeMap["UpperSlash"]->Default_Time_;
-			float CurTime = *CoolTimeMap["UpperSlash"]->GetIterTime();
-			float ratio = CurTime / MaxTime;
-			float4 Black = { 0.f,0.f,0.f,1.0f };
-			SkillIcon_[13]->UpdateGauegeColor(ratio, Black);
-		}
-		else
-		{
-			if (CoolTimeMap["UpperSlash"]->IsSet == true) //쿨타임이 다 돌면 스킬아이콘이 번쩍이게 한다.
+			if (CoolTimeMap[i.first]->IsTimerOn() == true) //쿨타임 도는 것을 보여준다.
 			{
-				SkillIcon_[13]->GetColorData().PlusColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
-				FlashSkillIcon_.push_back(SkillIcon_[13]);
-				CoolTimeMap["UpperSlash"]->IsSet = false;
+				SkillIcon_[StringToInt_[i.first]]->SetTexture(i.first + "Cool.png");
+				float MaxTime = CoolTimeMap[i.first]->Default_Time_;
+				float CurTime = *CoolTimeMap[i.first]->GetIterTime();
+				float ratio = CurTime / MaxTime;
+				float4 Black = { 0.f,0.f,0.f,1.0f };
+				SkillIcon_[StringToInt_[i.first]]->UpdateGauegeColor(ratio, Black);
 			}
-			SkillIcon_[13]->SetTexture("UpperSlash.png");
+			else
+			{
+				if (CoolTimeMap[i.first]->IsSet == true) //쿨타임이 다 돌면 스킬아이콘이 번쩍이게 한다.
+				{
+					SkillIcon_[StringToInt_[i.first]]->GetColorData().PlusColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+					FlashSkillIcon_.push_back(SkillIcon_[StringToInt_[i.first]]);
+					CoolTimeMap[i.first]->IsSet = false;
+				}
+				SkillIcon_[StringToInt_[i.first]]->SetTexture(i.first + ".png");
+			}
 		}
+		//if (CoolTimeMap["UpperSlash"]->IsTimerOn() == true) //쿨타임 도는 것을 보여준다.
+		//{
+		//	SkillIcon_[UpperSlash_Icon]->SetTexture("UpperSlashCool.png");
+		//	float MaxTime = CoolTimeMap["UpperSlash"]->Default_Time_;
+		//	float CurTime = *CoolTimeMap["UpperSlash"]->GetIterTime();
+		//	float ratio = CurTime / MaxTime;
+		//	float4 Black = { 0.f,0.f,0.f,1.0f };
+		//	SkillIcon_[UpperSlash_Icon]->UpdateGauegeColor(ratio, Black);
+		//}
+		//else
+		//{
+		//	if (CoolTimeMap["UpperSlash"]->IsSet == true) //쿨타임이 다 돌면 스킬아이콘이 번쩍이게 한다.
+		//	{
+		//		SkillIcon_[UpperSlash_Icon]->GetColorData().PlusColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+		//		FlashSkillIcon_.push_back(SkillIcon_[13]);
+		//		CoolTimeMap["UpperSlash"]->IsSet = false;
+		//	}
+		//	SkillIcon_[UpperSlash_Icon]->SetTexture("UpperSlash.png");
+		//}
 
 		std::list<GaugeRenderer*>::iterator StartIter = FlashSkillIcon_.begin();
 		for (; StartIter != FlashSkillIcon_.end(); StartIter++)

@@ -40,58 +40,43 @@ bool Player_Main::CheckAttackKey()
 
 	if (GameEngineInput::GetInst()->IsPress("Z") == true)
 	{
-		//같은 공격의 선입력을 받으면 무시한다.
-		if (StateManager_.GetCurStateStateName() == "UpperSlash")
-		{
-			IsReadyNextAttack_ = false;
-			return false;
-		}
-
-		//어퍼슬래쉬를 사용해서 쿨타임이 돌고있는 상태면 무시한다.
-		if (SkillCoolTime_["UpperSlash"]->IsTimerOn() == true)
-		{
-			IsReadyNextAttack_ = false;
-			return false;
-		}
-
-		//어퍼 슬래쉬를 사용할 MP가 없다면 False
-		if (CurMP_ < Value_.UpperSlash_MP)
-		{
-			IsReadyNextAttack_ = false;
-			return false;
-		}
-		IsReadyNextAttack_ = true;
-		NextAttackAni_ = PlayerAnimations::UpperSlash;
-		return true;
+		return CheckCanUsingSkill("UpperSlash", PlayerAnimations::UpperSlash);
 	}
 
 	if (GameEngineInput::GetInst()->IsPress("A") == true)
 	{
-		//아예 다른 공격
-		if (CurAttackData_.AttackName != "GoreCross")
-		{
-			NextAttackAni_ = PlayerAnimations::GoreCross;
-			return true;
-		}
-		//같은 공격의 선입력을 받으면 무시한다.
-		if (CurAttackData_.AttackName == "GoreCross")
-		{
-			IsReadyNextAttack_ = false;
-			return false;
-		}
-
-		//어퍼 슬래쉬를 사용할 MP가 없다면 False
-		if (CurMP_ < Value_.UpperSlash_MP)
-		{
-			IsReadyNextAttack_ = false;
-			return false;
-		}
-		IsReadyNextAttack_ = true;
-		NextAttackAni_ = PlayerAnimations::GoreCross_0;
-		return true;
+		return CheckCanUsingSkill("GoreCross", PlayerAnimations::GoreCross);
 	}
 
 	return false;
+}
+
+bool Player_Main::CheckCanUsingSkill(std::string _SkillName, PlayerAnimations _ChangeStateEnum)
+{
+	//같은 공격의 선입력을 받으면 무시한다.
+	if (StateManager_.GetCurStateStateName() == _SkillName)
+	{
+		IsReadyNextAttack_ = false;
+		return false;
+	}
+
+	//어퍼슬래쉬를 사용해서 쿨타임이 돌고있는 상태면 무시한다.
+	if (SkillCoolTime_[_SkillName]->IsTimerOn() == true)
+	{
+		IsReadyNextAttack_ = false;
+		return false;
+	}
+
+	//어퍼 슬래쉬를 사용할 MP가 없다면 False
+	if (CurMP_ < MPConsumption_[_SkillName])
+	{
+		IsReadyNextAttack_ = false;
+		return false;
+	}
+
+	IsReadyNextAttack_ = true;
+	NextAttackAni_ = _ChangeStateEnum;
+	return true;
 }
 
 void Player_Main::InitAniFunc()
@@ -228,10 +213,6 @@ void Player_Main::InitAniFunc()
 
 				//내가 앞으로 가는 정도
 				Force_.ForceX_ = 70.0f;
-				//CoolTime Set
-				SkillCoolTime_["UpperSlash"]->StartTimer();
-				//슈퍼아머 set
-				StartSuperArmor(0.8f);
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 7)
 			{
@@ -250,7 +231,7 @@ void Player_Main::InitAniFunc()
 		{
 			if (_Desc.Frames[_Desc.CurFrame - 1] == GoreCross_0_Start + 1)
 			{
-				SetAttackCol(Value_.UpperSlashPos, Value_.UpeerSlashScale);
+				SetAttackCol(Value_.GoreCrossSpawnPos, Value_.GoreCrossScale);
 				CurAttackData_.AttackName = "GoreCross";
 				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.Att = CalAtt(Value_.GoreCrossAtt);
@@ -266,17 +247,20 @@ void Player_Main::InitAniFunc()
 				//고어크로스 액터 생성
 				GoreCross* New = GetLevel()->CreateActor<GoreCross>();
 				float4 SpawnPos = GetTransform().GetWorldPosition();
-				float4 MovePos = Value_.GoreCrossPos;
+				float4 MovePos = Value_.GoreCrossSpawnPos;
 				MovePos.x = GetDirX().x * MovePos.x;
 				New->GetTransform().SetWorldPosition(SpawnPos + MovePos);
 				New->GetTransform().SetLocalScale({ GetDirX().x,1,1 });
 			}
-			else if (_Desc.Frames[_Desc.CurFrame - 1] == GoreCross_0_End)
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == GoreCross_0_End - 4)
 			{
 				CurAttackData_.Att = CalAtt(Value_.GoreCrossAtt);
 				CurAttackData_.AttCount++;
 				CurAttackData_.AttEffect = Effect::SlashSRight;
 				CurAttackData_.XForce = 70.0f;
+			}
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == GoreCross_0_End)
+			{
 				AvatarManager_.ChangeMotion(PlayerAnimations::GoreCross_1);
 			}
 		});
