@@ -41,6 +41,10 @@ DamageFont* DamageFont::SetDamageFont(int _Value, int _Type)
 			NewFont->SetFolderTextureToIndex("PlayerHitDamage", Digit);
 			IsPlayerHitFont_ = true;
 		}
+		else if (_Type == 3)
+		{
+			NewFont->SetFolderTextureToIndex("BleedingDamage", Digit);
+		}
 		else
 		{
 			MsgBoxAssert("Àß¸øµÈ Font Type");

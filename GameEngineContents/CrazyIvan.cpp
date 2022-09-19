@@ -46,8 +46,7 @@ void CrazyIvan::Start()
 	InitMonster();
 	//StartDebug();
 	StartSuperArmor(9999999.0f);
-	DNFDebugGUI::AddMutableValue("Sclae", &Value_.SuperArmorScale);
-	DNFDebugGUI::AddMutableValue("Pos", &Value_.SuperArmorPos);
+	Bleeding_Timer_.StartTimer(20.0f);
 }
 
 void CrazyIvan::Update(float _DeltaTime)

@@ -75,15 +75,15 @@ void Vilmark_0::DNFOnEvent()
 	DNFGlobalValue::CurrentMonsterHP = MonsterHP_;
 	MonsterHP_->Off();
 
-	//Bloodlugaru* Monster = CreateActor<Bloodlugaru>();
-	//Monster->ID_ = 1;
-	//Monster->GetTransform().SetWorldPosition({ 700,-400 });
+	Bloodlugaru* Monster = CreateActor<Bloodlugaru>();
+	Monster->ID_ = 1;
+	Monster->GetTransform().SetWorldPosition({ 700,-400 });
 
-	//Bloodlugaru* Monster2 = CreateActor<Bloodlugaru>();
-	//Monster2->ID_ = 2;
-	//Monster2->GetTransform().SetWorldPosition({ 800,-430 });
+	Bloodlugaru* Monster2 = CreateActor<Bloodlugaru>();
+	Monster2->ID_ = 2;
+	Monster2->GetTransform().SetWorldPosition({ 800,-430 });
 
 	CrazyIvan* Monster3 = CreateActor<CrazyIvan>();
 	Monster3->ID_ = 3;
-	Monster3->GetTransform().SetWorldPosition({ 600,-400 });//1000,-400
+	Monster3->GetTransform().SetWorldPosition({ 1000,-400 });//1000,-400
 }

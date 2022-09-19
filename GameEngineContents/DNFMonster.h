@@ -77,6 +77,8 @@ protected:
 	float SuperArmorMulTime_;
 	void StartSuperArmor(float _SuperArmorTime);
 	void CopyRendererUpdate(float _DeltaTime);
+	Timer SuperArmor_Hit_Timer_;
+	std::string PrevHitName_;
 
 	//Idle 관련 변수들
 	bool IsIdleFirst_;
@@ -107,6 +109,11 @@ protected:
 	//사망
 	float DieAlpha_;
 	bool IsDieEffect_;
+
+	//출혈상태
+	void UpdateBleeding(float _DeltaTime);
+	Timer Bleeding_Timer_;
+	float Bleed_Blink_Time_;
 
 	//DefaultVales
 	virtual void InitDefaultValue();

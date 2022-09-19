@@ -30,7 +30,11 @@ DNFMonster::DNFMonster() :
 	AttackCol_(),
 	ID_(0),
 	DieAlpha_(1.0f),
-	IsDieEffect_(false)
+	IsDieEffect_(false),
+	Bleeding_Timer_(),
+	Bleed_Blink_Time_(),
+	SuperArmor_Hit_Timer_(),
+	PrevHitName_("")
 {
 	InitDefaultValue();
 	InitTransition();
@@ -62,6 +66,7 @@ void DNFMonster::InitMonster()
 void DNFMonster::UpdateMonster(float _DeltaTime)
 {
 	CopyRendererUpdate(_DeltaTime);
+	UpdateBleeding(_DeltaTime);
 	StiffnessUpdate(_DeltaTime);
 	if (Stiffness_ > 0.0f)
 	{
@@ -76,6 +81,28 @@ void DNFMonster::UpdateMonster(float _DeltaTime)
 		SuperArmorRenderer_->Off();
 		IsSuperArmor_ = false;
 		StateManager_.ChangeState("Die");
+	}
+	if (IsSuperArmor_ == true)
+	{
+		if (PrevHitName_ != PrevHitData_.AttackName)
+		{
+			PrevHitName_ = PrevHitData_.AttackName;
+		}
+		else
+		{
+			if (SuperArmor_Hit_Timer_.IsTimerOn() == false)
+			{
+				SuperArmor_Hit_Timer_.StartTimer(1.0f);
+			}
+			if (SuperArmor_Hit_Timer_.IsTimerOn() == true)
+			{
+				SuperArmor_Hit_Timer_.Update(_DeltaTime);
+				if (SuperArmor_Hit_Timer_.IsTimerOn() == false)
+				{
+					PrevHitData_ = {};
+				}
+			}
+		}
 	}
 	TimerCheck(_DeltaTime);
 	Force_.Update(_DeltaTime * (1 + (AirborneTime_ * AirborneTime_) * 0.01f));
@@ -642,6 +669,43 @@ void DNFMonster::TimerCheck(float _DeltaTime)
 		SuperArmorRenderer_->Off();
 
 		IsSuperArmor_ = false;
+	}
+}
+
+void DNFMonster::UpdateBleeding(float _DeltaTime)
+{
+	if (Bleeding_Timer_.IsTimerOn() == true)
+	{
+		Bleeding_Timer_.Update(_DeltaTime);
+		Bleed_Blink_Time_ += _DeltaTime;
+
+		//»¡°³Á³´Ù ´ú »¡°³Á³´Ù ÇÏ´Â°Å
+		if (Bleed_Blink_Time_ < 0.5f)
+		{
+			float AlphaValue = GameEngineMath::LerpLimit(0.13f, 0.33f, Bleed_Blink_Time_ * 2.0f);
+			MainRenderer_->GetPixelData().PlusColor.r = AlphaValue;
+		}
+		else if (Bleed_Blink_Time_ >= 0.5f && Bleed_Blink_Time_ < 1.0f)
+		{
+			float AlphaValue = GameEngineMath::LerpLimit(0.33f, 0.13f, (Bleed_Blink_Time_ - 0.5f) * 2.0f);
+			MainRenderer_->GetPixelData().PlusColor.r = AlphaValue;
+		}
+		else
+		{
+			//Æ½
+			float Damage = static_cast<float>(MaxHP_) * 0.005f;
+			Damage = GameEngineRandom::MainRandom.RandomFloat(Damage * 0.7f, Damage * 1.3f);
+			int DamageI = static_cast<int>(Damage);
+			SetDamageFont(DamageI, GetTransform().GetWorldPosition() + DamageFontMovePos_, 3);
+			CalHP(-DamageI);
+			HPBarUpdate();
+
+			Bleed_Blink_Time_ = 0.0f;
+		}
+	}
+	else
+	{
+		MainRenderer_->GetPixelData().PlusColor.r = 0.0;
 	}
 }
 
