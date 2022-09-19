@@ -138,12 +138,11 @@ void Player_Main::Start()
 	Force_.FrictionX_ = 700.0f;
 	Force_.Gravity_ = 700.0f;
 	Force_.SetTransfrom(&GetTransform());
-
-	DNFDebugGUI::AddMutableValue("Pos", &Value_.GoreCrossPos);
 }
 
 void Player_Main::Update(float _DeltaTime)
 {
+	DNFDebugGUI::AddValue("State", StateManager_.GetCurStateStateName());
 	CoolTimeUpdate(_DeltaTime);
 	CopyRendererUpdate(_DeltaTime);
 	StiffnessUpdate(_DeltaTime);

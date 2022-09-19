@@ -8,7 +8,8 @@ GoreCross::GoreCross() :
 	IsEnd_(false),
 	Stiffness_(),
 	IsSlashEnd_(false),
-	IsAttCountPlus_(false)
+	IsAttCountPlus_(false),
+	IsCallPlayerEnd_(false)
 {
 }
 
@@ -152,7 +153,7 @@ void GoreCross::Update(float _DeltaTime)
 		MoveTimer_.Update(_DeltaTime);
 		GetTransform().SetLocalMove(float4::RIGHT * GetDirX() * Speed_ * _DeltaTime);
 		//도중에 공격 딱 한번 더하는거 추가
-		if (*MoveTimer_.GetIterTime() < 0.04f && IsAttCountPlus_ == false)
+		if (*MoveTimer_.GetIterTime() < 0.02f && IsAttCountPlus_ == false)
 		{
 			Player_Main* Player = DNFGlobalValue::CurrentLevel->GetPlayer();
 			Player->GetAttData().AttCount++;
@@ -183,7 +184,11 @@ void GoreCross::Update(float _DeltaTime)
 	//모든 이펙트가 끝난 후 후처리
 	if (IsEnd_ == true)
 	{
-		DNFGlobalValue::CurrentLevel->GetPlayer()->CurAttEnd();
+		if (IsCallPlayerEnd_ == false)
+		{
+			DNFGlobalValue::CurrentLevel->GetPlayer()->CurAttEnd();
+			IsCallPlayerEnd_ = true;
+		}
 		if (Renderer_["ObjFront"]->GetPixelData().MulColor.a > 0)
 		{
 			Renderer_["ObjFront"]->GetPixelData().MulColor.a -= _DeltaTime * 6.0f;

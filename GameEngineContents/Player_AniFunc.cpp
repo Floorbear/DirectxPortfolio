@@ -41,7 +41,7 @@ bool Player_Main::CheckAttackKey()
 	if (GameEngineInput::GetInst()->IsPress("Z") == true)
 	{
 		//같은 공격의 선입력을 받으면 무시한다.
-		if (CurAttackData_.AttackName == "UpperSlash")
+		if (StateManager_.GetCurStateStateName() == "UpperSlash")
 		{
 			IsReadyNextAttack_ = false;
 			return false;
@@ -273,6 +273,10 @@ void Player_Main::InitAniFunc()
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == GoreCross_0_End)
 			{
+				CurAttackData_.Att = CalAtt(Value_.GoreCrossAtt);
+				CurAttackData_.AttCount++;
+				CurAttackData_.AttEffect = Effect::SlashSRight;
+				CurAttackData_.XForce = 70.0f;
 				AvatarManager_.ChangeMotion(PlayerAnimations::GoreCross_1);
 			}
 		});
@@ -282,10 +286,6 @@ void Player_Main::InitAniFunc()
 		{
 			if (_Desc.Frames[_Desc.CurFrame - 1] == GoreCross_1_Start + 1)
 			{
-				CurAttackData_.Att = CalAtt(Value_.GoreCrossAtt);
-				CurAttackData_.AttCount++;
-				CurAttackData_.AttEffect = Effect::SlashSRight;
-				CurAttackData_.XForce = 70.0f;
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == GoreCross_1_End)
 			{

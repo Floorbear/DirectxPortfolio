@@ -238,11 +238,11 @@ void Player_Main::UpperSlashUpdate(float _DeltaTime, const StateInfo _Info)
 	//평소에는 False
 	if (IsAttack_End_ == true)
 	{
-		if (IsReadyNextAttack_ == true)
+		if (CheckAttackKey() == true)
 		{
-			AvatarManager_.ChangeMotion(NextAttackAni_);
 			IsAttack_End_ = false;
 			IsReadyNextAttack_ = false;
+			StateManager_.ChangeState(AvatarManager_.EnumToString(NextAttackAni_));
 			return;
 		}
 
@@ -276,11 +276,11 @@ void Player_Main::GoreCrossUpdate(float _DeltaTime, const StateInfo _Info)
 	//평소에는 False
 	if (IsAttack_End_ == true)
 	{
-		if (IsReadyNextAttack_ == true)
+		if (CheckAttackKey() == true)
 		{
-			AvatarManager_.ChangeMotion(NextAttackAni_);
 			IsAttack_End_ = false;
 			IsReadyNextAttack_ = false;
+			StateManager_.ChangeState(AvatarManager_.EnumToString(NextAttackAni_));
 			return;
 		}
 
