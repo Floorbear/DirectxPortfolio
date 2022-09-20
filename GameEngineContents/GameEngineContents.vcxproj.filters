@@ -46,6 +46,9 @@
     <Filter Include="Player\Skill">
       <UniqueIdentifier>{ca517adc-047c-40e0-b462-7b5a6a67e218}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Monster\Skill">
+      <UniqueIdentifier>{67b0b1b3-78cc-4a0b-b4ce-b423f31d2144}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ContentsCore.h">
@@ -163,6 +166,9 @@
     <ClInclude Include="GoreCross.h">
       <Filter>Player\Skill</Filter>
     </ClInclude>
+    <ClInclude Include="BoomEffect.h">
+      <Filter>Monster\Skill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -273,6 +279,9 @@
     </ClCompile>
     <ClCompile Include="GoreCross.cpp">
       <Filter>Player\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="BoomEffect.cpp">
+      <Filter>Monster\Skill</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

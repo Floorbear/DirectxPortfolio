@@ -34,7 +34,8 @@ DNFMonster::DNFMonster() :
 	Bleeding_Timer_(),
 	Bleed_Blink_Time_(),
 	SuperArmor_Hit_Timer_(),
-	PrevHitName_("")
+	PrevHitName_(""),
+	BleedingRenderer_()
 {
 	InitDefaultValue();
 	InitTransition();
@@ -51,6 +52,19 @@ void DNFMonster::InitMonster()
 	InitCol();
 
 	InitAniNState();
+
+	//출혈 렌더러
+	BleedingRenderer_ = CreateComponent<GameEngineTextureRenderer>();
+	BleedingRenderer_->CreateFrameAnimationFolder("Bleeding", FrameAnimation_DESC("Bleeding", 0.1f, false));
+	BleedingRenderer_->ChangeFrameAnimation("Bleeding");
+	BleedingRenderer_->SetScaleModeImage();
+	BleedingRenderer_->SetScaleRatio(Value_.BleedingScale.y);
+	BleedingRenderer_->Off();
+
+	BleedingRenderer_->AnimationBindEnd("Bleeding", [&](const FrameAnimation_DESC _Desc)
+		{
+			BleedingRenderer_->Off();
+		});
 
 	//슈퍼아머 & 잔상 렌더러
 	SuperArmorRenderer_ = CreateComponent<GameEngineTextureRenderer>();
@@ -564,6 +578,7 @@ void DNFMonster::DieStart(const StateInfo _Info)
 {
 	ChangeDNFAnimation("Die");
 	ShadowRenderer_->Off();
+	SuperArmorRenderer_->Off();
 	Force_.OffGravity();
 	Force_.ForceX_ = 0;
 	MainRenderer_->GetPixelData().PlusColor = { 1.0f,1.0f,1.0f,1.0f };
@@ -674,6 +689,10 @@ void DNFMonster::TimerCheck(float _DeltaTime)
 
 void DNFMonster::UpdateBleeding(float _DeltaTime)
 {
+	if (StateManager_.GetCurStateStateName() == "Die")
+	{
+		return;
+	}
 	if (Bleeding_Timer_.IsTimerOn() == true)
 	{
 		Bleeding_Timer_.Update(_DeltaTime);
@@ -693,12 +712,23 @@ void DNFMonster::UpdateBleeding(float _DeltaTime)
 		else
 		{
 			//틱
+
+			//데미지 뜨는거
 			float Damage = static_cast<float>(MaxHP_) * 0.005f;
 			Damage = GameEngineRandom::MainRandom.RandomFloat(Damage * 0.7f, Damage * 1.3f);
 			int DamageI = static_cast<int>(Damage);
 			SetDamageFont(DamageI, GetTransform().GetWorldPosition() + DamageFontMovePos_, 3);
 			CalHP(-DamageI);
 			HPBarUpdate();
+
+			//출혈 이펙트 리셋& ON
+			BleedingRenderer_->CurAnimationReset();
+			BleedingRenderer_->On();
+
+			float4 BleedingPos = Value_.BleedingPos;
+			BleedingPos.x = GetDirX().x * Value_.BleedingPos.x;
+			BleedingRenderer_->GetTransform().SetLocalPosition(BleedingPos);
+			BleedingRenderer_->GetTransform().SetLocalScale({ Value_.BleedingScale.x,Value_.BleedingScale.y,Value_.BleedingScale.z });
 
 			Bleed_Blink_Time_ = 0.0f;
 		}
@@ -707,6 +737,19 @@ void DNFMonster::UpdateBleeding(float _DeltaTime)
 	{
 		MainRenderer_->GetPixelData().PlusColor.r = 0.0;
 	}
+}
+
+void DNFMonster::CheckBleeding(int _RandomValue)
+{
+	//Bleed상태 조건 PrevData로부터
+	//타이머 셋팅해주는 역할을 하자
+	int RandomValue = GameEngineRandom::MainRandom.RandomInt(0, 100);
+	if (RandomValue < _RandomValue)
+	{
+		Bleeding_Timer_.StartTimer(10.0f);
+		return;
+	}
+	return;
 }
 
 void DNFMonster::InitDefaultValue()
@@ -765,6 +808,9 @@ void DNFMonster::StartDebug()
 	DNFDebugGUI::AddMutableValue("DownBelowColscl", &Value_.DownBelowColScale);
 
 	DNFDebugGUI::AddMutableValue("HitEffectPos", &HitEffectMovePos_);
+
+	DNFDebugGUI::AddMutableValue("BleedingEffectPos", &Value_.BleedingPos);
+	DNFDebugGUI::AddMutableValue("BleedingScale", &Value_.BleedingScale);
 }
 
 void DNFMonster::UpdateDebug()
@@ -837,7 +883,7 @@ void DNFMonster::CopyRendererUpdate(float _DeltaTime)
 	//크기 커졌다가 작아지는 것
 	if (SuperArmorScale_.x > Value_.SuperArmorScale.x)
 	{
-		SuperArmorScale_.x -= _DeltaTime * 100.f;
+		SuperArmorScale_.x -= _DeltaTime * 120.f;
 	}
 	else
 	{
@@ -845,7 +891,7 @@ void DNFMonster::CopyRendererUpdate(float _DeltaTime)
 	}
 	if (SuperArmorScale_.y > Value_.SuperArmorScale.y)
 	{
-		SuperArmorScale_.y -= _DeltaTime * 100.f;
+		SuperArmorScale_.y -= _DeltaTime * 120.f;
 	}
 	else
 	{

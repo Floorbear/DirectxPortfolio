@@ -144,6 +144,8 @@ void Player_Main::Start()
 	Force_.FrictionX_ = 700.0f;
 	Force_.Gravity_ = 700.0f;
 	Force_.SetTransfrom(&GetTransform());
+
+	DNFDebugGUI::AddMutableValue("Temp1", &DNFGlobalValue::Temp1);
 }
 
 void Player_Main::Update(float _DeltaTime)

@@ -242,6 +242,7 @@ void Player_Main::InitAniFunc()
 				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
 				//CurAttackData_.YForce = 550.0f;
 				CurAttackData_.AttCount++;
+				CurAttackData_.Bleeding = 20;
 				CurAttackData_.AttEffect = Effect::SlashSHori;
 
 				//고어크로스 액터 생성

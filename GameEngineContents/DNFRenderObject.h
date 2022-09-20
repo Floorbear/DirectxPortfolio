@@ -25,6 +25,7 @@ struct AttackData
 	float RStiffness = 0.0f; //역경직
 	float YForce = 0.f;
 	float XForce = 0.f;
+	int Bleeding = 0; //출혈 계수
 };
 
 struct ScaleNPos
@@ -172,6 +173,7 @@ protected:
 	//이펙트 관련
 	EffectActor* SetEffect(Effect _Effect, float4 _Pos, float4 _Dir = float4::ZERO);
 	float4 HitEffectMovePos_;
+	virtual void CheckBleeding(int _RandomValue) {}; //출혈
 
 private:
 };

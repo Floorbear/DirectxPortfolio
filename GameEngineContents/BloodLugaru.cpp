@@ -25,6 +25,8 @@ void Bloodlugaru::Start()
 {
 	InitMonster();
 
+	Value_.BleedingPos.y -= 50.0f;
+
 	//전이 추가
 	{
 		DNFTransition Attack_2;
@@ -35,10 +37,6 @@ void Bloodlugaru::Start()
 	StateManager_.CreateStateMember("Attack_2", std::bind(&Bloodlugaru::Attack_2_Update, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&Bloodlugaru::Attack_2_Start, this, std::placeholders::_1),
 		std::bind(&Bloodlugaru::Attack_2_End, this, std::placeholders::_1));
-
-	DNFDebugGUI::AddMutableValue("XAcc", &LugaruValue.Attack_2_ForceXAcc);//Attack_2_FrctionAcc
-	DNFDebugGUI::AddMutableValue("Range", &LugaruValue.Attack_2_StartRange);//Attack_2_FrctionAcc
-	DNFDebugGUI::AddMutableValue("Friction", &LugaruValue.Attack_2_FrctionAcc);
 }
 
 void Bloodlugaru::Update(float _DeltaTime)

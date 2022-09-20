@@ -112,7 +112,9 @@ protected:
 
 	//ÃâÇ÷»óÅÂ
 	void UpdateBleeding(float _DeltaTime);
+	void CheckBleeding(int _RandomValue) override;
 	Timer Bleeding_Timer_;
+	GameEngineTextureRenderer* BleedingRenderer_;
 	float Bleed_Blink_Time_;
 
 	//DefaultVales
@@ -156,6 +158,10 @@ protected:
 		float4 SuperArmorScale = { 216.0f,206.0f }; //½´ÆÛ¾Æ¸Ó »óÅÂ
 		float4 StartSuperArmorScale = { 300.f,300.f };
 		float SuperArmorMul = 1000.0f;
+
+		//ÃâÇ÷
+		float4 BleedingPos = { 10.0f,60.0f,-1 };
+		float4 BleedingScale = { -0.7f,0.7f,0.7f };
 	};
 	DefaultValue Value_;
 

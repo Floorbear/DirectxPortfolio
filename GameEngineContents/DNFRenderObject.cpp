@@ -223,6 +223,9 @@ bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
 	//데미지
 	SetDamageFont(Damage, GetTransform().GetWorldPosition() + DamageFontMovePos_, Data.Font);
 
+	//출혈
+	CheckBleeding(Data.Bleeding);
+
 	if (IsSuperArmor_ == true)
 	{
 		return true;
