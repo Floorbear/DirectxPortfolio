@@ -28,6 +28,22 @@ public:
 		return Stiffness_;
 	}
 
+	inline float4 GetBotPos()
+	{
+		if (OnAir_ == true)
+		{
+			float4 DownPos = GetTransform().GetWorldPosition();
+			DownPos.y = GroundYPos_ + BotPos_.y;
+			return DownPos;
+		}
+		else
+		{
+			float4 DownPos = GetTransform().GetWorldPosition();
+			DownPos.y += BotPos_.y;
+			return DownPos;
+		}
+	}
+
 	inline AttackData& GetAttData()
 	{
 		return CurAttackData_;

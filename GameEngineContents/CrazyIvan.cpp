@@ -10,7 +10,9 @@
 #include "Player_Main.h"
 
 CrazyIvan::CrazyIvan() :
-	Check_SelfDestruct_Timer_()
+	Check_SelfDestruct_Timer_(),
+	SelfDestructTargetPos_(),
+	SelfDestructCol_Timer_()
 {
 	MaxHP_ = 600000;
 	CurHP_ = MaxHP_;
@@ -37,6 +39,8 @@ CrazyIvan::CrazyIvan() :
 	Attack_1_Scale_ = { 120.0f,50.0f,1.0f };
 	ShadowPos_ = { -10.f,-28.f,500.f,1.f };
 	BotPos_ = { 0,-58.f,0 };
+
+	Value_.Attack_1_CoolTime = 10.0f;
 }
 
 CrazyIvan::~CrazyIvan()
@@ -48,14 +52,50 @@ void CrazyIvan::Start()
 	InitMonster();
 	//StartDebug();
 	StartSuperArmor(9999999.0f);
-	FindRange_ = 200.0f;
 	//State추가
 	StateManager_.CreateStateMember("SelfDestruct", std::bind(&CrazyIvan::SelfDestruct_Update, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&CrazyIvan::SelfDestruct_Start, this, std::placeholders::_1));
 
-	//Debug
-	DNFDebugGUI::AddMutableValue("Pos", &(IvanValue_.SelfStructAttackPos));
-	DNFDebugGUI::AddMutableValue("Sclae", &(IvanValue_.SelfStructAttackScale));
+	StateManager_.CreateStateMember("FuryChase", std::bind(&CrazyIvan::FuryChaseUpdate, this, std::placeholders::_1, std::placeholders::_2)
+		, std::bind(&CrazyIvan::FuryChaseStart, this, std::placeholders::_1));
+
+	//Transition 수정
+	{
+		Transition_.erase("Idle");
+		Transition_.erase("Chase");
+		Transition_.erase("Attack_1");
+		Transition_.erase("Back");
+
+		DNFTransition Idle;
+		Idle.AddValue("Back", 20);
+		Idle.AddValue("Chase", 30);
+		Idle.AddValue("Idle", -1);
+		Transition_.insert(std::make_pair("Idle", Idle));
+	}
+
+	{
+		DNFTransition Chase;
+		Chase.AddValue("Back", 30);
+		Chase.AddValue("Chase", 30);
+		Chase.AddValue("Idle", -1);
+		Transition_.insert(std::make_pair("Chase", Chase));
+	}
+
+	{
+		DNFTransition Attack_1;
+		Attack_1.AddValue("Back", 30);
+		Attack_1.AddValue("Chase", 20);
+		Attack_1.AddValue("Idle", -1);
+		Transition_.insert(std::make_pair("Attack_1", Attack_1));
+	}
+
+	{
+		DNFTransition Back;
+		Back.AddValue("Chase", 20);
+		Back.AddValue("Idle", 60);
+		Back.AddValue("Back", -1);
+		Transition_.insert(std::make_pair("Back", Back));
+	}
 }
 
 void CrazyIvan::Update(float _DeltaTime)
@@ -100,6 +140,10 @@ void CrazyIvan::SelfDestruct_Start(const StateInfo _Info)
 	MainRenderer_->GetPixelData().PlusColor = { 1.0f,1.0f,1.0f,1.0f };
 	GodTime_.StartTimer(1.0f);
 	MainRenderer_->CurAnimationPauseOn();
+
+	IsSuperArmor_ = false;
+	CurHP_ = 0;
+	HPBarUpdate();
 	Death(1.5f);
 }
 
@@ -143,6 +187,16 @@ void CrazyIvan::SelfDestruct_Update(float _DeltaTime, const StateInfo _Info)
 		MainRenderer_->Off();
 		DieAlpha_ = 0.0f;
 		IsDieEffect_ = true;
+		SelfDestructCol_Timer_.StartTimer(0.13f);
+	}
+
+	if (SelfDestructCol_Timer_.IsTimerOn() == true)
+	{
+		SelfDestructCol_Timer_.Update(_DeltaTime);
+		if (SelfDestructCol_Timer_.IsTimerOn() == false)
+		{
+			AttackCol_->Off();
+		}
 	}
 	MainRenderer_->GetPixelData().MulColor = { 1.0f,1.0f,1.0f,DieAlpha_ };
 	MainRenderer_->GetPixelData().PlusColor = { 1.0f,1.0f,1.0f,DieAlpha_ };
@@ -184,7 +238,7 @@ void CrazyIvan::CreateMonsterAniFunc()
 			{
 				//공격이 끝난 직후 로직
 				IsAttack_1_End_ = true;
-				Attack_1_Timer_.StartTimer();
+				Attack_1_Timer_.StartTimer(Value_.Attack_1_CoolTime);
 				AttackCol_->Off();
 			}
 		}
@@ -195,13 +249,46 @@ void CrazyIvan::CreateMonsterAniFunc()
 		{
 			//공격이 끝난 직후 로직
 			IsAttack_1_End_ = true;
-			Attack_1_Timer_.StartTimer();
+			Attack_1_Timer_.StartTimer(Value_.Attack_1_CoolTime);
 			AttackCol_->Off();
 		}
 	);
 }
+void CrazyIvan::FuryChaseStart(const StateInfo _Info)
+{
+	ChangeDNFAnimation("Move");
+	SelfDestructTargetPos_ = Player_->GetBotPos() + float4(0, 30, 0);
+}
 
-std::string CrazyIvan::CheckAdditionalPattern()
+void CrazyIvan::FuryChaseUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	float4 thisPos = GetTransform().GetWorldPosition();
+
+	float length = DNFMath::Length(SelfDestructTargetPos_, thisPos);
+
+	//목적지에 다다르면 자폭
+	if (length < 1.0f)
+	{
+		StateManager_.ChangeState("SelfDestruct");
+		return;
+	}
+
+	//Flip
+	float4 MoveDir = SelfDestructTargetPos_ - thisPos;
+	MoveDir.z = 0;
+	MoveDir.Normalize();
+	if (MoveDir.x > 0)
+	{
+		GetTransform().PixLocalPositiveX();
+	}
+	else
+	{
+		GetTransform().PixLocalNegativeX();
+	}
+	GetTransform().SetWorldMove(MoveDir * Value_.Speed * _DeltaTime);
+}
+
+std::string CrazyIvan::CheckAdditionalPattern(float _DeltaTime)
 {
 	if (Check_SelfDestruct_Timer_.IsTimerOn() == false) //최초의 타이머 Set
 	{
@@ -210,7 +297,18 @@ std::string CrazyIvan::CheckAdditionalPattern()
 	}
 	else
 	{
+		Check_SelfDestruct_Timer_.Update(_DeltaTime);
+		if (Check_SelfDestruct_Timer_.IsTimerOn() == false) //시간이 다되고 자폭하러갈지 판단
+		{
+			float HPRatio = static_cast<float>(CurHP_) / static_cast<float>(MaxHP_);
+			float Value = 1.f - (HPRatio);
+			float RandomValue = GameEngineRandom::MainRandom.RandomFloat(0.0f, 1.0f);
+			if (Value > RandomValue)
+			{
+				return "FuryChase";
+			}
+		}
 	}
-	float HPRatio = static_cast<float>(CurHP_) / static_cast<float>(MaxHP_);
-	return "SelfDestruct";
+
+	return "";
 }

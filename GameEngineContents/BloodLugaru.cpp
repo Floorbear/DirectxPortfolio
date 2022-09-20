@@ -220,7 +220,7 @@ void Bloodlugaru::CreateMonsterAniFunc()
 	);
 }
 
-std::string Bloodlugaru::CheckAdditionalPattern()
+std::string Bloodlugaru::CheckAdditionalPattern(float _DeltaTime)
 {
 	if (Attack_2_Timer_.IsTimerOn() == false)
 	{

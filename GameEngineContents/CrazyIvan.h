@@ -21,13 +21,17 @@ protected:
 	void SelfDestruct_Start(const StateInfo _Info);
 	void SelfDestruct_Update(float _DeltaTime, const StateInfo _Info);
 
+	void FuryChaseStart(const StateInfo _Info);
+	void FuryChaseUpdate(float _DeltaTime, const StateInfo _Info);
+
 	void CreateMonsterAni() override;
 	void CreateMonsterAniFunc() override;
 
-	std::string CheckAdditionalPattern() override;
+	std::string CheckAdditionalPattern(float _DeltaTime) override;
 
 	Timer Check_SelfDestruct_Timer_;
-
+	Timer SelfDestructCol_Timer_;
+	float4 SelfDestructTargetPos_;
 	struct IvanValue
 	{
 		float4 SelfStructAttackPos = { 0,-10,0 };

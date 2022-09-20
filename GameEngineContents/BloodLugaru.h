@@ -24,7 +24,7 @@ protected:
 	void CreateMonsterAni() override;
 	void CreateMonsterAniFunc() override;
 
-	std::string CheckAdditionalPattern() override;
+	std::string CheckAdditionalPattern(float _DeltaTime) override;
 
 	//Attack_2 ฐüทร
 	Timer Attack_2_Wait_Timer_;

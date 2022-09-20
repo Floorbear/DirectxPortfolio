@@ -22,7 +22,7 @@ DNFMonster::DNFMonster() :
 	IsAttack_1_End_(false),
 	BackMoveDir_(),
 	IsIdleFirst_(true),
-	Attack_1_Timer_(4.0f),
+	Attack_1_Timer_(),
 	Idle_Timer_(3.0f),
 	Back_Timer_(3.0f),
 	Chase_Timer_(5.0f),
@@ -277,7 +277,7 @@ void DNFMonster::IdleUpdate(float _DeltaTime, const StateInfo _Info)
 	//상태 판단
 
 	//자식 클래스에서 추가 패턴의 조건을 확인하고 조건을 만족하면, 그 상태로 이동한다.
-	std::string AdditionalPattern = CheckAdditionalPattern();
+	std::string AdditionalPattern = CheckAdditionalPattern(_DeltaTime);
 	if (AdditionalPattern != "")
 	{
 		StateManager_.ChangeState(AdditionalPattern);
@@ -316,7 +316,7 @@ void DNFMonster::ChaseUpdate(float _DeltaTime, const StateInfo _Info)
 	float length = DNFMath::Length(PlayerPos, thisPos);
 
 	//자식 클래스에서 추가 패턴의 조건을 확인하고 조건을 만족하면, 그 상태로 이동한다.
-	std::string AdditionalPattern = CheckAdditionalPattern();
+	std::string AdditionalPattern = CheckAdditionalPattern(_DeltaTime);
 	if (AdditionalPattern != "")
 	{
 		StateManager_.ChangeState(AdditionalPattern);
@@ -378,7 +378,7 @@ void DNFMonster::Attack_1_Update(float _DeltaTime, const StateInfo _Info)
 void DNFMonster::Attack_1_End(const StateInfo _Info)
 {
 	IsAttack_1_End_ = false;
-	Attack_1_Timer_.StartTimer();
+	Attack_1_Timer_.StartTimer(Value_.Attack_1_CoolTime);
 	AttackCol_->Off();
 	CurAttackData_ = {};
 }
@@ -426,7 +426,7 @@ void DNFMonster::BackUpdate(float _DeltaTime, const StateInfo _Info)
 	//상태 판단
 	//
 	// 	//자식 클래스에서 추가 패턴의 조건을 확인하고 조건을 만족하면, 그 상태로 이동한다.
-	std::string AdditionalPattern = CheckAdditionalPattern();
+	std::string AdditionalPattern = CheckAdditionalPattern(_DeltaTime);
 	if (AdditionalPattern != "")
 	{
 		StateManager_.ChangeState(AdditionalPattern);

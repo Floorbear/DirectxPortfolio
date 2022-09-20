@@ -39,7 +39,7 @@ protected:
 	virtual void CreateMonsterAniFunc() {};
 
 	//추가 패턴
-	virtual std::string CheckAdditionalPattern() { return ""; }
+	virtual std::string CheckAdditionalPattern(float _DeltaTime) { return ""; }
 
 	void InitCol();
 
@@ -143,6 +143,8 @@ protected:
 
 		float Default_Frction = 700.0f;
 
+		//Att_1 관련
+		float Attack_1_CoolTime = 4.0f;
 		int Attack_1_Att = 1200;
 
 		MonsterType Type;
