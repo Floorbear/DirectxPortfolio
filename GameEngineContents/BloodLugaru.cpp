@@ -23,6 +23,17 @@ Bloodlugaru::~Bloodlugaru()
 
 void Bloodlugaru::Start()
 {
+	//루가루 텍스처 로드
+	if (GameEngineFolderTexture::Find("bloodlugaru") == nullptr)
+	{
+		GameEngineDirectory Dir;
+		Dir.MoveParentToExitsChildDirectory("ContentsResources");
+		Dir.Move("ContentsResources");
+		Dir.Move("FolderTexture");
+		Dir.Move("MonsterTexture");
+		Dir.Move("bloodlugaru");
+		GameEngineFolderTexture::Load(Dir.GetFullPath());
+	}
 	InitMonster();
 
 	Value_.BleedingPos.y -= 50.0f;

@@ -1,7 +1,7 @@
 #pragma once
-#include "DNFLevel.h"
+#include "VilmarkLevel.h"
 
-class Vilmark_0 : public DNFLevel
+class Vilmark_0 : public VilmarkLevel
 {
 public:
 	Vilmark_0();
@@ -14,7 +14,7 @@ public:
 
 protected:
 	void Start() override;
-	void Update(float _DeltaTime) override;
+	void Update(float _DeltaTime);
 	void End() override;
 
 	void DNFOnEvent() override;

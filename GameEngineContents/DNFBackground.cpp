@@ -4,7 +4,11 @@
 #include "DNFLevel.h"
 #include "DNFRenderObject.h"
 #include "DNFGlobalValue.h"
-DNFBackground::DNFBackground()
+DNFBackground::DNFBackground() :
+	ColRenderer(),
+	BushRenderer_(),
+	MainRenderer_(),
+	FarSpeed_(0.5f)
 {
 }
 

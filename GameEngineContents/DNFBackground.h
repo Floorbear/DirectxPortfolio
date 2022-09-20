@@ -10,7 +10,6 @@ public:
 	DNFBackground();
 	~DNFBackground();
 
-
 	DNFBackground(const DNFBackground& _Other) = delete;
 	DNFBackground(const DNFBackground&& _Other) noexcept = delete;
 	DNFBackground& operator=(const DNFBackground& _Ohter) = delete;
@@ -25,8 +24,12 @@ protected:
 	void InitBackground(const std::string& _FileName);
 
 	GameEngineTextureRenderer* MainRenderer_;
+	GameEngineTextureRenderer* BushRenderer_;
 	GameEngineTextureRenderer* ColRenderer;
+	GameEngineTextureRenderer* FarRenderer_;
+
+	float FarSpeed_;
+	float4 PrevCameraPos_;
 
 private:
 };
-

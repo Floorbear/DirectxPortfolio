@@ -1,11 +1,13 @@
 #pragma once
 #include <GameEngineCore/GameEngineLevel.h>
+#include <GameEngineBase/GameEngineMath.h>
 
 //던파의 레벨에서 필요한 공통 기능을 담당할 클래스
 class GameEngineCameraActor;
 class Player_Main;
 class DNFBackground;
 class MonsterHP;
+class DNFHUD;
 class DNFLevel : public GameEngineLevel
 {
 public:
@@ -57,6 +59,7 @@ protected:
 	void LevelStartEvent() override;
 	virtual void DNFOnEvent();
 	Player_Main* Player_;
+	DNFHUD* HUD_;
 	MonsterHP* MonsterHP_;
 
 private:

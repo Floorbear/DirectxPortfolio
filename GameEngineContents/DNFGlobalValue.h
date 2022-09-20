@@ -35,5 +35,9 @@ public:
 
 	static MonsterHP* CurrentMonsterHP;
 
+	static Player_Main* CurrentPlayer_;
+
+	static DNFHUD* CurrentHUD_;
+
 	static float4 Temp1;
 };

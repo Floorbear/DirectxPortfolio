@@ -91,10 +91,10 @@
     <ClInclude Include="Elvenguard_Front_Background.h">
       <Filter>Elvengurad_Front</Filter>
     </ClInclude>
-    <ClInclude Include="Vilmark_0.h">
+    <ClInclude Include="VilmarkLevel.h">
       <Filter>Vilmark</Filter>
     </ClInclude>
-    <ClInclude Include="Vilmark_0_Background.h">
+    <ClInclude Include="VilmarkMap.h">
       <Filter>Vilmark</Filter>
     </ClInclude>
     <ClInclude Include="Bar.h">
@@ -169,6 +169,12 @@
     <ClInclude Include="BoomEffect.h">
       <Filter>Monster\Skill</Filter>
     </ClInclude>
+    <ClInclude Include="Vilmark_0.h">
+      <Filter>Vilmark</Filter>
+    </ClInclude>
+    <ClInclude Include="Vilmark_1.h">
+      <Filter>Vilmark</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -208,10 +214,10 @@
     <ClCompile Include="Elvenguard_Front_Background.cpp">
       <Filter>Elvengurad_Front</Filter>
     </ClCompile>
-    <ClCompile Include="Vilmark_0.cpp">
+    <ClCompile Include="VilmarkLevel.cpp">
       <Filter>Vilmark</Filter>
     </ClCompile>
-    <ClCompile Include="Vilmark_0_Background.cpp">
+    <ClCompile Include="VilmarkMap.cpp">
       <Filter>Vilmark</Filter>
     </ClCompile>
     <ClCompile Include="Bar.cpp">
@@ -282,6 +288,12 @@
     </ClCompile>
     <ClCompile Include="BoomEffect.cpp">
       <Filter>Monster\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="Vilmark_0.cpp">
+      <Filter>Vilmark</Filter>
+    </ClCompile>
+    <ClCompile Include="Vilmark_1.cpp">
+      <Filter>Vilmark</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

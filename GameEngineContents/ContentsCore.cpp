@@ -9,7 +9,10 @@
 #include "GameEngineContents/Elvenguard_Front.h"
 #include "Bar.h"
 
+#include "VilmarkLevel.h"
+
 #include "Vilmark_0.h"
+#include "Vilmark_1.h"
 
 #pragma comment(lib, "GameEngineBase.lib")
 
@@ -94,6 +97,20 @@ void ContentsCore::Start()
 		}
 	}
 
+	//이펙트 텍스처 로드
+	{
+		GameEngineDirectory Dir;
+		Dir.MoveParentToExitsChildDirectory("ContentsResources");
+		Dir.Move("ContentsResources");
+		Dir.Move("FolderTexture");
+		Dir.Move("EffectTexture");
+		std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
+		for (GameEngineDirectory Dir_i : Dirs)
+		{
+			GameEngineFolderTexture::Load(Dir_i.GetFullPath());
+		}
+	}
+
 	//UI 텍스처 로드
 	{
 		GameEngineDirectory Dir;
@@ -143,6 +160,8 @@ void ContentsCore::Start()
 	//CreateLevel<Bar>("Bar");
 
 	CreateLevel<Vilmark_0>("Vilmark_0");
+	CreateLevel<Vilmark_1>("Vilmark_1");
+
 	//CreateLevel<State0>("Title");
 	//CreateLevel<State1>("Title");
 	ChangeLevel("Vilmark_0");

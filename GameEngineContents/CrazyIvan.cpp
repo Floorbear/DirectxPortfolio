@@ -49,6 +49,17 @@ CrazyIvan::~CrazyIvan()
 
 void CrazyIvan::Start()
 {
+	//크레이지 이반 텍스처 로드
+	if (GameEngineFolderTexture::Find("crazyivan") == nullptr)
+	{
+		GameEngineDirectory Dir;
+		Dir.MoveParentToExitsChildDirectory("ContentsResources");
+		Dir.Move("ContentsResources");
+		Dir.Move("FolderTexture");
+		Dir.Move("MonsterTexture");
+		Dir.Move("crazyivan");
+		GameEngineFolderTexture::Load(Dir.GetFullPath());
+	}
 	InitMonster();
 	//StartDebug();
 	StartSuperArmor(9999999.0f);
