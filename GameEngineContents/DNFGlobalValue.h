@@ -15,6 +15,7 @@ enum class ColOrder
 	MonsterHit,
 	MonsterRange,
 	PlayerAttack,
+	DoorRight,
 	Debug
 };
 

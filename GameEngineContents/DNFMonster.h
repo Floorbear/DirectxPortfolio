@@ -162,6 +162,7 @@ protected:
 		float SuperArmorMul = 1000.0f;
 
 		//ÃâÇ÷
+		float4 BleedingSpawnPos = { 20,35 };
 		float4 BleedingPos = { 10.0f,60.0f,-1 };
 		float4 BleedingScale = { -0.7f,0.7f,0.7f };
 	};

@@ -717,7 +717,7 @@ void DNFMonster::UpdateBleeding(float _DeltaTime)
 			float Damage = static_cast<float>(MaxHP_) * 0.005f;
 			Damage = GameEngineRandom::MainRandom.RandomFloat(Damage * 0.7f, Damage * 1.3f);
 			int DamageI = static_cast<int>(Damage);
-			SetDamageFont(DamageI, GetTransform().GetWorldPosition() + DamageFontMovePos_, 3);
+			SetDamageFont(DamageI, GetTransform().GetWorldPosition() + DamageFontMovePos_ + Value_.BleedingSpawnPos, 3);
 			CalHP(-DamageI);
 			HPBarUpdate();
 

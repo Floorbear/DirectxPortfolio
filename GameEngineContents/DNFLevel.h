@@ -61,6 +61,7 @@ protected:
 	Player_Main* Player_;
 	DNFHUD* HUD_;
 	MonsterHP* MonsterHP_;
+	DNFBackground* Background_;
 
 private:
 	//에러 체크용 Bool 함수
@@ -70,8 +71,6 @@ private:
 	float4 MapScale_;
 
 	//몬스터HPBar
-
-	DNFBackground* Background_;
 
 	//레벨의 ZoomRate
 	float Zoom_;

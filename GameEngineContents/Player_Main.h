@@ -5,9 +5,11 @@
 
 #include <GameEngineCore/GameEngineCollision.h>
 
+class VilmarkLevel;
 class Player_Main : public DNFRenderObject
 {
 	friend AvatarManager;
+	friend VilmarkLevel;
 public:
 	Player_Main();
 	~Player_Main();

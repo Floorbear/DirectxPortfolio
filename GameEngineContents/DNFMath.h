@@ -94,6 +94,10 @@ public:
 	{
 		return &Iter_Time_;
 	}
+	inline float GetCurTime()
+	{
+		return Iter_Time_;
+	}
 	//타이머의 초기 시간
 	float Default_Time_;
 

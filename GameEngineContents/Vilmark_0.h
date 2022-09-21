@@ -1,5 +1,6 @@
 #pragma once
 #include "VilmarkLevel.h"
+#include "DNFMath.h"
 
 class Vilmark_0 : public VilmarkLevel
 {
