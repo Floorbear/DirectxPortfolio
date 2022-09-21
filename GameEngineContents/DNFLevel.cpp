@@ -80,6 +80,7 @@ void DNFLevel::LevelStartEvent()
 
 		DNFGlobalValue::CurrentHUD_->SetLevelOverOn();
 		DNFGlobalValue::CurrentPlayer_->SetLevelOverOn();
+		DNFGlobalValue::CurrentPlayer_->GetTransform().SetWorldPosition({ 800,-300 });
 	}
 
 	//캐릭터가 만들어진 상태면 가지고 와서 현재 레벨의 포인터와 연결한다.

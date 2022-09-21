@@ -4,7 +4,8 @@
 enum MonsterType
 {
 	BloodLugaruM,
-	CrazyIvanM
+	CrazyIvanM,
+	CielM
 };
 
 enum class ColOrder
@@ -16,6 +17,7 @@ enum class ColOrder
 	MonsterRange,
 	PlayerAttack,
 	DoorRight,
+	DoorLeft,
 	Debug
 };
 

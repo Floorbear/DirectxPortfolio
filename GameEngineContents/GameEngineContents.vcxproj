@@ -177,6 +177,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Ciel.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="CrazyIvan.h">
       <SubType>
       </SubType>
@@ -329,6 +333,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="BoomEffect.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Ciel.cpp">
       <SubType>
       </SubType>
     </ClCompile>

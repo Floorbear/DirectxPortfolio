@@ -276,6 +276,14 @@ void MonsterHP::CheckType(MonsterType _Type)
 		MonsterCategory_->SetFolderTextureToIndex("Category", 0);
 		MonsterCategory_->ScaleToTexture();
 		break;
+	case CielM:
+		MonsterHead_->SetFolderTextureToIndex("MonsterHead", 3);
+		MonsterHead_->ScaleToTexture();
+		MonsterHead_->On();
+
+		MonsterCategory_->SetFolderTextureToIndex("Category", 1);
+		MonsterCategory_->ScaleToTexture();
+		break;
 	default:
 		break;
 	}

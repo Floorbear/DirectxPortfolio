@@ -1,5 +1,6 @@
 #pragma once
 #include <GameEngineCore/GameEngineActor.h>
+#include "DNFMath.h"
 
 class GameEngineActor;
 class GameEngineTextureRenderer;
@@ -20,6 +21,15 @@ public:
 	{
 		return ColRenderer;
 	}
+
+	void StartFadeIn()
+	{
+		FadeInTimer_.StartTimer(1.0f);
+	}
+	void StartFadeOut()
+	{
+		FadeOutTimer_.StartTimer(1.0f);
+	}
 protected:
 	void InitBackground(const std::string& _FileName);
 
@@ -30,6 +40,11 @@ protected:
 
 	float FarSpeed_;
 	float4 PrevCameraPos_;
+
+	//Fade°ü·Ã
+	GameEngineUIRenderer* FadeRenderer_;
+	Timer FadeInTimer_;
+	Timer FadeOutTimer_;
 
 private:
 };

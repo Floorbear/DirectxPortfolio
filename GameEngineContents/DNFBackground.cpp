@@ -8,7 +8,9 @@ DNFBackground::DNFBackground() :
 	ColRenderer(),
 	BushRenderer_(),
 	MainRenderer_(),
-	FarSpeed_(0.5f)
+	FarSpeed_(0.5f),
+	FadeRenderer_(),
+	FadeInTimer_()
 {
 }
 
@@ -32,4 +34,11 @@ void DNFBackground::InitBackground(const std::string& _FileName)
 	ColRenderer->ScaleToTexture();
 	ColRenderer->SetPivot(PIVOTMODE::LEFTTOP);
 	ColRenderer->Off();
+
+	//페이드 인 아웃
+	FadeRenderer_ = CreateComponent<GameEngineUIRenderer>(GetNameCopy());
+	FadeRenderer_->SetTexture("Fade.png");
+	FadeRenderer_->GetTransform().SetLocalScale({ 2000.0f,2000.0f });
+	FadeRenderer_->GetTransform().SetLocalMove({ 0,0,-4000 });
+	FadeRenderer_->GetPixelData().PlusColor = { -1,-1,-1,0 };
 }

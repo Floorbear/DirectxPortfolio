@@ -1,6 +1,7 @@
 #include "PreCompile.h"
 #include "Vilmark_1.h"
 
+#include "VilmarkMap.h"
 #include "CrazyIvan.h"
 
 Vilmark_1::Vilmark_1()
@@ -15,10 +16,9 @@ Vilmark_1::~Vilmark_1()
 void Vilmark_1::Start()
 {
 	VilmarkStart();
-
-	CrazyIvan* Monster3 = CreateActor<CrazyIvan>();
-	Monster3->ID_ = 3;
-	Monster3->GetTransform().SetWorldPosition({ 700,-400 });//1000,-400
+	VilmarkMap_->MakeLeftDoor();
+	VilmarkMap_->MakeRightDoor();
+	//CrazyIvan* Monster = CreateMonster<CrazyIvan>({ { 700,-400 } });
 
 	//CrazyIvan* Monster4 = CreateActor<CrazyIvan>();
 	//Monster4->ID_ = 4;

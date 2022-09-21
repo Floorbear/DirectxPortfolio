@@ -1,5 +1,6 @@
 #pragma once
 #include "DNFLevel.h"
+#include "DNFMath.h"
 
 class VilmarkMap;
 class DNFMonster;
@@ -60,9 +61,12 @@ protected:
 	void VilmarkStart();
 	void VilmarkUpdate(float _DeltaTime);
 
+	void Update_Door(float _DeltaTime);
+
 	void VilmarkStartLevel();
 
 	VilmarkMap* VilmarkMap_;
 
+	Timer LevelChangeTimer_;
 	std::map<int, DNFMonster*> MonsterList_;
 };

@@ -30,7 +30,7 @@ public:
 		return Stiffness_;
 	}
 
-	inline float4 GetBotPos()
+	inline float4 GetBotPos() //자폭 공격 추적에서 사용
 	{
 		if (OnAir_ == true)
 		{
@@ -59,12 +59,19 @@ public:
 		IsReadyNextAttack_ = false;
 		IsAttack_End_ = true;
 	}
+
+	int PrevMapPos_; // 0 : 나는 이전맵에서 오른쪽에 있었다, 1: 나는 왼쪽에 있었다
+	bool IsLevelChanging_ = false; //레벨을 바꾸고 있는중입니다.
 	//아바타 관련 변수들
 	AvatarManager AvatarManager_;
 protected:
 	void Start() override;
 	void Update(float _DeltaTime) override;
 	void End() override;
+
+	//void LevelStartEvent() override
+	//{
+	//}
 
 private:
 	//카메라 추적

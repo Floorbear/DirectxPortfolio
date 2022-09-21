@@ -41,7 +41,8 @@ Player_Main::Player_Main() :
 	BottomAttackCol_(),
 	Value_(),
 	SkillCoolTime_(),
-	SuperArmorMulTime_()
+	SuperArmorMulTime_(),
+	PrevMapPos_(0)
 {
 	InitDefaultValue();
 
@@ -150,7 +151,10 @@ void Player_Main::Start()
 
 void Player_Main::Update(float _DeltaTime)
 {
-	DNFDebugGUI::AddValue("State", StateManager_.GetCurStateStateName());
+	if (IsLevelChanging_ == true) //레벨이 변하고 있으면 하는일을 멈춘다.
+	{
+		return;
+	}
 	CoolTimeUpdate(_DeltaTime);
 	CopyRendererUpdate(_DeltaTime);
 	StiffnessUpdate(_DeltaTime);
