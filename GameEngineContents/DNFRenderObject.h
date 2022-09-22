@@ -103,6 +103,8 @@ protected:
 	//start에서 호출
 	virtual void DNFStart();
 
+	virtual void InitAdditionalRenderer() {};
+
 	//Update에서 돌려줘야함
 	void ZSort();
 
@@ -113,8 +115,8 @@ protected:
 	std::list< GameEngineTextureRenderer**> AllDNFRenderer_;
 
 	//shadow관련 함수& 변수
-	void CreateDNFAnimation(const std::string& _AnimationName, const FrameAnimation_DESC& _Desc);
-	void ChangeDNFAnimation(const std::string& _Name);
+	virtual void CreateDNFAnimation(const std::string& _AnimationName, const FrameAnimation_DESC& _Desc);
+	virtual void ChangeDNFAnimation(const std::string& _Name);
 	void ResetDNFAnimation();
 	void ShadowUpdate();
 

@@ -48,7 +48,7 @@ DNFMonster::~DNFMonster()
 void DNFMonster::InitMonster()
 {
 	DNFStart();
-
+	InitAdditionalRenderer();
 	InitCol();
 
 	InitAniNState();
@@ -591,6 +591,10 @@ void DNFMonster::DieStart(const StateInfo _Info)
 	ChangeDNFAnimation("Die");
 	ShadowRenderer_->Off();
 	SuperArmorRenderer_->Off();
+	for (auto i : AdditionRenderer_)
+	{
+		(*i)->Off();
+	}
 	Force_.OffGravity();
 	Force_.ForceX_ = 0;
 	MainRenderer_->GetPixelData().PlusColor = { 1.0f,1.0f,1.0f,1.0f };
@@ -895,7 +899,7 @@ void DNFMonster::CopyRendererUpdate(float _DeltaTime)
 	//크기 커졌다가 작아지는 것
 	if (SuperArmorScale_.x > Value_.SuperArmorScale.x)
 	{
-		SuperArmorScale_.x -= _DeltaTime * 120.f;
+		SuperArmorScale_.x -= _DeltaTime * Value_.SuperArmorSmallerSpeed;
 	}
 	else
 	{
@@ -903,7 +907,7 @@ void DNFMonster::CopyRendererUpdate(float _DeltaTime)
 	}
 	if (SuperArmorScale_.y > Value_.SuperArmorScale.y)
 	{
-		SuperArmorScale_.y -= _DeltaTime * 120.f;
+		SuperArmorScale_.y -= _DeltaTime * Value_.SuperArmorSmallerSpeed;
 	}
 	else
 	{

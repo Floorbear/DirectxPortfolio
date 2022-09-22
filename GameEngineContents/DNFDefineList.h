@@ -52,6 +52,8 @@
 #define Lugaru_Down_Start 17
 #define Lugaru_Down_End 19
 
+#define Lugaru_Angry_Start 26
+#define Lugaru_Angry_End 32
 //¿Ãπ›
 #define Ivan_Attack_1_Start 1
 #define Ivan_Attack_1_End 4

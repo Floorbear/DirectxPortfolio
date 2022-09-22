@@ -18,7 +18,7 @@ CrazyIvanCaptain::CrazyIvanCaptain() :
 	MaxHP_ = 1200000;
 	CurHP_ = MaxHP_;
 
-	Value_.Type = MonsterType::CrazyIvanM;
+	Value_.Type = MonsterType::CrazyIvanCapM;
 	Value_.MonsterTextureSize_ = { 200.0f,200.0f,1.0f };
 	Value_.DieParticleName = "DieParticleGreen";
 	Value_.DieParticleSize = { 0.7f,0.7f,0.7f };

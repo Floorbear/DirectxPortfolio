@@ -229,8 +229,7 @@ void Player_Main::UpperSlashStart(const StateInfo _Info)
 	AvatarManager_.ChangeMotion(PlayerAnimations::UpperSlash);
 	//CoolTime Set
 	SkillCoolTime_["UpperSlash"]->StartTimer();
-	//슈퍼아머 set
-	StartSuperArmor(0.7f);
+
 	//마나 소모
 	CurMP_ -= Value_.UpperSlash_MP;
 }

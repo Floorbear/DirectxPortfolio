@@ -5,7 +5,9 @@ enum MonsterType
 {
 	BloodLugaruM,
 	CrazyIvanM,
-	CielM
+	CrazyIvanCapM,
+	CielM,
+	HeartFoxM
 };
 
 enum class ColOrder

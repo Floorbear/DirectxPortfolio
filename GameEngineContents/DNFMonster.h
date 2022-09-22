@@ -41,6 +41,7 @@ protected:
 
 	//추가 패턴
 	virtual std::string CheckAdditionalPattern(float _DeltaTime) { return ""; }
+	std::list<GameEngineTextureRenderer**> AdditionRenderer_;
 
 	void InitCol();
 
@@ -160,7 +161,8 @@ protected:
 		float4 SuperArmorPos = { 0.0f,0.0f };
 		float4 SuperArmorScale = { 216.0f,206.0f }; //슈퍼아머 상태
 		float4 StartSuperArmorScale = { 300.f,300.f };
-		float SuperArmorMul = 1000.0f;
+		float SuperArmorSmallerSpeed = 430.0f;
+		//float SuperArmorMul = 1000.0f;
 
 		//출혈
 		float4 BleedingSpawnPos = { 20,35 };

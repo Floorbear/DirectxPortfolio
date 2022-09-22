@@ -284,6 +284,22 @@ void MonsterHP::CheckType(MonsterType _Type)
 		MonsterCategory_->SetFolderTextureToIndex("Category", 1);
 		MonsterCategory_->ScaleToTexture();
 		break;
+	case CrazyIvanCapM:
+		MonsterHead_->SetFolderTextureToIndex("MonsterHead", 4);
+		MonsterHead_->ScaleToTexture();
+		MonsterHead_->On();
+
+		MonsterCategory_->SetFolderTextureToIndex("Category", 0);
+		MonsterCategory_->ScaleToTexture();
+		break;
+	case HeartFoxM:
+		MonsterHead_->SetFolderTextureToIndex("MonsterHead", 5);
+		MonsterHead_->ScaleToTexture();
+		MonsterHead_->On();
+
+		MonsterCategory_->SetFolderTextureToIndex("Category", 1);
+		MonsterCategory_->ScaleToTexture();
+		break;
 	default:
 		break;
 	}

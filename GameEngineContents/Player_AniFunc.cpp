@@ -195,6 +195,11 @@ void Player_Main::InitAniFunc()
 	MainRenderer_->AnimationBindFrame("UpperSlash",
 		[&](const FrameAnimation_DESC& _Desc)
 		{
+			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start)
+			{
+				//½´ÆÛ¾Æ¸Ó set
+				StartSuperArmor(0.7f);
+			}
 			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 1)
 			{
 				SetAttackCol(Value_.UpperSlashPos, Value_.UpeerSlashScale);

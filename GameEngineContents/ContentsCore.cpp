@@ -166,7 +166,7 @@ void ContentsCore::Start()
 
 	//CreateLevel<State0>("Title");
 	//CreateLevel<State1>("Title");
-	ChangeLevel("Vilmark_0");
+	ChangeLevel("Vilmark_2");
 
 	GameEngineGUI::CreateGUIWindow<GameEngineStatusWindow>("EngineStatus", nullptr);
 	GameEngineGUI::CreateGUIWindow<DNFDebugGUI>("DNFDebug", nullptr);
