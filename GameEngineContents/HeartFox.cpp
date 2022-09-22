@@ -24,7 +24,7 @@ HeartFox::HeartFox() :
 	Value_.Type = MonsterType::HeartFoxM;
 	Value_.DieParticleName = "DieParticleBlue";
 	Value_.DieParticleSize = { 0.7f,0.7f,0.7f };
-	MaxHP_ = 2000000;
+	MaxHP_ = 1700000;
 	CurHP_ = MaxHP_;
 	FindRange_ = 550.0f;
 

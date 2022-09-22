@@ -3,6 +3,7 @@
 
 #include "VilmarkMap.h"
 
+#include "TauCaptain.h"
 #include "Ciel.h"
 #include "HeartFox.h"
 
@@ -21,15 +22,19 @@ void Vilmark_2::Start()
 	VilmarkMap_->MakeLeftDoor();
 	VilmarkMap_->MakeRightDoor();
 
-	HeartFox* MonsterBoss = CreateMonster<HeartFox>(float4(1079, -342));
-	////몬스터 생성
-	float4 AccPos = {};
-	Ciel* Monster = CreateMonster<Ciel>(AccPos + float4(579, -342));
-	Ciel* Monster1 = CreateMonster<Ciel>(AccPos + float4(697, -365));
-	Ciel* Monster2 = CreateMonster<Ciel>(AccPos + float4(782, -418));
-	Ciel* Monster3 = CreateMonster<Ciel>(AccPos + float4(869, -340));
-	Ciel* Monster4 = CreateMonster<Ciel>(AccPos + float4(918, -379));
-	Ciel* Monster5 = CreateMonster<Ciel>(AccPos + float4(1014, -433));
+	TauCaptain* Monster = CreateMonster<TauCaptain>(float4(579, -342));
+
+	//빌마르크 방 3꺼
+
+	//HeartFox* MonsterBoss = CreateMonster<HeartFox>(float4(1079, -342));
+	//////몬스터 생성
+	//float4 AccPos = {};
+	//Ciel* Monster = CreateMonster<Ciel>(AccPos + float4(579, -342));
+	//Ciel* Monster1 = CreateMonster<Ciel>(AccPos + float4(697, -365));
+	//Ciel* Monster2 = CreateMonster<Ciel>(AccPos + float4(782, -418));
+	//Ciel* Monster3 = CreateMonster<Ciel>(AccPos + float4(869, -340));
+	//Ciel* Monster4 = CreateMonster<Ciel>(AccPos + float4(918, -379));
+	//Ciel* Monster5 = CreateMonster<Ciel>(AccPos + float4(1014, -433));
 }
 
 void Vilmark_2::Update(float _DeltaTime)

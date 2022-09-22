@@ -187,6 +187,9 @@
     <ClInclude Include="HeartFox.h">
       <Filter>Monster</Filter>
     </ClInclude>
+    <ClInclude Include="TauCaptain.h">
+      <Filter>Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -317,6 +320,9 @@
       <Filter>Vilmark</Filter>
     </ClCompile>
     <ClCompile Include="HeartFox.cpp">
+      <Filter>Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="TauCaptain.cpp">
       <Filter>Monster</Filter>
     </ClCompile>
   </ItemGroup>

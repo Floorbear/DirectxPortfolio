@@ -65,3 +65,15 @@
 #define Ivan_Hit_End 6
 #define Ivan_Down_Start 7
 #define Ivan_Down_End 9
+
+//Å¸¿ì
+#define Tau_Attack_1_Start 1
+#define Tau_Attack_1_End 6
+#define Tau_Idle_Start 0
+#define Tau_Idle_End 0
+#define Tau_Move_Start 20
+#define Tau_Move_End 27
+#define Tau_Hit_Start 8
+#define Tau_Hit_End 9
+#define Tau_Down_Start 10
+#define Tau_Down_End 12
