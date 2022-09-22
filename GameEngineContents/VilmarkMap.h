@@ -16,6 +16,7 @@ public:
 	void OnDoor();
 	void MakeLeftDoor();//왼쪽 문이 없는 녀석들도 있기 때문에, 왼쪽 문을 만드는 함수를 호출하자
 	void MakeRightDoor();
+	void MakeLogo();
 
 protected:
 	void Start() override;
@@ -24,6 +25,9 @@ protected:
 	void ChaseFarBackground();
 	void DoorEffect(float _DeltaTime);
 	void End() override;
+
+	int LogoLoopCount_ = 0;
+	GameEngineUIRenderer* VilmarkLogo_;
 
 	std::vector<GameEngineTextureRenderer*> RightDoor_Renderer_;// 0 : 문짝 1: 담장 2: 이펙트
 	std::vector<GameEngineTextureRenderer*> LeftDoor_Renderer_;// 0 : 문짝 1: 담장 2: 이펙트

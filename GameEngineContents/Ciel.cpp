@@ -1,6 +1,7 @@
 #include "PreCompile.h"
 #include "Ciel.h"
 
+#include <GameEngineBase/GameEngineRandom.h>
 #include <GameEngineCore/GameEngineCollision.h>
 #include "DNFContentsMinimal.h"
 
@@ -17,6 +18,7 @@ Ciel::Ciel() :
 	Value_.DieParticleSize = { 0.7f,0.7f,0.7f };
 	MaxHP_ = 450000;
 	CurHP_ = MaxHP_;
+	FindRange_ = 550.0f;
 }
 
 Ciel::~Ciel()
@@ -250,7 +252,12 @@ std::string Ciel::CheckAdditionalPattern(float _DeltaTime)
 		{
 			return "";
 		}
-		return "Attack_2";
+		//사정거리 내에 들면 공격할 확률 70프로
+		float RandomValue = GameEngineRandom::MainRandom.RandomFloat(0.f, 1.f);
+		if (RandomValue < 0.7f)
+		{
+			return "Attack_2";
+		}
 	}
 	return "";
 }

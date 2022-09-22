@@ -243,8 +243,8 @@ private:
 		int Default_MP = 15000;
 
 		//마나 소비량
-		int UpperSlash_MP = 250;
-		int GoreCross_MP = 500;
+		int UpperSlash_MP = 70;
+		int GoreCross_MP = 120;
 
 		float Down_Time = 1.3f;
 		float Down_God_Time = 0.48f;

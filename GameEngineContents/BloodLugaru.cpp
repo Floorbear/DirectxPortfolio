@@ -2,6 +2,7 @@
 #include "Bloodlugaru.h"
 
 #include <GameEngineCore/GameEngineCollision.h>
+#include <GameEngineBase/GameEngineRandom.h>
 #include "DNFContentsMinimal.h"
 
 #include "MonsterHP.h"
@@ -15,6 +16,7 @@ Bloodlugaru::Bloodlugaru() :
 	Value_.Type = MonsterType::BloodLugaruM;
 	Value_.DieParticleName = "DieParticleRed";
 	Value_.DieParticleSize = { 0.7f,0.7f,0.7f };
+	FindRange_ = 550.0f;
 }
 
 Bloodlugaru::~Bloodlugaru()
@@ -248,7 +250,12 @@ std::string Bloodlugaru::CheckAdditionalPattern(float _DeltaTime)
 		{
 			return "";
 		}
-		return "Attack_2";
+		//사정거리 내에 들면 공격할 확률 60프로
+		float RandomValue = GameEngineRandom::MainRandom.RandomFloat(0.f, 1.f);
+		if (RandomValue < 0.6f)
+		{
+			return "Attack_2";
+		}
 	}
 	return "";
 }

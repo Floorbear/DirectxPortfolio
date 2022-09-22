@@ -13,6 +13,7 @@
 
 #include "Vilmark_0.h"
 #include "Vilmark_1.h"
+#include "Vilmark_2.h"
 
 #pragma comment(lib, "GameEngineBase.lib")
 
@@ -161,6 +162,7 @@ void ContentsCore::Start()
 
 	CreateLevel<Vilmark_0>("Vilmark_0");
 	CreateLevel<Vilmark_1>("Vilmark_1");
+	CreateLevel<Vilmark_2>("Vilmark_2");
 
 	//CreateLevel<State0>("Title");
 	//CreateLevel<State1>("Title");

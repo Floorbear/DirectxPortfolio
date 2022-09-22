@@ -153,11 +153,11 @@ void Player_Main::DownUpdate(float _DeltaTime, const StateInfo _Info)
 	float CurYPos = GetTransform().GetWorldPosition().y;
 
 	//»ç¸Á°Ë»ç
-	if (CurHP_ == 0)
-	{
-		//StateManager_.ChangeState("Die");
-		return;
-	}
+	//if (CurHP_ == 0)
+	//{
+	//	//StateManager_.ChangeState("Die");
+	//	return;
+	//}
 
 	if (CurYPos <= GroundYPos_)
 	{

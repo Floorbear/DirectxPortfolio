@@ -3,6 +3,7 @@
 
 #include "VilmarkMap.h"
 #include "CrazyIvan.h"
+#include "CrazyIvanCaptain.h"
 
 Vilmark_1::Vilmark_1()
 {
@@ -18,19 +19,13 @@ void Vilmark_1::Start()
 	VilmarkStart();
 	VilmarkMap_->MakeLeftDoor();
 	VilmarkMap_->MakeRightDoor();
-	//CrazyIvan* Monster = CreateMonster<CrazyIvan>({ { 700,-400 } });
 
-	//CrazyIvan* Monster4 = CreateActor<CrazyIvan>();
-	//Monster4->ID_ = 4;
-	//Monster4->GetTransform().SetWorldPosition({ 1000,-400 });//1000,-400
-
-	//CrazyIvan* Monster5 = CreateActor<CrazyIvan>();
-	//Monster5->ID_ = 5;
-	//Monster5->GetTransform().SetWorldPosition({ 1100,-500 });//1000,-400
-
-	//CrazyIvan* Monster6 = CreateActor<CrazyIvan>();
-	//Monster6->ID_ = 6;
-	//Monster6->GetTransform().SetWorldPosition({ 1200,-400 });//1000,-400
+	//-320보다 작아야
+	CrazyIvan* Monster = CreateMonster<CrazyIvan>({ 423,-340 });
+	CrazyIvan* Monster1 = CreateMonster<CrazyIvan>({ 494,-359 });
+	CrazyIvan* Monster2 = CreateMonster<CrazyIvan>({ 414,-442 });
+	CrazyIvan* Monster3 = CreateMonster<CrazyIvan>({ 572,-376 });
+	CrazyIvanCaptain* MonsterBoss = CreateMonster<CrazyIvanCaptain>({ 1040,-376 });
 }
 
 void Vilmark_1::Update(float _DeltaTime)

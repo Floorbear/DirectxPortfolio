@@ -10,7 +10,8 @@
 VilmarkMap::VilmarkMap() :
 	RightDoor_Renderer_(),
 	DoorEffect_Timer_(),
-	LeftDoorCol_()
+	LeftDoorCol_(),
+	VilmarkLogo_()
 {
 	RightDoor_Renderer_.reserve(3);
 	LeftDoor_Renderer_.reserve(3);
@@ -125,6 +126,26 @@ void VilmarkMap::MakeRightDoor()
 	}
 }
 
+void VilmarkMap::MakeLogo()
+{
+	VilmarkLogo_ = CreateComponent<GameEngineUIRenderer>();
+	VilmarkLogo_->CreateFrameAnimationFolder("Logo", FrameAnimation_DESC("VilmarkLogo", 0.05f, true));
+	VilmarkLogo_->ChangeFrameAnimation("Logo");
+	VilmarkLogo_->SetScaleRatio(1.3f);
+	VilmarkLogo_->ScaleToTexture();
+	VilmarkLogo_->SetPivot(PIVOTMODE::CENTER);
+	VilmarkLogo_->GetTransform().SetLocalPosition({ 0,0,-10000 });
+
+	VilmarkLogo_->AnimationBindEnd("Logo", [&](const FrameAnimation_DESC _Desc)
+		{
+			if (LogoLoopCount_ >= 3)
+			{
+				VilmarkLogo_->Off();
+			}
+			LogoLoopCount_++;
+		});
+}
+
 void VilmarkMap::Start()
 {
 	GetTransform().SetLocalMove({ 0, 0, 1000 });
@@ -159,12 +180,12 @@ void VilmarkMap::Update(float _DeltaTime)
 	//FadeIn & Out
 	if (FadeInTimer_.IsTimerOn() == true)//Fade In : Á¡Á¡ ¹à¾ÆÁü
 	{
-		FadeInTimer_.Update(_DeltaTime * 1.2f);
+		FadeInTimer_.Update(_DeltaTime * FadeTimeAcc_);
 		FadeRenderer_->GetPixelData().MulColor.a = FadeInTimer_.GetCurTime();
 	}
 	if (FadeOutTimer_.IsTimerOn() == true)//Fade Out : Á¡Á¡ ¹à¾ÆÁü
 	{
-		FadeOutTimer_.Update(_DeltaTime * 1.2f);
+		FadeOutTimer_.Update(_DeltaTime * FadeTimeAcc_);
 		FadeRenderer_->GetPixelData().MulColor.a = (1.f - FadeOutTimer_.GetCurTime());
 	}
 	//DoorEffect ±ôºý°Å¸®´Â°Å

@@ -30,6 +30,7 @@ public:
 	{
 		FadeOutTimer_.StartTimer(1.0f);
 	}
+	float FadeTimeAcc_ = 1.2f;
 protected:
 	void InitBackground(const std::string& _FileName);
 

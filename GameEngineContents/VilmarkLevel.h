@@ -18,6 +18,11 @@ public:
 	template <typename MonsterType>
 	MonsterType* CreateMonster(float4 _SpawnWorldPos)
 	{
+		//잘못된 위치에 스폰하는 것을 방지
+		if (_SpawnWorldPos.y > -320)
+		{
+			MsgBoxAssert("잘못된 SpawnPos");
+		}
 		DNFMonster* NewMonster = CreateActor< MonsterType>();
 		NewMonster->GetTransform().SetWorldPosition(_SpawnWorldPos);
 

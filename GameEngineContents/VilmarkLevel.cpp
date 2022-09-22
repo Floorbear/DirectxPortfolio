@@ -65,7 +65,7 @@ void VilmarkLevel::Update_Door(float _DeltaTime)
 	if (MonsterList_.empty() == true)
 	{
 		VilmarkMap_->OnDoor();
-
+		VilmarkMap_->FadeTimeAcc_ = 2.0f; //최초의 Vilmark_0에서 FadeTime을 느리게 만들었기 때문에 여기서 별도 수정
 		//플레이어가 오른쪽Door Order에 충돌하면 다음 맵으로
 		if (Player_->HitBelow_->IsCollision(CollisionType::CT_OBB2D,
 			ColOrder::DoorRight, CollisionType::CT_OBB2D) == true)
@@ -78,7 +78,7 @@ void VilmarkLevel::Update_Door(float _DeltaTime)
 			}
 			else
 			{
-				LevelChangeTimer_.Update(_DeltaTime * 1.2f);
+				LevelChangeTimer_.Update(_DeltaTime * VilmarkMap_->FadeTimeAcc_);
 				if (LevelChangeTimer_.IsTimerOn() == false)
 				{
 					Player_->PrevMapPos_ = 0;
@@ -100,7 +100,7 @@ void VilmarkLevel::Update_Door(float _DeltaTime)
 			}
 			else
 			{
-				LevelChangeTimer_.Update(_DeltaTime * 1.2f);
+				LevelChangeTimer_.Update(_DeltaTime * VilmarkMap_->FadeTimeAcc_);
 				if (LevelChangeTimer_.IsTimerOn() == false)
 				{
 					Player_->PrevMapPos_ = 1;

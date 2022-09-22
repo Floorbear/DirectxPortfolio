@@ -14,7 +14,8 @@ CrazyIvan::CrazyIvan() :
 	SelfDestructTargetPos_(),
 	SelfDestructCol_Timer_()
 {
-	MaxHP_ = 600000;
+	//MaxHP_ = 600000;//기본체려
+	MaxHP_ = 320000;
 	CurHP_ = MaxHP_;
 
 	Value_.Type = MonsterType::CrazyIvanM;
@@ -41,6 +42,8 @@ CrazyIvan::CrazyIvan() :
 	BotPos_ = { 0,-58.f,0 };
 
 	Value_.Attack_1_CoolTime = 10.0f;
+
+	Value_.Speed = 70.0f;
 }
 
 CrazyIvan::~CrazyIvan()
