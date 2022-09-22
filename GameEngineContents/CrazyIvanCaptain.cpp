@@ -12,9 +12,10 @@
 CrazyIvanCaptain::CrazyIvanCaptain() :
 	Check_SelfDestruct_Timer_(),
 	SelfDestructTargetPos_(),
-	SelfDestructCol_Timer_()
+	SelfDestructCol_Timer_(),
+	IsUnder50_(false)
 {
-	MaxHP_ = 1000000;
+	MaxHP_ = 1200000;
 	CurHP_ = MaxHP_;
 
 	Value_.Type = MonsterType::CrazyIvanM;
@@ -79,7 +80,7 @@ void CrazyIvanCaptain::Start()
 
 		DNFTransition Idle;
 		Idle.AddValue("Back", 20);
-		Idle.AddValue("Chase", 30);
+		Idle.AddValue("Chase", 40);
 		Idle.AddValue("Idle", -1);
 		Transition_.insert(std::make_pair("Idle", Idle));
 	}
@@ -87,7 +88,7 @@ void CrazyIvanCaptain::Start()
 	{
 		DNFTransition Chase;
 		Chase.AddValue("Back", 30);
-		Chase.AddValue("Chase", 30);
+		Chase.AddValue("Chase", 40);
 		Chase.AddValue("Idle", -1);
 		Transition_.insert(std::make_pair("Chase", Chase));
 	}
@@ -95,15 +96,15 @@ void CrazyIvanCaptain::Start()
 	{
 		DNFTransition Attack_1;
 		Attack_1.AddValue("Back", 30);
-		Attack_1.AddValue("Chase", 20);
+		Attack_1.AddValue("Chase", 30);
 		Attack_1.AddValue("Idle", -1);
 		Transition_.insert(std::make_pair("Attack_1", Attack_1));
 	}
 
 	{
 		DNFTransition Back;
-		Back.AddValue("Chase", 20);
-		Back.AddValue("Idle", 60);
+		Back.AddValue("Chase", 40);
+		Back.AddValue("Idle", 40);
 		Back.AddValue("Back", -1);
 		Transition_.insert(std::make_pair("Back", Back));
 	}
@@ -127,13 +128,18 @@ void CrazyIvanCaptain::CheckIvanFury()
 	if (HPRatio < 0.7f/* && IsUnder70_ == false*/)
 	{
 		//IsUnder70_ = true;
-		Value_.Speed = 195.0f;
+		Value_.Speed = 245.0f;
 		MainRenderer_->GetPixelData().PlusColor.r += 0.25f;
+	}
+	if (HPRatio < 0.5f && IsUnder50_ == false) //체력이 35이하일경우에 딱1번만 실행
+	{
+		IsUnder50_ = true;
+		StateManager_.ChangeState("FuryChase");
 	}
 	if (HPRatio < 0.35f /*&& IsUnder35_ == false*/)
 	{
 		//IsUnder35_ = true;
-		Value_.Speed = 240.0f;
+		Value_.Speed = 310.0f;
 		MainRenderer_->GetPixelData().PlusColor.r += 0.25f;
 	}
 }
@@ -268,19 +274,37 @@ void CrazyIvanCaptain::CreateMonsterAniFunc()
 void CrazyIvanCaptain::FuryChaseStart(const StateInfo _Info)
 {
 	ChangeDNFAnimation("Move");
-	SelfDestructTargetPos_ = Player_->GetBotPos() + float4(0, 30, 0);
 }
 
 void CrazyIvanCaptain::FuryChaseUpdate(float _DeltaTime, const StateInfo _Info)
 {
+	SelfDestructTargetPos_ = Player_->GetBotPos() + float4(0, 30, 0);
 	float4 thisPos = GetTransform().GetWorldPosition();
 
 	float length = DNFMath::Length(SelfDestructTargetPos_, thisPos);
 
-	//목적지에 다다르면 자폭
+	if (Check_SelfDestruct_Timer_.IsTimerOn() == false) //최초의 타이머 Set
+	{
+		float RandomValue = GameEngineRandom::MainRandom.RandomFloat(4.5f, 6.5f);
+		Check_SelfDestruct_Timer_.StartTimer(RandomValue);
+	}
+	else
+	{
+		Check_SelfDestruct_Timer_.Update(_DeltaTime);
+		if (Check_SelfDestruct_Timer_.IsTimerOn() == false) //시간이 다되고 자폭하러갈지 판단
+		{
+			float HPRatio = static_cast<float>(CurHP_) / static_cast<float>(MaxHP_);
+			float Value = 1.f - (HPRatio);
+			float RandomValue = GameEngineRandom::MainRandom.RandomFloat(0.0f, 1.0f);
+			if (Value > RandomValue)
+			{
+				StateManager_.ChangeState("SelfDestruct");
+			}
+		}
+	}
+
 	if (length < 1.0f)
 	{
-		StateManager_.ChangeState("SelfDestruct");
 		return;
 	}
 
@@ -301,24 +325,9 @@ void CrazyIvanCaptain::FuryChaseUpdate(float _DeltaTime, const StateInfo _Info)
 
 std::string CrazyIvanCaptain::CheckAdditionalPattern(float _DeltaTime)
 {
-	if (Check_SelfDestruct_Timer_.IsTimerOn() == false) //최초의 타이머 Set
+	if (IsUnder50_ == false)
 	{
-		float RandomValue = GameEngineRandom::MainRandom.RandomFloat(4.5f, 6.3f);
-		Check_SelfDestruct_Timer_.StartTimer(RandomValue);
-	}
-	else
-	{
-		Check_SelfDestruct_Timer_.Update(_DeltaTime);
-		if (Check_SelfDestruct_Timer_.IsTimerOn() == false) //시간이 다되고 자폭하러갈지 판단
-		{
-			float HPRatio = static_cast<float>(CurHP_) / static_cast<float>(MaxHP_);
-			float Value = 1.f - (HPRatio);
-			float RandomValue = GameEngineRandom::MainRandom.RandomFloat(0.0f, 1.0f);
-			if (Value > RandomValue)
-			{
-				return "FuryChase";
-			}
-		}
+		return "";
 	}
 
 	return "";

@@ -28,6 +28,8 @@ protected:
 
 	std::string CheckAdditionalPattern(float _DeltaTime) override;
 
+	bool IsUnder50_;
+
 	Timer Check_SelfDestruct_Timer_;
 	Timer SelfDestructCol_Timer_;
 	float4 SelfDestructTargetPos_;
