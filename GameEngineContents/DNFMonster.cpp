@@ -742,7 +742,7 @@ void DNFMonster::UpdateBleeding(float _DeltaTime)
 			BleedingRenderer_->On();
 
 			float4 BleedingPos = Value_.BleedingPos;
-			BleedingPos.x = GetDirX().x * Value_.BleedingPos.x;
+			BleedingPos.x = -abs(Value_.BleedingPos.x);
 			BleedingRenderer_->GetTransform().SetLocalPosition(BleedingPos);
 			BleedingRenderer_->GetTransform().SetLocalScale({ Value_.BleedingScale.x,Value_.BleedingScale.y,Value_.BleedingScale.z });
 

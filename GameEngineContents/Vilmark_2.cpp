@@ -22,19 +22,19 @@ void Vilmark_2::Start()
 	VilmarkMap_->MakeLeftDoor();
 	VilmarkMap_->MakeRightDoor();
 
-	TauCaptain* Monster = CreateMonster<TauCaptain>(float4(579, -342));
+	TauCaptain* MonsterTau = CreateMonster<TauCaptain>(float4(579, -342));
 
-	//ºô¸¶¸£Å© ¹æ 3²¨
+	////ºô¸¶¸£Å© ¹æ 3²¨
 
-	//HeartFox* MonsterBoss = CreateMonster<HeartFox>(float4(1079, -342));
-	//////¸ó½ºÅÍ »ý¼º
-	//float4 AccPos = {};
-	//Ciel* Monster = CreateMonster<Ciel>(AccPos + float4(579, -342));
-	//Ciel* Monster1 = CreateMonster<Ciel>(AccPos + float4(697, -365));
-	//Ciel* Monster2 = CreateMonster<Ciel>(AccPos + float4(782, -418));
-	//Ciel* Monster3 = CreateMonster<Ciel>(AccPos + float4(869, -340));
-	//Ciel* Monster4 = CreateMonster<Ciel>(AccPos + float4(918, -379));
-	//Ciel* Monster5 = CreateMonster<Ciel>(AccPos + float4(1014, -433));
+	HeartFox* MonsterBoss = CreateMonster<HeartFox>(float4(1079, -342));
+	////¸ó½ºÅÍ »ý¼º
+	float4 AccPos = {};
+	Ciel* Monster = CreateMonster<Ciel>(AccPos + float4(573, -342));
+	Ciel* Monster1 = CreateMonster<Ciel>(AccPos + float4(697, -365));
+	Ciel* Monster2 = CreateMonster<Ciel>(AccPos + float4(782, -418));
+	Ciel* Monster3 = CreateMonster<Ciel>(AccPos + float4(869, -340));
+	Ciel* Monster4 = CreateMonster<Ciel>(AccPos + float4(918, -379));
+	Ciel* Monster5 = CreateMonster<Ciel>(AccPos + float4(1014, -433));
 }
 
 void Vilmark_2::Update(float _DeltaTime)

@@ -16,24 +16,29 @@ TauCaptain::TauCaptain() :
 	AdditionRenderer_.push_back(&WeaponRenderer_);
 
 	Value_.MonsterTextureSize_ = { 500.0f,500.0f,1.0f };
-	Value_.IdleAboveColPos = { 0,0,-500.0f };
-	Value_.IdleAboveColScale = { 60,47,1 };
-	Value_.IdleBelowColPos = { 0,-30,-500 };
-	Value_.HitAboveColPos = { 0, 0, -500.0f };
-	Value_.HitAboveColScale = { 60,47,1 };
-	Value_.HitBelowColPos = { 0, -30, -500 };
-	Value_.HitBelowColScale = { 60,47,1 };
-	Value_.DownAboveColPos = { -25,-30,-500 };
-	Value_.DownAboveColScale = { 80,20,1 };
-	Value_.DownBelowColPos = { -25,-50,-500 };
-	Value_.DownBelowColScale = { 80,20,1 };
+	Value_.IdleAboveColPos = { 0,-20,-500.0f };
+	Value_.IdleAboveColScale = { 120,70,1 };
+	Value_.IdleBelowColPos = { 0,-50,-500 };
+	Value_.IdleBelowColScale = { 120,70,1 };
+	Value_.HitAboveColPos = { 0,-20,-500.0f };
+	Value_.HitAboveColScale = { 120,70,1 };
+	Value_.HitBelowColPos = { 0,-50,-500 };
+	Value_.HitBelowColScale = { 120,70,1 };
+	Value_.DownAboveColPos = { -65,-60,-500 };
+	Value_.DownAboveColScale = { 120,20,1 };
+	Value_.DownBelowColPos = { -65,-80,-500 };
+	Value_.DownBelowColScale = { 120,20,1 };
+
+	//출혈
+	Value_.BleedingPos = { -90,120 };
+	Value_.BleedingScale = { -1.3f,1.3f,1.3f };
 
 	HitEffectMovePos_ = { 0,-20,0 }; //Hit파티클이 생기는 위치
 
-	Attack_1_Pos_ = { 40.0f,-30.0f,-500.0f };
+	Attack_1_Pos_ = { 40.0f,-38.0f,-500.0f };
 	Attack_1_Scale_ = { 120.0f,50.0f,1.0f };
 	ShadowPos_ = { -10.f,-28.f,500.f,1.f };
-	BotPos_ = { 0,-58.f,0 };
+	BotPos_ = { 0,-88.f,0 };
 
 	Value_.Attack_1_CoolTime = 5.0f;
 
@@ -74,13 +79,13 @@ void TauCaptain::Start()
 		}
 	}
 	InitMonster();
-
-	Value_.BleedingPos.y -= 50.0f;
+	StartDebug();
 }
 
 void TauCaptain::Update(float _DeltaTime)
 {
 	UpdateMonster(_DeltaTime);
+	UpdateDebug();
 }
 
 void TauCaptain::End()
@@ -107,7 +112,7 @@ void TauCaptain::CreateMonsterAni()
 {
 	CreateDNFAnimation("Idle", FrameAnimation_DESC("taucaptain_body", Tau_Idle_Start, Tau_Idle_End, AniSpeed_));
 	CreateDNFAnimation("Move", FrameAnimation_DESC("taucaptain_body", Tau_Move_Start, Tau_Move_End, AniSpeed_));
-	std::vector<unsigned int> AttackFrames = { 1,2,2,2,3,4,5,6,6,6 };
+	std::vector<unsigned int> AttackFrames = { 1,2,2,2,2,3,4,5,6,6,6 };
 	CreateDNFAnimation("Attack_1", FrameAnimation_DESC("taucaptain_body", AttackFrames, AniSpeed_, false));
 	CreateDNFAnimation("Hit", FrameAnimation_DESC("taucaptain_body", Tau_Hit_Start, Tau_Hit_End, AniSpeed_, false));
 	CreateDNFAnimation("Down", FrameAnimation_DESC("taucaptain_body", Tau_Down_Start, Tau_Down_End, AniSpeed_, false));
@@ -126,10 +131,10 @@ void TauCaptain::CreateMonsterAniFunc()
 				CurAttackData_.AttackName = "Attack_1";
 				CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
 				CurAttackData_.Font = 2;
-				CurAttackData_.XForce = 100.0f;
-				//CurAttackData_.YForce = 300.0f;
-				CurAttackData_.Stiffness = 0.15f;
-				CurAttackData_.RStiffness = 0.11f;
+				CurAttackData_.XForce = 1100.0f;
+				CurAttackData_.YForce = 300.0f;
+				CurAttackData_.Stiffness = 1.35f;
+				CurAttackData_.RStiffness = 1.21f;
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.AttCount++;
 				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
