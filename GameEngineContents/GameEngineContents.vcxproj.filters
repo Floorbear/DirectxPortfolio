@@ -178,6 +178,9 @@
     <ClInclude Include="Ciel.h">
       <Filter>Monster</Filter>
     </ClInclude>
+    <ClInclude Include="CrazyIvanCaptain.h">
+      <Filter>Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -299,6 +302,9 @@
       <Filter>Vilmark</Filter>
     </ClCompile>
     <ClCompile Include="Ciel.cpp">
+      <Filter>Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="CrazyIvanCaptain.cpp">
       <Filter>Monster</Filter>
     </ClCompile>
   </ItemGroup>

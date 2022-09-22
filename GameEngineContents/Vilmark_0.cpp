@@ -4,6 +4,7 @@
 #include "CrazyIvan.h"
 #include "Bloodlugaru.h"
 #include "Ciel.h"
+#include "CrazyIvanCaptain.h"
 
 #include "VilmarkMap.h"
 
@@ -20,7 +21,7 @@ void Vilmark_0::Start()
 {
 	VilmarkStart();
 	VilmarkMap_->MakeRightDoor();
-	Ciel* Monster = CreateMonster<Ciel>({ { 700,-400 } });
+	CrazyIvanCaptain* Monster = CreateMonster<CrazyIvanCaptain>({ { 700,-400 } });
 	//Bloodlugaru* Monster = CreateMonster<Bloodlugaru>({ { 700,-400 } });
 	//Bloodlugaru* Monster2 = CreateMonster<Bloodlugaru>({ { 800,-430 } });
 	//Bloodlugaru* Monster3 = CreateMonster<Bloodlugaru>({ { 750,-430 } });

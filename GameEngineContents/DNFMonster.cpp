@@ -90,34 +90,8 @@ void DNFMonster::UpdateMonster(float _DeltaTime)
 	{
 		MsgBoxAssert("ID가 0입니다. ID를 세팅해주세요");
 	}
-	if (IsSuperArmor_ == true && CurHP_ <= 0) //슈퍼아머상태에서는 Idle상태에서도 HP =0 이 될수있으므로 그것에 대한 예외처리
-	{
-		SuperArmorRenderer_->Off();
-		IsSuperArmor_ = false;
-		StateManager_.ChangeState("Die");
-	}
-	if (IsSuperArmor_ == true)
-	{
-		if (PrevHitName_ != PrevHitData_.AttackName)
-		{
-			PrevHitName_ = PrevHitData_.AttackName;
-		}
-		else
-		{
-			if (SuperArmor_Hit_Timer_.IsTimerOn() == false)
-			{
-				SuperArmor_Hit_Timer_.StartTimer(1.0f);
-			}
-			if (SuperArmor_Hit_Timer_.IsTimerOn() == true)
-			{
-				SuperArmor_Hit_Timer_.Update(_DeltaTime);
-				if (SuperArmor_Hit_Timer_.IsTimerOn() == false)
-				{
-					PrevHitData_ = {};
-				}
-			}
-		}
-	}
+
+	CheckSuperArmorHit(_DeltaTime);	//Idle상태에서 공격 여러번 당하는거 방지 & 공격 카운트 자동 초기화해주기
 	TimerCheck(_DeltaTime);
 	Force_.Update(_DeltaTime * (1 + (AirborneTime_ * AirborneTime_) * 0.01f));
 
@@ -131,6 +105,44 @@ void DNFMonster::UpdateMonster(float _DeltaTime)
 	//제한된 범위 밖을 나가지 못하게
 	CheckColMap();
 	DNFUpdate();
+}
+
+void DNFMonster::CheckSuperArmorHit(float _DeltaTime)
+{
+	if (IsSuperArmor_ == true && CurHP_ <= 0) //슈퍼아머상태에서는 Idle상태에서도 HP =0 이 될수있으므로 그것에 대한 예외처리
+	{
+		SuperArmorRenderer_->Off();
+		IsSuperArmor_ = false;
+		StateManager_.ChangeState("Die");
+	}
+	if (IsSuperArmor_ == true)
+	{
+		if (PrevHitName_ != PrevHitData_.AttackName)
+		{
+			PrevHitName_ = PrevHitData_.AttackName;
+		}
+		else //이름이 동일한 녀석이 들어온다면
+		{
+			if (PrevHitName_ == "")
+			{
+				SuperArmor_Hit_Timer_.Off();
+				return;
+			}
+
+			if (SuperArmor_Hit_Timer_.IsTimerOn() == false) //Attcount에 대한것이있어야함 & 갱신
+			{
+				SuperArmor_Hit_Timer_.StartTimer(1.0f); //같은 공격 1초뒤에 중복 허용
+			}
+			if (SuperArmor_Hit_Timer_.IsTimerOn() == true)
+			{
+				SuperArmor_Hit_Timer_.Update(_DeltaTime);
+				if (SuperArmor_Hit_Timer_.IsTimerOn() == false)
+				{
+					PrevHitData_ = {};
+				}
+			}
+		}
+	}
 }
 
 void DNFMonster::CheckColMap()

@@ -66,6 +66,10 @@ public:
 			return false;
 		}
 	}
+	void Off()
+	{
+		IsTimerOn_ = false;
+	}
 
 	void StartTimer()
 	{
@@ -112,11 +116,6 @@ private:
 	void On()
 	{
 		IsTimerOn_ = true;
-	}
-
-	void Off()
-	{
-		IsTimerOn_ = false;
 	}
 
 	void Reset()

@@ -22,6 +22,7 @@ public:
 protected:
 	void InitMonster();
 	void UpdateMonster(float _DeltaTime);
+	void CheckSuperArmorHit(float _DeltaTime);
 	void CheckColMap();
 	void End() override;
 
