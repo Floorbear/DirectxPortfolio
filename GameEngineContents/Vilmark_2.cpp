@@ -26,7 +26,7 @@ void Vilmark_2::Start()
 
 	TauCaptain* MonsterBoss = CreateMonster<TauCaptain>(float4(1079, -342));
 	////몬스터 생성
-	float4 AccPos = {};
+	float4 AccPos = { 0,-30.f };
 	MiniTau* Monster0 = CreateMonster<MiniTau>(AccPos + float4(573, -342));
 	MiniTau* Monster1 = CreateMonster<MiniTau>(AccPos + float4(697, -365));
 	MiniTau* Monster2 = CreateMonster<MiniTau>(AccPos + float4(782, -418));

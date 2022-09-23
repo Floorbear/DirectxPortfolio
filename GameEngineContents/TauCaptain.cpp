@@ -139,8 +139,8 @@ void TauCaptain::Attack_2_Update(float _DeltaTime, const StateInfo _Info)
 			CurAttackData_.Font = 2;
 			CurAttackData_.XForce = 1100.0f;
 			CurAttackData_.YForce = 350.0f;
-			CurAttackData_.Stiffness = 1.05f;
-			CurAttackData_.RStiffness = 1.04f;
+			CurAttackData_.Stiffness = 0.85f;
+			CurAttackData_.RStiffness = 0.84f;
 			CurAttackData_.AttCount = 0;
 			CurAttackData_.AttCount++;
 			CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
