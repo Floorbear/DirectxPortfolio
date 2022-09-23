@@ -8,7 +8,8 @@ enum MonsterType
 	CrazyIvanCapM,
 	CielM,
 	HeartFoxM,
-	TauCaptainM
+	TauCaptainM,
+	MiniTauM
 };
 
 enum class ColOrder

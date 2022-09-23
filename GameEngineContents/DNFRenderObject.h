@@ -122,6 +122,7 @@ protected:
 
 	float4 ShadowPos_;
 	float4 ShadowRot_;
+	float ShadowAirAcc_ = 1.f;
 
 	float4 PrevPos_;
 	float4 BotPos_;

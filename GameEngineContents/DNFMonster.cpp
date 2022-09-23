@@ -331,7 +331,7 @@ void DNFMonster::ChaseStart(const StateInfo _Info)
 
 void DNFMonster::ChaseUpdate(float _DeltaTime, const StateInfo _Info)
 {
-	float4 PlayerPos = Player_->GetTransform().GetWorldPosition();
+	float4 PlayerPos = Player_->GetTransform().GetWorldPosition(); //미니타우는 GetBotPos로해야 맛더라?
 	float4 thisPos = GetTransform().GetWorldPosition();
 
 	float length = DNFMath::Length(PlayerPos, thisPos);
@@ -661,7 +661,7 @@ bool DNFMonster::CanHitAttack1()
 	if (AttackRangeCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::PlayerHit, CollisionType::CT_OBB2D)
 		== true && Attack_1_Timer_.IsTimerOn() == false)
 	{
-		if (IsZPosHit(static_cast<int>(Player_->GetTransform().GetWorldPosition().y + BotPos_.y)) == true)
+		if (IsZPosHit(static_cast<int>(Player_->GetBotPos().y)) == true)
 		{
 			return true;
 		}

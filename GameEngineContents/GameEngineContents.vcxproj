@@ -278,6 +278,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="MiniTau.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="MonsterHP.h">
       <SubType>
       </SubType>
@@ -450,6 +454,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="HeartFox.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="MiniTau.cpp">
       <SubType>
       </SubType>
     </ClCompile>

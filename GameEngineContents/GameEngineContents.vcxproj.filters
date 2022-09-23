@@ -193,6 +193,9 @@
     <ClInclude Include="Vilmark_3.h">
       <Filter>Vilmark</Filter>
     </ClInclude>
+    <ClInclude Include="MiniTau.h">
+      <Filter>Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -330,6 +333,9 @@
     </ClCompile>
     <ClCompile Include="Vilmark_3.cpp">
       <Filter>Vilmark</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniTau.cpp">
+      <Filter>Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

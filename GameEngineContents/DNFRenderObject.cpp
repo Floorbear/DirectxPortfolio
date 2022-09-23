@@ -133,7 +133,7 @@ void DNFRenderObject::ShadowUpdate()
 	{
 		float4 GroundPos = GetTransform().GetWorldPosition();
 		GroundPos += ShadowPos_;
-		GroundPos.y = GroundYPos_ - 40.0f;
+		GroundPos.y = (GroundYPos_ - 40.0f * ShadowAirAcc_);
 		ShadowRenderer_->GetTransform().SetWorldPosition(GroundPos);
 	}
 }
@@ -433,6 +433,6 @@ void DNFRenderObject::DNFStart()
 void DNFRenderObject::ZSort()
 {
 	float4 CurPos = GetTransform().GetWorldPosition();
-	CurPos.z = CurPos.y - 10;
+	CurPos.z = CurPos.y + BotPos_.y;
 	GetTransform().SetWorldPosition(CurPos);
 }

@@ -309,6 +309,14 @@ void MonsterHP::CheckType(MonsterType _Type)
 		MonsterCategory_->SetFolderTextureToIndex("Category", 1);
 		MonsterCategory_->ScaleToTexture();
 		break;
+	case MiniTauM:
+		MonsterHead_->SetFolderTextureToIndex("MonsterHead", 7);
+		MonsterHead_->ScaleToTexture();
+		MonsterHead_->On();
+
+		MonsterCategory_->SetFolderTextureToIndex("Category", 1);
+		MonsterCategory_->ScaleToTexture();
+		break;
 	default:
 		break;
 	}
