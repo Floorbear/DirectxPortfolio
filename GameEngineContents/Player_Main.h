@@ -75,7 +75,7 @@ protected:
 
 private:
 	//카메라 추적
-	void ChaseCamera();
+	void ChaseCamera(float _DeltaTime);
 
 	//픽셀충돌 체크
 	void CheckColMap();
@@ -106,6 +106,22 @@ public:
 	{
 		return SkillCoolTime_;
 	}
+
+	//카메라 흔들림관련
+public:
+	inline void ShakeCamera(float _Size, float _Duration, float _IterTime = 0.04f)
+	{
+		ShakeIterTimer_.StartTimer(_IterTime);
+		ShakeDurationTimer_.StartTimer(_Duration);
+		ShakeSize_ = _Size;
+	}
+protected:
+	float4 UpdateShakeCamera(float _DeltaTime);
+	float4 ShakeData_;
+	Timer ShakeIterTimer_;
+	Timer ShakeDurationTimer_;
+	float ShakeSize_ = 0.f;
+
 private:
 	Timer* CreateSkillCoolTime(std::string _Name, float Time_); //새로운 스킬쿨타임을 새로 생성한다.
 	void InitSkillCoolTime(); //여러 스킬쿨타임들을 초기화 한다.

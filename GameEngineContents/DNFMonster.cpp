@@ -145,7 +145,12 @@ void DNFMonster::CheckSuperArmorHit(float _DeltaTime)
 	}
 }
 
-void DNFMonster::CheckColMap()
+void DNFMonster::OffSuperArmor()
+{
+	SuperArmorTimer_ = 0.01f;
+}
+
+bool DNFMonster::CheckColMap()
 {
 	float4 MapScale = GetDNFLevel()->GetMapScale();
 	float4 PlayerPosBot = GetTransform().GetWorldPosition();
@@ -159,6 +164,7 @@ void DNFMonster::CheckColMap()
 		if (ColMap->GetPixelToFloat4(static_cast<int>(PlayerPosBot.x), static_cast<int>(PlayerPosBot.y)).CompareInt3D(float4::MAGENTA) == false)
 		{
 			GetTransform().SetWorldPosition(PrevPos_);
+			return false;
 		}
 	}
 	else
@@ -169,6 +175,7 @@ void DNFMonster::CheckColMap()
 		{
 			GetTransform().SetWorldPosition(PrevPos_);
 			Force_.ForceX_ = 0.f;
+			return false;
 		}
 	}
 
@@ -177,6 +184,7 @@ void DNFMonster::CheckColMap()
 	{
 		PrevPos_ = GetTransform().GetWorldPosition();
 	}
+	return true;
 }
 
 void DNFMonster::End()
@@ -828,6 +836,11 @@ void DNFMonster::StartDebug()
 
 	DNFDebugGUI::AddMutableValue("BleedingEffectPos", &Value_.BleedingPos);
 	DNFDebugGUI::AddMutableValue("BleedingScale", &Value_.BleedingScale);
+
+	DNFDebugGUI::AddMutableValue("SuperArmorPos", &Value_.SuperArmorPos);
+	DNFDebugGUI::AddMutableValue("SuperArmorScale", &Value_.SuperArmorScale);
+	DNFDebugGUI::AddMutableValue("StartSuperArmorScale", &Value_.StartSuperArmorScale);
+	DNFDebugGUI::AddMutableValue("SuperArmorSmallerSpeed", &Value_.SuperArmorSmallerSpeed);
 }
 
 void DNFMonster::UpdateDebug()

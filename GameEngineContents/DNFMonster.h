@@ -23,7 +23,8 @@ protected:
 	void InitMonster();
 	void UpdateMonster(float _DeltaTime);
 	void CheckSuperArmorHit(float _DeltaTime);
-	void CheckColMap();
+	void OffSuperArmor();
+	bool CheckColMap(); //false : ÇÈ¼¿Ãæµ¹ ¹üÀ§ ¹ÛÀ» ¹þ¾î³µ´Ù
 	void End() override;
 
 	float AniSpeed_;

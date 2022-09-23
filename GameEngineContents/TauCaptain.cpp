@@ -9,7 +9,9 @@
 #include "Player_Main.h"
 
 TauCaptain::TauCaptain() :
-	WeaponRenderer_()
+	WeaponRenderer_(),
+	Attack_2_Change_Timer_(),
+	Attack_2_Wait_Timer_()
 {
 	AllDNFRenderer_.push_back(&WeaponRenderer_);
 
@@ -40,9 +42,9 @@ TauCaptain::TauCaptain() :
 	ShadowPos_ = { -10.f,-28.f,500.f,1.f };
 	BotPos_ = { 0,-88.f,0 };
 
-	Value_.Attack_1_CoolTime = 5.0f;
+	Value_.Attack_1_CoolTime = 0.2f;
 
-	Value_.Speed = 100.0f;
+	Value_.Speed = 170.0f;
 
 	Value_.Type = MonsterType::TauCaptainM;
 	Value_.DieParticleName = "DieParticleRed";
@@ -52,8 +54,8 @@ TauCaptain::TauCaptain() :
 	FindRange_ = 550.0f;
 
 	Value_.SuperArmorPos = { 0.0f,0.0f };
-	Value_.SuperArmorScale = { 328.0f,321.0f }; //슈퍼아머 상태
-	Value_.StartSuperArmorScale = { 420.f,420.f };
+	Value_.SuperArmorScale = { 513.0f,506.0f }; //슈퍼아머 상태
+	Value_.StartSuperArmorScale = { 690.f,690.f };
 	Value_.SuperArmorSmallerSpeed = 430.0f;
 }
 
@@ -79,17 +81,119 @@ void TauCaptain::Start()
 		}
 	}
 	InitMonster();
+
+	StateManager_.CreateStateMember("Attack_2", std::bind(&TauCaptain::Attack_2_Update, this, std::placeholders::_1, std::placeholders::_2)
+		, std::bind(&TauCaptain::Attack_2_Start, this, std::placeholders::_1),
+		std::bind(&TauCaptain::Attack_2_End, this, std::placeholders::_1));
+
 	StartDebug();
 }
 
 void TauCaptain::Update(float _DeltaTime)
 {
 	UpdateMonster(_DeltaTime);
-	UpdateDebug();
+	if (Attack_2_CoolTimer_.IsTimerOn() == true)
+	{
+		Attack_2_CoolTimer_.Update(_DeltaTime);
+	}
 }
 
 void TauCaptain::End()
 {
+}
+
+void TauCaptain::Attack_2_Start(const StateInfo _Info)
+{
+	//Flip Check
+	float4 PlayerPos = Player_->GetTransform().GetWorldPosition();
+	float4 thisPos = GetTransform().GetWorldPosition();
+	float4 MoveDir = PlayerPos - thisPos;
+	MoveDir.z = 0;
+	MoveDir.Normalize();
+	if (MoveDir.x > 0)
+	{
+		GetTransform().PixLocalPositiveX();
+	}
+	else
+	{
+		GetTransform().PixLocalNegativeX();
+	}
+
+	ChangeDNFAnimation("Attack_2_Wait");
+	StartSuperArmor(9999.0f);
+	Attack_2_Wait_Timer_.StartTimer(0.35f);
+}
+
+void TauCaptain::Attack_2_Update(float _DeltaTime, const StateInfo _Info)
+{
+	//돌진 공격 전 준비동작
+	if (Attack_2_Wait_Timer_.IsTimerOn() == true)
+	{
+		Attack_2_Wait_Timer_.Update(_DeltaTime);
+		if (Attack_2_Wait_Timer_.IsTimerOn() == false) //준비자세를 취하고 돌진하기 직전 순간
+		{
+			//Set Attack
+			CurAttackData_.Type = AttackType::Below;
+			CurAttackData_.AttackName = "Attack_2";
+			CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
+			CurAttackData_.Font = 2;
+			CurAttackData_.XForce = 1100.0f;
+			CurAttackData_.YForce = 350.0f;
+			CurAttackData_.Stiffness = 1.05f;
+			CurAttackData_.RStiffness = 1.04f;
+			CurAttackData_.AttCount = 0;
+			CurAttackData_.AttCount++;
+			CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
+			CurAttackData_.AttEffect = Effect::SlashSLeft;
+			AttackCol_->GetTransform().SetLocalPosition(Attack_2_Pos_);
+			AttackCol_->On();
+			ChangeDNFAnimation("Attack_2");
+			Force_.ForceX_ += Value_.Speed;
+			return;
+		}
+		return;
+	}
+	//플레이어를 박았어
+	if (AttackCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::PlayerHit, CollisionType::CT_OBB2D) == true &&
+		IsZPosHit(static_cast<int>(Player_->GetTransform().GetWorldPosition().y + BotPos_.y)) == true)
+	{
+		//O.2초뒤에 Idle상태로
+		Player_->ShakeCamera(11.5f, 0.35f);
+		Attack_2_Change_Timer_.StartTimer(0.2f);
+	}
+
+	if (Attack_2_Change_Timer_.IsTimerOn() == true) //플레이어를 박고 0.1초뒤 Idle상태로
+	{
+		Attack_2_Change_Timer_.Update(_DeltaTime);
+		if (Attack_2_Change_Timer_.IsTimerOn() == false)
+		{
+			StateManager_.ChangeState("Idle");
+			return;
+		}
+	}
+
+	Force_.ForceX_ += Value_.Speed * 10.0f * _DeltaTime;
+
+	//픽셀충돌 범위 밖에 도달했어
+	if (CheckColMap() == false)
+	{
+		Player_->ShakeCamera(11.5f, 0.35f);
+		StateManager_.ChangeState("Hit");
+		return;
+	}
+}
+
+void TauCaptain::Attack_2_End(const StateInfo _Info)
+{
+	Attack_2_CoolTimer_.StartTimer(Attack_2_CoolTime);
+	OnAir_ = false;
+	Force_.OffGravity();
+	Force_.ForceX_ = 0.f;
+	Force_.FrictionX_ = Value_.Default_Frction;
+	Attack_2_Change_Timer_.Off();
+	AttackCol_->Off();
+	OffSuperArmor();
+	CurAttackData_ = {};
 }
 
 void TauCaptain::CreateDNFAnimation(const std::string& _AnimationName, const FrameAnimation_DESC& _Desc)
@@ -117,6 +221,8 @@ void TauCaptain::CreateMonsterAni()
 	CreateDNFAnimation("Hit", FrameAnimation_DESC("taucaptain_body", Tau_Hit_Start, Tau_Hit_End, AniSpeed_, false));
 	CreateDNFAnimation("Down", FrameAnimation_DESC("taucaptain_body", Tau_Down_Start, Tau_Down_End, AniSpeed_, false));
 	CreateDNFAnimation("Die", FrameAnimation_DESC("taucaptain_body", Tau_Down_Start, Tau_Down_Start, AniSpeed_, false));
+	CreateDNFAnimation("Attack_2_Wait", FrameAnimation_DESC("taucaptain_body", Tau_Attack_2_Wait_Start, Tau_Attack_2_Wait_Start, AniSpeed_, false));
+	CreateDNFAnimation("Attack_2", FrameAnimation_DESC("taucaptain_body", Tau_Attack_2_Start, Tau_Attack_2_End, AniSpeed_, true));
 }
 
 void TauCaptain::CreateMonsterAniFunc()
@@ -124,6 +230,10 @@ void TauCaptain::CreateMonsterAniFunc()
 	MainRenderer_->AnimationBindFrame("Attack_1",
 		[&](const FrameAnimation_DESC& _Desc)
 		{
+			if (_Desc.Frames[_Desc.CurFrame - 1] == 1)
+			{
+				StartSuperArmor(1.0f);
+			}
 			if (_Desc.Frames[_Desc.CurFrame - 1] == 3)
 			{
 				//Set Attack
@@ -132,13 +242,14 @@ void TauCaptain::CreateMonsterAniFunc()
 				CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
 				CurAttackData_.Font = 2;
 				CurAttackData_.XForce = 300.0f;
-				CurAttackData_.YForce = 950.0f;
-				CurAttackData_.Stiffness = 1.35f;
-				CurAttackData_.RStiffness = 1.21f;
+				//CurAttackData_.YForce = 950.0f;
+				CurAttackData_.Stiffness = 0.35f;
+				CurAttackData_.RStiffness = 0.21f;
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.AttCount++;
 				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
 				CurAttackData_.AttEffect = Effect::SlashSLeft;
+				AttackCol_->GetTransform().SetLocalPosition(Attack_1_Pos_);
 				AttackCol_->On();
 			}
 		}
@@ -166,5 +277,15 @@ void TauCaptain::InitAdditionalRenderer()
 
 std::string TauCaptain::CheckAdditionalPattern(float _DeltaTime)
 {
+	if (Attack_2_CoolTimer_.IsTimerOn() == false)
+	{
+		//돌진하면 적이 맞을꺼 같냐
+		if (IsZPosHit(static_cast<int>(Player_->GetTransform().GetWorldPosition().y + BotPos_.y)) == true &&
+			abs(Player_->GetTransform().GetWorldPosition().x - GetTransform().GetWorldPosition().x) < FindRange_)
+		{
+			return "Attack_2";
+		}
+	}
+
 	return "";
 }

@@ -77,3 +77,8 @@
 #define Tau_Hit_End 9
 #define Tau_Down_Start 10
 #define Tau_Down_End 12
+
+#define Tau_Attack_2_Wait_Start 13
+#define Tau_Attack_2_Wait_End 14
+#define Tau_Attack_2_Start 15
+#define Tau_Attack_2_End 18

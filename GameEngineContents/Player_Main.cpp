@@ -157,6 +157,7 @@ void Player_Main::Update(float _DeltaTime)
 	}
 	CoolTimeUpdate(_DeltaTime);
 	CopyRendererUpdate(_DeltaTime);
+	UpdateShakeCamera(_DeltaTime);
 	StiffnessUpdate(_DeltaTime);
 	if (Stiffness_ > 0)
 	{
@@ -184,7 +185,7 @@ void Player_Main::Update(float _DeltaTime)
 	if (DNFGlobalValue::CurrentLevel != nullptr)
 	{
 		CheckColMap();
-		ChaseCamera();
+		ChaseCamera(_DeltaTime);
 	}
 	ShadowUpdate();
 }
@@ -193,7 +194,7 @@ void Player_Main::End()
 {
 }
 
-void Player_Main::ChaseCamera()
+void Player_Main::ChaseCamera(float _DeltaTime)
 {
 	//카메라 Pos관련
 	float4 CurPos = GetTransform().GetWorldPosition();
@@ -203,15 +204,20 @@ void Player_Main::ChaseCamera()
 	CameraPos.z = -500;
 
 	CameraPos.x = GetTransform().GetWorldPosition().x;
+
+	float4 ShakePos = ShakeData_;
+
 	//왼쪽
 	if (CurPos.x - 640 * Zoom < 0.0f)
 	{
 		CameraPos.x = 640 * Zoom;
+		ShakePos.x = abs(ShakePos.x);
 	}
 	//오른쪽
 	if (CurPos.x + 640 * Zoom > MapScale.x)
 	{
 		CameraPos.x = MapScale.x - 640 * Zoom;
+		ShakePos.x = -abs(ShakePos.x);
 	}
 
 	CameraPos.y = GetTransform().GetWorldPosition().y;
@@ -219,14 +225,21 @@ void Player_Main::ChaseCamera()
 	if (CurPos.y - 360 * Zoom < -MapScale.y)
 	{
 		CameraPos.y = -MapScale.y + 360 * Zoom;
+		ShakePos.y = abs(ShakePos.y);
+	}
+	//아래
+	if ((CurPos.y - 360 * Zoom) + ShakePos.y < -MapScale.y)
+	{
+		ShakePos.y = abs(ShakePos.y);
 	}
 	//위
 	if (CurPos.y + 360 * Zoom > 0.0f)
 	{
 		CameraPos.y = -360 * Zoom;
+		ShakePos.y = -abs(ShakePos.y);
 	}
 
-	GetLevel()->GetMainCameraActorTransform().SetWorldPosition(CameraPos);
+	GetLevel()->GetMainCameraActorTransform().SetWorldPosition(CameraPos + ShakePos);
 }
 
 void Player_Main::CheckColMap()
@@ -497,6 +510,30 @@ int Player_Main::CalAtt(int _Value)
 	}
 	float CalDam = GameEngineRandom::MainRandom.RandomFloat(Value * 0.7f, Value * 1.3f);
 	return static_cast<int>(CalDam);
+}
+
+float4 Player_Main::UpdateShakeCamera(float _DeltaTime)
+{
+	if (ShakeDurationTimer_.IsTimerOn() == false)
+	{
+		ShakeData_ = {};
+		return { 0,0,0 };
+	}
+	else
+	{
+		ShakeDurationTimer_.Update(_DeltaTime);
+		if (ShakeIterTimer_.IsTimerOn() == false)
+		{
+			ShakeIterTimer_.StartTimer();
+			ShakeData_.x = GameEngineRandom::MainRandom.RandomFloat(-1.f, 1.f) * ShakeSize_;
+			ShakeData_.y = GameEngineRandom::MainRandom.RandomFloat(-1.f, 1.f) * ShakeSize_;
+
+			ShakeSize_ = ShakeSize_ * 0.8f;
+		}
+		ShakeIterTimer_.Update(_DeltaTime);
+		return ShakeData_;
+	}
+	return {};
 }
 
 Timer* Player_Main::CreateSkillCoolTime(std::string _Name, float Time_)

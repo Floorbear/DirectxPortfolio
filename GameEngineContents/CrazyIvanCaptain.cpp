@@ -204,7 +204,8 @@ void CrazyIvanCaptain::SelfDestruct_Update(float _DeltaTime, const StateInfo _In
 		MainRenderer_->Off();
 		DieAlpha_ = 0.0f;
 		IsDieEffect_ = true;
-		SelfDestructCol_Timer_.StartTimer(0.13f);
+		Player_->ShakeCamera(13.0f, 0.35f);
+		SelfDestructCol_Timer_.StartTimer(0.13f); //충돌체를 끄기위한 타이머
 	}
 
 	if (SelfDestructCol_Timer_.IsTimerOn() == true)
