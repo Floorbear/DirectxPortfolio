@@ -245,13 +245,14 @@ void Player_Main::CheckColMap()
 			GetTransform().SetWorldPosition(PrevPos_);
 		}
 	}
-	else
+	else //체공중입니다
 	{
 		float4 DownPos = GetTransform().GetWorldPosition();
 		DownPos.y = -GroundYPos_ - BotPos_.y;
 		if (ColMap->GetPixelToFloat4(static_cast<int>(PlayerPosBot.x), static_cast<int>(DownPos.y)).CompareInt3D(float4::MAGENTA) == false)
 		{
 			GetTransform().SetWorldPosition(PrevPos_);
+			Force_.ForceX_ = 0.f;
 		}
 	}
 

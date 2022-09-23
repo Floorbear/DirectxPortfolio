@@ -106,6 +106,7 @@ void MonsterHP::Start()
 		MonsterHead_ = CreateComponent<GameEngineUIRenderer>();
 		MonsterHead_->SetPivot(PIVOTMODE::LEFTTOP);
 		MonsterHead_->GetTransform().SetLocalPosition(Value_.MonsterHeadPos);
+		MonsterHead_->SetScaleRatio(0.9f);
 		MonsterHead_->Off();
 
 		MonsterDead_ = CreateComponent<GameEngineUIRenderer>();
@@ -294,6 +295,14 @@ void MonsterHP::CheckType(MonsterType _Type)
 		break;
 	case HeartFoxM:
 		MonsterHead_->SetFolderTextureToIndex("MonsterHead", 5);
+		MonsterHead_->ScaleToTexture();
+		MonsterHead_->On();
+
+		MonsterCategory_->SetFolderTextureToIndex("Category", 1);
+		MonsterCategory_->ScaleToTexture();
+		break;
+	case TauCaptainM:
+		MonsterHead_->SetFolderTextureToIndex("MonsterHead", 6);
 		MonsterHead_->ScaleToTexture();
 		MonsterHead_->On();
 

@@ -57,7 +57,7 @@ private:
 		float4 HPFontPos_0 = { 875,-20,0 };
 		float4 HPFontPos_1 = { 897,-20,0 };
 		float4 HPFontPos_2 = { 924,-20,0 };
-		float4 MonsterHeadPos = { 0,0, };
+		float4 MonsterHeadPos = { 2,-2, };
 		float4 UIPos = { -625,230,-1000 };
 		float4 CategoryPos = { 48,0 };
 	};

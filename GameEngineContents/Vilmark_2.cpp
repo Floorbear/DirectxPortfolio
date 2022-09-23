@@ -22,8 +22,6 @@ void Vilmark_2::Start()
 	VilmarkMap_->MakeLeftDoor();
 	VilmarkMap_->MakeRightDoor();
 
-	TauCaptain* MonsterTau = CreateMonster<TauCaptain>(float4(579, -342));
-
 	////ºô¸¶¸£Å© ¹æ 3²¨
 
 	HeartFox* MonsterBoss = CreateMonster<HeartFox>(float4(1079, -342));

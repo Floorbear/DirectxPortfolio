@@ -168,6 +168,7 @@ void DNFMonster::CheckColMap()
 		if (ColMap->GetPixelToFloat4(static_cast<int>(PlayerPosBot.x), static_cast<int>(DownPos.y)).CompareInt3D(float4::MAGENTA) == false)
 		{
 			GetTransform().SetWorldPosition(PrevPos_);
+			Force_.ForceX_ = 0.f;
 		}
 	}
 
@@ -730,7 +731,7 @@ void DNFMonster::UpdateBleeding(float _DeltaTime)
 			//Æ½
 
 			//µ¥¹ÌÁö ¶ß´Â°Å
-			float Damage = static_cast<float>(MaxHP_) * 0.005f;
+			float Damage = static_cast<float>(MaxHP_) * 0.0025f;
 			Damage = GameEngineRandom::MainRandom.RandomFloat(Damage * 0.7f, Damage * 1.3f);
 			int DamageI = static_cast<int>(Damage);
 			SetDamageFont(DamageI, GetTransform().GetWorldPosition() + DamageFontMovePos_ + Value_.BleedingSpawnPos, 3);

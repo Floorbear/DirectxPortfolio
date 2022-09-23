@@ -44,7 +44,7 @@ TauCaptain::TauCaptain() :
 
 	Value_.Speed = 100.0f;
 
-	Value_.Type = MonsterType::HeartFoxM;
+	Value_.Type = MonsterType::TauCaptainM;
 	Value_.DieParticleName = "DieParticleRed";
 	Value_.DieParticleSize = { 1.0f,1.0f,1.0f };
 	MaxHP_ = 1700000;
@@ -131,8 +131,8 @@ void TauCaptain::CreateMonsterAniFunc()
 				CurAttackData_.AttackName = "Attack_1";
 				CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
 				CurAttackData_.Font = 2;
-				CurAttackData_.XForce = 1100.0f;
-				CurAttackData_.YForce = 300.0f;
+				CurAttackData_.XForce = 300.0f;
+				CurAttackData_.YForce = 950.0f;
 				CurAttackData_.Stiffness = 1.35f;
 				CurAttackData_.RStiffness = 1.21f;
 				CurAttackData_.AttCount = 0;
