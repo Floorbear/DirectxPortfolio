@@ -169,6 +169,9 @@ protected:
 		float4 BleedingSpawnPos = { 20,35 };
 		float4 BleedingPos = { 30.0f,60.0f,-1 };
 		float4 BleedingScale = { -0.7f,0.7f,0.7f };
+
+		//Chase 목표 위치
+		float4 ChaseAccPos = {};
 	};
 	DefaultValue Value_;
 

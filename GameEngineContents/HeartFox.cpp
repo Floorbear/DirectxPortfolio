@@ -26,7 +26,7 @@ HeartFox::HeartFox() :
 	Value_.DieParticleSize = { 0.7f,0.7f,0.7f };
 	MaxHP_ = 1700000;
 	CurHP_ = MaxHP_;
-	FindRange_ = 550.0f;
+	FindRange_ = 850.0f;
 
 	Value_.SuperArmorPos = { 0.0f,0.0f };
 	Value_.SuperArmorScale = { 328.0f,321.0f }; //슈퍼아머 상태

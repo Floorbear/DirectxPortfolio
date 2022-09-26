@@ -226,6 +226,7 @@ void Player_Main::AutoAttackEnd(const StateInfo _Info)
 
 void Player_Main::UpperSlashStart(const StateInfo _Info)
 {
+	IsAttack_End_ = false;
 	AvatarManager_.ChangeMotion(PlayerAnimations::UpperSlash);
 	//CoolTime Set
 	SkillCoolTime_["UpperSlash"]->StartTimer();
@@ -267,6 +268,7 @@ void Player_Main::UpperSlashEnd(const StateInfo _Info)
 
 void Player_Main::GoreCrossStart(const StateInfo _Info)
 {
+	IsAttack_End_ = false;
 	AvatarManager_.ChangeMotion(PlayerAnimations::GoreCross_0);
 	SkillCoolTime_["GoreCross"]->StartTimer();
 	CurMP_ -= Value_.GoreCross_MP;

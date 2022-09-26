@@ -331,7 +331,7 @@ void DNFMonster::ChaseStart(const StateInfo _Info)
 
 void DNFMonster::ChaseUpdate(float _DeltaTime, const StateInfo _Info)
 {
-	float4 PlayerPos = Player_->GetTransform().GetWorldPosition(); //미니타우는 GetBotPos로해야 맛더라?
+	float4 PlayerPos = Player_->GetTransform().GetWorldPosition() + Value_.ChaseAccPos; //미니타우는 GetBotPos로해야 맛더라?
 	float4 thisPos = GetTransform().GetWorldPosition();
 
 	float length = DNFMath::Length(PlayerPos, thisPos);

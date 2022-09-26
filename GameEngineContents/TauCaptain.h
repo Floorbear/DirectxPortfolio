@@ -32,8 +32,8 @@ protected:
 
 	GameEngineTextureRenderer* WeaponRenderer_;
 
-	//Attack_2 관련
-	float Attack_2_CoolTime = 9.0f;
+	//Attack_2 = Charge 관련
+	float Attack_2_CoolTime = 18.0f;
 	Timer Attack_2_CoolTimer_;
 	Timer Attack_2_Wait_Timer_;
 	Timer Attack_2_Change_Timer_;

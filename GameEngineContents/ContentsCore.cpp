@@ -15,6 +15,8 @@
 #include "Vilmark_1.h"
 #include "Vilmark_2.h"
 #include "Vilmark_3.h"
+#include "Vilmark_4.h"
+#include "Vilmark_5.h"
 
 #pragma comment(lib, "GameEngineBase.lib")
 
@@ -165,10 +167,10 @@ void ContentsCore::Start()
 	CreateLevel<Vilmark_1>("Vilmark_1");
 	CreateLevel<Vilmark_2>("Vilmark_2");
 	CreateLevel<Vilmark_3>("Vilmark_3");
+	CreateLevel<Vilmark_4>("Vilmark_4");
+	CreateLevel<Vilmark_5>("Vilmark_5");
 
-	//CreateLevel<State0>("Title");
-	//CreateLevel<State1>("Title");
-	ChangeLevel("Vilmark_2");
+	ChangeLevel("Vilmark_5");
 
 	GameEngineGUI::CreateGUIWindow<GameEngineStatusWindow>("EngineStatus", nullptr);
 	GameEngineGUI::CreateGUIWindow<DNFDebugGUI>("DNFDebug", nullptr);

@@ -56,7 +56,6 @@ public:
 	}
 	inline void CurAttEnd()
 	{
-		IsReadyNextAttack_ = false;
 		IsAttack_End_ = true;
 	}
 

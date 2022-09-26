@@ -59,6 +59,8 @@ MiniTau::MiniTau() :
 	Value_.SuperArmorScale = { 513.0f * 0.31f,506.0f * 0.31f }; //슈퍼아머 상태
 	Value_.StartSuperArmorScale = { 690.f * 0.31f,690.f * 0.31f };
 	Value_.SuperArmorSmallerSpeed = 400.0f;
+
+	Value_.ChaseAccPos = { 0,-55.f,0 };
 }
 
 MiniTau::~MiniTau()
@@ -87,8 +89,6 @@ void MiniTau::Start()
 	StateManager_.CreateStateMember("Attack_2", std::bind(&MiniTau::Attack_2_Update, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&MiniTau::Attack_2_Start, this, std::placeholders::_1),
 		std::bind(&MiniTau::Attack_2_End, this, std::placeholders::_1));
-
-	StartDebug();
 }
 
 void MiniTau::Update(float _DeltaTime)

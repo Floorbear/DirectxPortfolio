@@ -51,7 +51,7 @@ TauCaptain::TauCaptain() :
 	Value_.DieParticleSize = { 1.0f,1.0f,1.0f };
 	MaxHP_ = 1700000;
 	CurHP_ = MaxHP_;
-	FindRange_ = 550.0f;
+	FindRange_ = 850.0f;
 
 	Value_.SuperArmorPos = { 0.0f,0.0f };
 	Value_.SuperArmorScale = { 513.0f,506.0f }; //슈퍼아머 상태
@@ -82,11 +82,12 @@ void TauCaptain::Start()
 	}
 	InitMonster();
 
+	//추가 패턴의 확률 추가
+	//Transition_
+
 	StateManager_.CreateStateMember("Attack_2", std::bind(&TauCaptain::Attack_2_Update, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&TauCaptain::Attack_2_Start, this, std::placeholders::_1),
 		std::bind(&TauCaptain::Attack_2_End, this, std::placeholders::_1));
-
-	StartDebug();
 }
 
 void TauCaptain::Update(float _DeltaTime)
@@ -146,6 +147,9 @@ void TauCaptain::Attack_2_Update(float _DeltaTime, const StateInfo _Info)
 			CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
 			CurAttackData_.AttEffect = Effect::SlashSLeft;
 			AttackCol_->GetTransform().SetLocalPosition(Attack_2_Pos_);
+			float4 UpperAttackScale = Attack_1_Scale_;
+			UpperAttackScale.x *= 0.5f;
+			AttackCol_->GetTransform().SetLocalScale(UpperAttackScale);
 			AttackCol_->On();
 			ChangeDNFAnimation("Attack_2");
 			Force_.ForceX_ += Value_.Speed;
@@ -192,6 +196,7 @@ void TauCaptain::Attack_2_End(const StateInfo _Info)
 	Force_.FrictionX_ = Value_.Default_Frction;
 	Attack_2_Change_Timer_.Off();
 	AttackCol_->Off();
+	AttackCol_->GetTransform().SetLocalScale(Attack_1_Scale_);
 	OffSuperArmor();
 	CurAttackData_ = {};
 }
