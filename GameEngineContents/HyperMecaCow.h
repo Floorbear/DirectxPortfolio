@@ -43,18 +43,20 @@ protected:
 
 	//Attack_2 관련
 	float Attack_2_CoolTime = 18.0f;
-	Timer Attack_2_CoolTimer_ = 5.0f;
+	Timer Attack_2_CoolTimer_ = 20.0f;
 	Timer Attack_2_Wait_Timer_;
 	Timer Attack_2_Change_Timer_;
 
 	//밥상 뒤집기 패턴관련
 	bool IsUpperAttackEnd = false;
-	Timer UpperAttack_CoolTimer_ = 7.0f;
+	Timer UpperAttack_CoolTimer_ = 10.0f;
 
 	//브레스 패턴 관련
 	GameEngineTextureRenderer* BreathFront_;
 	GameEngineTextureRenderer* BreathBack_;
 	bool IsBreathEnd_ = false;
+	float4 BreathPos_ = { 180.f,9.f ,0 };
+	Timer Breath_CoolTimer = 2.0f;
 
 	float4 Attack_2_Pos_ = { 0.0f,-38.0f,-500.0f };
 };

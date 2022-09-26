@@ -17,10 +17,10 @@ HyperMecaCow::HyperMecaCow() :
 	AdditionRenderer_.push_back(&WeaponRenderer_);
 
 	Value_.MonsterTextureSize_ = { 750.0f,750.0f,1.0f };
-	Value_.IdleAboveColPos = { -40,-60,-500.0f };
-	Value_.IdleAboveColScale = { 120,70,1 };
-	Value_.IdleBelowColPos = { -40,-90,-500 };
-	Value_.IdleBelowColScale = { 120,70,1 };
+	Value_.IdleAboveColPos = { -30,-60,-500.0f };
+	Value_.IdleAboveColScale = { 150,70,1 };
+	Value_.IdleBelowColPos = { -30,-90,-500 };
+	Value_.IdleBelowColScale = { 150,70,1 };
 	Value_.HitAboveColPos = Value_.IdleAboveColPos;
 	Value_.HitAboveColScale = Value_.IdleAboveColScale;
 	Value_.HitBelowColPos = Value_.IdleBelowColPos;
@@ -80,6 +80,22 @@ void HyperMecaCow::Start()
 			GameEngineFolderTexture::Load(Dir_i.GetFullPath());
 		}
 	}
+
+	//브레스 텍스처 로드
+	if (GameEngineFolderTexture::Find("fire_start") == nullptr)
+	{
+		GameEngineDirectory Dir;
+		Dir.MoveParentToExitsChildDirectory("ContentsResources");
+		Dir.Move("ContentsResources");
+		Dir.Move("FolderTexture");
+		Dir.Move("SkillTexture");
+		Dir.Move("Breath");
+		std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
+		for (GameEngineDirectory Dir_i : Dirs)
+		{
+			GameEngineFolderTexture::Load(Dir_i.GetFullPath());
+		}
+	}
 	InitMonster();
 
 	//Transition 수정 >> 좀더 호전적이게
@@ -122,6 +138,7 @@ void HyperMecaCow::Start()
 
 	//상태 추가
 	Attack_2_CoolTimer_.StartTimer();
+	Breath_CoolTimer.StartTimer();
 	StateManager_.CreateStateMember("Attack_2", std::bind(&HyperMecaCow::Attack_2_Update, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&HyperMecaCow::Attack_2_Start, this, std::placeholders::_1),
 		std::bind(&HyperMecaCow::Attack_2_End, this, std::placeholders::_1));
@@ -150,6 +167,10 @@ void HyperMecaCow::CheckCoolTime(float _DeltaTime)
 	if (UpperAttack_CoolTimer_.IsTimerOn() == true)
 	{
 		UpperAttack_CoolTimer_.Update(_DeltaTime);
+	}
+	if (Breath_CoolTimer.IsTimerOn() == true)
+	{
+		Breath_CoolTimer.Update(_DeltaTime);
 	}
 }
 
@@ -292,10 +313,24 @@ void HyperMecaCow::UpperAttack_End(const StateInfo _Info)
 
 void HyperMecaCow::Breath_Start(const StateInfo _Info)
 {
-	StartSuperArmor(2.5f);
+	//Flip Check
+	float4 PlayerPos = Player_->GetTransform().GetWorldPosition();
+	float4 thisPos = GetTransform().GetWorldPosition();
+	float4 MoveDir = PlayerPos - thisPos;
+	MoveDir.z = 0;
+	MoveDir.Normalize();
+	if (MoveDir.x > 0)
+	{
+		GetTransform().PixLocalPositiveX();
+	}
+	else
+	{
+		GetTransform().PixLocalNegativeX();
+	}
+
+	StartSuperArmor(2.9f);
 	ChangeDNFAnimation("Breath");
 	WeaponRenderer_->Off();
-	BreathFront_->On();
 }
 
 void HyperMecaCow::Breath_Update(float _DeltaTime, const StateInfo _Info)
@@ -311,7 +346,7 @@ void HyperMecaCow::Breath_End(const StateInfo _Info)
 	WeaponRenderer_->On();
 	//공격이 끝난 직후 로직
 	IsBreathEnd_ = false;
-	//UpperAttack_CoolTimer_.StartTimer();
+	Breath_CoolTimer.StartTimer();
 	AttackCol_->Off();
 
 	OnAir_ = false;
@@ -319,8 +354,11 @@ void HyperMecaCow::Breath_End(const StateInfo _Info)
 	Force_.ForceX_ = 0.f;
 	Force_.FrictionX_ = Value_.Default_Frction;
 	CurAttackData_ = {};
+	BreathFront_->Off();
+	BreathBack_->Off();
 
-	//AttackCol_->GetTransform().SetLocalScale(Attack_1_Scale_);
+	AttackCol_->GetTransform().SetLocalScale(Attack_1_Scale_);
+	AttackCol_->GetTransform().SetLocalPosition(Attack_1_Pos_);
 }
 
 void HyperMecaCow::CreateDNFAnimation(const std::string& _AnimationName, const FrameAnimation_DESC& _Desc)
@@ -347,7 +385,7 @@ void HyperMecaCow::CreateMonsterAni()
 	CreateDNFAnimation("Attack_1", FrameAnimation_DESC("hypermecacow_body", AttackFrames, AniSpeed_, false));
 	std::vector<unsigned int> UpperAttackFrames = { 6,6,6,5,4,3,2,2,2 };
 	CreateDNFAnimation("UpperAttack", FrameAnimation_DESC("hypermecacow_body", UpperAttackFrames, AniSpeed_, false));
-	std::vector<unsigned int> ShoutFrames = { 28,29,30,31,29,30,31,29,30,31 ,29,30,31 }; //로봇소환, Breath 애니함수 별도 구현을 위해
+	std::vector<unsigned int> ShoutFrames = { 28,29,30,31,29,30,31,29,30,31 ,29,30,31,29,30,31 }; //로봇소환, Breath 애니함수 별도 구현을 위해
 	CreateDNFAnimation("Breath", FrameAnimation_DESC("hypermecacow_body", ShoutFrames, AniSpeed_, false));
 
 	CreateDNFAnimation("Hit", FrameAnimation_DESC("hypermecacow_body", Tau_Hit_Start, Tau_Hit_End, AniSpeed_, false));
@@ -355,6 +393,16 @@ void HyperMecaCow::CreateMonsterAni()
 	CreateDNFAnimation("Die", FrameAnimation_DESC("hypermecacow_body", Tau_Down_Start, Tau_Down_Start, AniSpeed_, false));
 	CreateDNFAnimation("Attack_2_Wait", FrameAnimation_DESC("hypermecacow_body", Tau_Attack_2_Wait_Start, Tau_Attack_2_Wait_Start, AniSpeed_, false));
 	CreateDNFAnimation("Attack_2", FrameAnimation_DESC("hypermecacow_body", Tau_Attack_2_Start, Tau_Attack_2_End, AniSpeed_, true));
+
+	//브레스 애니메이션
+	float BreathTime = 0.05f;
+	BreathFront_->CreateFrameAnimationFolder("Breath_Start", FrameAnimation_DESC("fire_start", BreathTime, false));
+	BreathFront_->CreateFrameAnimationFolder("Breath_Loop", FrameAnimation_DESC("fire_loop", BreathTime, true));
+	BreathFront_->CreateFrameAnimationFolder("Breath_End", FrameAnimation_DESC("fire_end", BreathTime, false));
+	BreathFront_->ChangeFrameAnimation("Breath_Start");
+
+	BreathBack_->Off();
+	BreathFront_->Off();
 }
 
 void HyperMecaCow::CreateMonsterAniFunc()
@@ -441,33 +489,17 @@ void HyperMecaCow::CreateMonsterAniFunc()
 	);
 
 	//브래스
-	//MainRenderer_->AnimationBindFrame("Breath",
-	//	[&](const FrameAnimation_DESC& _Desc)
-	//	{
-	//		if (_Desc.Frames[_Desc.CurFrame - 1] == 5)
-	//		{
-	//			//Set Attack
-	//			CurAttackData_.Type = AttackType::Below;
-	//			CurAttackData_.AttackName = "UpperAttack";
-	//			CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
-	//			CurAttackData_.Font = 2;
-	//			CurAttackData_.XForce = 100.0f;
-	//			CurAttackData_.YForce = 1450.0f;
-	//			CurAttackData_.Stiffness = 0.85f;
-	//			CurAttackData_.RStiffness = 0.71f;
-	//			CurAttackData_.AttCount = 0;
-	//			CurAttackData_.AttCount++;
-	//			CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
-	//			CurAttackData_.AttEffect = Effect::SlashSLeft;
-	//			AttackCol_->GetTransform().SetLocalPosition(Attack_1_Pos_);
-	//			AttackCol_->On();
-	//		}
-	//		if (_Desc.Frames[_Desc.CurFrame - 1] == 3)
-	//		{
-	//			AttackCol_->Off();
-	//		}
-	//	}
-	//);
+	MainRenderer_->AnimationBindFrame("Breath",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.CurFrame == 3)
+			{
+				BreathFront_->On();
+				BreathFront_->ChangeFrameAnimation("Breath_Start");
+				BreathFront_->CurAnimationReset();
+			}
+		}
+	);
 
 	MainRenderer_->AnimationBindEnd("Breath",
 		[&](const FrameAnimation_DESC& _Desc)
@@ -476,6 +508,53 @@ void HyperMecaCow::CreateMonsterAniFunc()
 			IsBreathEnd_ = true;
 			//UpperAttack_CoolTimer_.StartTimer();
 			AttackCol_->Off();
+		}
+	);
+
+	//브레스 불길
+	BreathFront_->AnimationBindEnd("Breath_Start",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			BreathFront_->ChangeFrameAnimation("Breath_Loop");
+			CurAttackData_.AttCount = 0;
+			CurAttackData_.Type = AttackType::Above;
+			CurAttackData_.AttackName = "Breath";
+			CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
+			CurAttackData_.Font = 2;
+			CurAttackData_.XForce = 100.0f;
+			//CurAttackData_.YForce = 1450.0f;
+			CurAttackData_.Stiffness = 0.1f;
+			CurAttackData_.RStiffness = 0.04f;
+			CurAttackData_.AttCount++;
+			CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
+			//CurAttackData_.AttEffect = Effect::SlashSLeft;
+			AttackCol_->GetTransform().SetLocalPosition(Attack_2_Pos_ + float4(170, 30));
+			AttackCol_->On();
+			float4 AttackSclae = Attack_1_Scale_;
+			AttackSclae.y *= 1.5f;
+			AttackCol_->GetTransform().SetLocalScale(AttackSclae);
+		}
+	);
+
+	BreathFront_->AnimationBindStart("Breath_Loop",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			//Set Attack
+			CurAttackData_.Type = AttackType::Above;
+			CurAttackData_.AttackName = "Breath";
+			CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
+			CurAttackData_.Font = 2;
+			CurAttackData_.XForce = 100.0f;
+			//CurAttackData_.YForce = 1450.0f;
+			CurAttackData_.Stiffness = 0.1f;
+			CurAttackData_.RStiffness = 0.04f;
+			CurAttackData_.AttCount++;
+			CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
+			//CurAttackData_.AttEffect = Effect::SlashSLeft;
+			AttackCol_->GetTransform().SetLocalPosition(Attack_2_Pos_ + float4(170, 30));
+			float4 AttackSclae = Attack_1_Scale_;
+			AttackSclae.y *= 1.5f;
+			AttackCol_->GetTransform().SetLocalScale(AttackSclae);
 		}
 	);
 }
@@ -490,32 +569,41 @@ void HyperMecaCow::InitAdditionalRenderer()
 		BreathFront_->SetScaleModeImage();
 		BreathBack_ = CreateComponent<GameEngineTextureRenderer>();
 		BreathBack_->SetScaleModeImage();
-		BreathBack_->Off();
-		BreathFront_->Off();
+		BreathFront_->GetTransform().SetLocalPosition(BreathPos_);
+		BreathFront_->GetPixelData().MulColor.a = 0.7f;
 	}
 }
 
 std::string HyperMecaCow::CheckAdditionalPattern(float _DeltaTime)
 {
-	//if (Attack_2_CoolTimer_.IsTimerOn() == false)
-	//{
-	//	//돌진하면 적이 맞을꺼 같냐
-	//	if (IsZPosHit(static_cast<int>(Player_->GetBotPos().y)) == true &&
-	//		abs(Player_->GetTransform().GetWorldPosition().x - GetTransform().GetWorldPosition().x) < FindRange_)
-	//	{
-	//		return "Attack_2";
-	//	}
-	//}
+	if (Attack_2_CoolTimer_.IsTimerOn() == false)
+	{
+		//돌진하면 적이 맞을꺼 같냐
+		if (IsZPosHit(static_cast<int>(Player_->GetBotPos().y)) == true &&
+			abs(Player_->GetTransform().GetWorldPosition().x - GetTransform().GetWorldPosition().x) < FindRange_)
+		{
+			return "Attack_2";
+		}
+	}
 
-	//if (UpperAttack_CoolTimer_.IsTimerOn() == false)
-	//{
-	//	//밥상 뒤집기 하면 적이 맞을꺼 같냐
-	//	if (IsZPosHit(static_cast<int>(Player_->GetBotPos().y)) == true &&
-	//		abs(Player_->GetTransform().GetWorldPosition().x - GetTransform().GetWorldPosition().x) < AttackCol_->GetTransform().GetLocalScale().Half().Half().x)
-	//	{
-	//		return "UpperAttack";
-	//	}
-	//}
-	return "Breath";
+	if (UpperAttack_CoolTimer_.IsTimerOn() == false)
+	{
+		//밥상 뒤집기 하면 적이 맞을꺼 같냐
+		if (IsZPosHit(static_cast<int>(Player_->GetBotPos().y)) == true &&
+			abs(Player_->GetTransform().GetWorldPosition().x - GetTransform().GetWorldPosition().x) < AttackCol_->GetTransform().GetLocalScale().Half().Half().x)
+		{
+			return "UpperAttack";
+		}
+	}
+
+	if (Breath_CoolTimer.IsTimerOn() == false)
+	{
+		//브래스 하면 적이 맞을꺼 같냐
+		if (IsZPosHit(static_cast<int>(Player_->GetBotPos().y)) == true &&
+			abs(Player_->GetTransform().GetWorldPosition().x - GetTransform().GetWorldPosition().x) < Attack_1_Scale_.x + 130.0f)
+		{
+			return "Breath";
+		}
+	}
 	return "";
 }
