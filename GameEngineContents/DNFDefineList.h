@@ -82,3 +82,15 @@
 #define Tau_Attack_2_Wait_End 14
 #define Tau_Attack_2_Start 15
 #define Tau_Attack_2_End 18
+
+//랜드러너
+#define Runner_Attack_1_Start 6
+#define Runner_Attack_1_End 11
+#define Runner_Idle_Start 0
+#define Runner_Idle_End 5
+#define Runner_Move_Start 0
+#define Runner_Move_End 5
+#define Runner_Hit_Start 0
+#define Runner_Hit_End 1
+#define Runner_Down_Start 0
+#define Runner_Down_End 1

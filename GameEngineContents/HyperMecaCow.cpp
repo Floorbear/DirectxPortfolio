@@ -519,14 +519,14 @@ void HyperMecaCow::CreateMonsterAniFunc()
 			CurAttackData_.AttCount = 0;
 			CurAttackData_.Type = AttackType::Above;
 			CurAttackData_.AttackName = "Breath";
-			CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
+			CurAttackData_.Att = CalAtt(static_cast<int>(Value_.Attack_1_Att * 0.3));
 			CurAttackData_.Font = 2;
 			CurAttackData_.XForce = 100.0f;
 			//CurAttackData_.YForce = 1450.0f;
 			CurAttackData_.Stiffness = 0.1f;
 			CurAttackData_.RStiffness = 0.04f;
 			CurAttackData_.AttCount++;
-			CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
+			CurAttackData_.ZPos = 0;
 			//CurAttackData_.AttEffect = Effect::SlashSLeft;
 			AttackCol_->GetTransform().SetLocalPosition(Attack_2_Pos_ + float4(170, 30));
 			AttackCol_->On();
@@ -542,14 +542,14 @@ void HyperMecaCow::CreateMonsterAniFunc()
 			//Set Attack
 			CurAttackData_.Type = AttackType::Above;
 			CurAttackData_.AttackName = "Breath";
-			CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
+			CurAttackData_.Att = CalAtt(static_cast<int>(Value_.Attack_1_Att * 0.3));
 			CurAttackData_.Font = 2;
 			CurAttackData_.XForce = 100.0f;
 			//CurAttackData_.YForce = 1450.0f;
 			CurAttackData_.Stiffness = 0.1f;
 			CurAttackData_.RStiffness = 0.04f;
 			CurAttackData_.AttCount++;
-			CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
+			CurAttackData_.ZPos = 0;
 			//CurAttackData_.AttEffect = Effect::SlashSLeft;
 			AttackCol_->GetTransform().SetLocalPosition(Attack_2_Pos_ + float4(170, 30));
 			float4 AttackSclae = Attack_1_Scale_;
@@ -579,7 +579,7 @@ std::string HyperMecaCow::CheckAdditionalPattern(float _DeltaTime)
 	if (Attack_2_CoolTimer_.IsTimerOn() == false)
 	{
 		//돌진하면 적이 맞을꺼 같냐
-		if (IsZPosHit(static_cast<int>(Player_->GetBotPos().y)) == true &&
+		if (IsZPosHit(static_cast<int>(Player_->GetBotPos().y + 10.0f)) == true &&
 			abs(Player_->GetTransform().GetWorldPosition().x - GetTransform().GetWorldPosition().x) < FindRange_)
 		{
 			return "Attack_2";
@@ -589,7 +589,7 @@ std::string HyperMecaCow::CheckAdditionalPattern(float _DeltaTime)
 	if (UpperAttack_CoolTimer_.IsTimerOn() == false)
 	{
 		//밥상 뒤집기 하면 적이 맞을꺼 같냐
-		if (IsZPosHit(static_cast<int>(Player_->GetBotPos().y)) == true &&
+		if (IsZPosHit(static_cast<int>(Player_->GetBotPos().y + 10.0f)) == true &&
 			abs(Player_->GetTransform().GetWorldPosition().x - GetTransform().GetWorldPosition().x) < AttackCol_->GetTransform().GetLocalScale().Half().Half().x)
 		{
 			return "UpperAttack";
@@ -599,7 +599,7 @@ std::string HyperMecaCow::CheckAdditionalPattern(float _DeltaTime)
 	if (Breath_CoolTimer.IsTimerOn() == false)
 	{
 		//브래스 하면 적이 맞을꺼 같냐
-		if (IsZPosHit(static_cast<int>(Player_->GetBotPos().y)) == true &&
+		if (IsZPosHit(static_cast<int>(Player_->GetBotPos().y + 10.0f)) == true &&
 			abs(Player_->GetTransform().GetWorldPosition().x - GetTransform().GetWorldPosition().x) < Attack_1_Scale_.x + 130.0f)
 		{
 			return "Breath";

@@ -4,6 +4,7 @@
 #include "VilmarkMap.h"
 
 #include "HyperMecaCow.h"
+#include "Runner.h"
 
 Vilmark_5::Vilmark_5()
 {
@@ -20,8 +21,8 @@ void Vilmark_5::Start()
 	VilmarkMap_->MakeLeftDoor();
 	float4 AccPos = {};
 
-	//Bloodlugaru* Monster2 = CreateMonster<Bloodlugaru>({ { 800,-430 } });
-	//Bloodlugaru* Monster3 = CreateMonster<Bloodlugaru>({ { 750,-430 } });
+	Runner* Monster2 = CreateMonster<Runner>({ { 800,-430 } });
+	Runner* Monster3 = CreateMonster<Runner>({ { 750,-430 } });
 	HyperMecaCow* Boss = CreateMonster< HyperMecaCow>({ { 700,-430 } });
 }
 

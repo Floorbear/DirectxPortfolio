@@ -205,6 +205,9 @@
     <ClInclude Include="HyperMecaCow.h">
       <Filter>Monster</Filter>
     </ClInclude>
+    <ClInclude Include="Runner.h">
+      <Filter>Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -353,6 +356,9 @@
       <Filter>Vilmark</Filter>
     </ClCompile>
     <ClCompile Include="HyperMecaCow.cpp">
+      <Filter>Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="Runner.cpp">
       <Filter>Monster</Filter>
     </ClCompile>
   </ItemGroup>

@@ -170,7 +170,7 @@ void ContentsCore::Start()
 	CreateLevel<Vilmark_4>("Vilmark_4");
 	CreateLevel<Vilmark_5>("Vilmark_5");
 
-	ChangeLevel("Vilmark_5");
+	ChangeLevel("Vilmark_0");
 
 	GameEngineGUI::CreateGUIWindow<GameEngineStatusWindow>("EngineStatus", nullptr);
 	GameEngineGUI::CreateGUIWindow<DNFDebugGUI>("DNFDebug", nullptr);
