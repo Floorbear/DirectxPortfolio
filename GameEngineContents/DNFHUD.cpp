@@ -10,6 +10,7 @@
 
 #define UpperSlash_Icon 13
 #define GoreCross_Icon 7
+#define HopSmash_Icon 8
 
 DNFHUD::DNFHUD() :
 	PrevHp_(-1),
@@ -24,8 +25,10 @@ DNFHUD::DNFHUD() :
 	SkillIconBackground_.reserve(14);
 	ShortCut_.reserve(14);
 
+	//SkillRendererInit 에도 추가 스킬 코드 작성해주세요
 	StringToInt_.insert(std::make_pair("UpperSlash", UpperSlash_Icon));
 	StringToInt_.insert(std::make_pair("GoreCross", GoreCross_Icon));
+	StringToInt_.insert(std::make_pair("HopSmash", HopSmash_Icon));
 }
 
 DNFHUD::~DNFHUD()
@@ -206,6 +209,10 @@ void DNFHUD::SkillRendererInit()
 	SkillIcon_[GoreCross_Icon]->On();
 	SkillIcon_[GoreCross_Icon]->SetTexture("GoreCross.png");
 	SkillIcon_[GoreCross_Icon]->GetTransform().SetLocalScale({ 28,28 });
+
+	SkillIcon_[HopSmash_Icon]->On();
+	SkillIcon_[HopSmash_Icon]->SetTexture("HopSmash.png");
+	SkillIcon_[HopSmash_Icon]->GetTransform().SetLocalScale({ 28,28 });
 }
 
 void DNFHUD::SkillIconUpdate(float _DeltaTime)

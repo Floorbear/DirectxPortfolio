@@ -30,9 +30,9 @@ void Vilmark_2::Start()
 	MiniTau* Monster0 = CreateMonster<MiniTau>(AccPos + float4(573, -352));
 	MiniTau* Monster1 = CreateMonster<MiniTau>(AccPos + float4(697, -365));
 	MiniTau* Monster2 = CreateMonster<MiniTau>(AccPos + float4(782, -418));
-	MiniTau* Monster3 = CreateMonster<MiniTau>(AccPos + float4(869, -340));
-	MiniTau* Monster4 = CreateMonster<MiniTau>(AccPos + float4(918, -379));
-	MiniTau* Monster5 = CreateMonster<MiniTau>(AccPos + float4(1014, -400));
+	//MiniTau* Monster3 = CreateMonster<MiniTau>(AccPos + float4(869, -340));
+	//MiniTau* Monster4 = CreateMonster<MiniTau>(AccPos + float4(918, -379));
+	//MiniTau* Monster5 = CreateMonster<MiniTau>(AccPos + float4(1014, -400));
 }
 
 void Vilmark_2::Update(float _DeltaTime)

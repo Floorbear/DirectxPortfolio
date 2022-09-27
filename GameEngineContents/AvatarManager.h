@@ -39,14 +39,18 @@ public:
 	{
 		return RenderList_;
 	}
+	void UpdateMotion();
 protected:
 
+	void ChangeLastUpdateMotion(PlayerAnimations _Animation);
+
 private:
+	//Update 마지막에서 모션 변경
+	std::function<void()> NextMotion_ = nullptr;
 
 	//아바타를 생성하는 함수 > 렌더러에 애니메이션을 추가해주는 함수
 	//주의! 아직 애니메이션을 전부 만들지 않음
 	void CreateAvatar(const std::string& _AvatarFolderName, AvatarParts _Parts, AvatarType _Type, AvatarLayer _Layer);
-
 
 	std::string EnumToString(AvatarType _Type);
 
@@ -54,8 +58,6 @@ private:
 	std::vector<AvatarLayer> GetRendererLayer(AvatarParts _Parts, AvatarType _Type);
 	//어떤 아바타가 무슨 렌더러를 가리는지(지우는지) 확인하는 함수
 	std::vector<GameEngineTextureRenderer*> GetHideRendererList(AvatarParts _Parts, AvatarType _Type);
-
-
 
 	//렌더러를 반환하는 함수
 	//내가 HairRenderer_a를 쓰고싶은데 이걸 switch분기문으로 구현하기에는 빡쌔서 함수로 만듬
@@ -65,7 +67,7 @@ private:
 	float LayerOffset_;
 
 	//아바타 렌더러 추가하면 확인해야할 것
-	// 
+	//
 	//아바타매니저에 렌더러 추가
 	//아바타 매니저 LinkPlayerToAvatar 에서 렌더러의 조치
 	//ChangeMotion에서 해당 부위가 있는지 확인
@@ -87,7 +89,6 @@ private:
 	GameEngineTextureRenderer* CoatRenderer_c_;
 	GameEngineTextureRenderer* CoatRenderer_d_;
 
-
 	GameEngineTextureRenderer* ShoesRenderer_a_;
 	GameEngineTextureRenderer* ShoesRenderer_b_;
 
@@ -100,7 +101,6 @@ private:
 
 	GameEngineTextureRenderer* ShadowRenderer_;
 
-
 	//이 아바타는 이 렌더러를 사용합니다를 보관하는 컨테이너
 	//여기에 넣어줘야 화면에 랜더링 된다
 	//Renderer_b등을 안쓰는 아바타 부위가 존재해
@@ -110,4 +110,3 @@ private:
 	//현재 장착하고 있는 아바타가 뭐냐
 	std::map<AvatarParts, AvatarType> CurAvatar_;
 };
-

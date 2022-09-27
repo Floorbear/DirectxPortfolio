@@ -4,6 +4,7 @@
 
 #include "DNFContentsMinimal.h"
 #include "Player_Main.h"
+#include "HopSmash.h"
 
 void Player_Main::IdleStart(const StateInfo _Info)
 {
@@ -91,6 +92,11 @@ void Player_Main::JumpUpdate(float _DeltaTime, const StateInfo _Info)
 }
 
 void Player_Main::JumpEnd(const StateInfo _Info)
+{
+	JumpLogicEnd();
+}
+
+void Player_Main::JumpLogicEnd()
 {
 	Force_.OffGravity();
 	float4 PlayerPos = GetTransform().GetWorldPosition();
@@ -273,8 +279,9 @@ void Player_Main::HopSmashStart(const StateInfo _Info)
 	CurMP_ -= Value_.HopSmash_MP;
 
 	AvatarManager_.ChangeMotion(PlayerAnimations::HopSmash_0);
-	Force_.ForceY_ = 400.0f;
-	Force_.ForceX_ = 400.0f;
+
+	Force_.ForceX_ = 300.f; //350.0f
+	Force_.ForceY_ = 300.f; //390.0f
 	Force_.OnGravity();
 	GroundYPos_ = GetTransform().GetWorldPosition().y;
 	OnAir_ = true;
@@ -285,6 +292,28 @@ void Player_Main::HopSmashStart(const StateInfo _Info)
 
 void Player_Main::HopSmashUpdate(float _DeltaTime, const StateInfo _Info)
 {
+	if (GetTransform().GetWorldPosition().y <= GroundYPos_ && StateManager_.GetCurStateTime() >= 0.12f && IsAttack_End_ == false)
+	{
+		HopSmash* New = GetLevel()->CreateActor<HopSmash>();
+		float4 SpawnPos = GetTransform().GetWorldPosition();
+		float4 MovePos = { 60,-60 };
+		MovePos.x = GetDirX().x * MovePos.x;
+		New->GetTransform().SetWorldPosition(SpawnPos + MovePos);
+		New->GetTransform().SetLocalScale({ GetDirX().x,1,1 });
+
+		CurAttackData_.AttCount++;
+		CurAttackData_.AttEffect = Effect::SlashSRight;
+		CurAttackData_.Stiffness = 0.32f;
+		CurAttackData_.RStiffness = 0.31f;
+		CurAttackData_.YForce = 350.0f;
+		CurAttackData_.Bleeding = 85;
+		CurAttackData_.ZPos = 0;
+		ShakeCamera(7.5f, 0.30f);
+		IsReadyNextAttack_ = false;
+		IsAttack_End_ = true;
+		JumpLogicEnd();
+		return;
+	}
 	//평소에는 False
 	if (IsAttack_End_ == true)
 	{
@@ -311,7 +340,10 @@ void Player_Main::HopSmashUpdate(float _DeltaTime, const StateInfo _Info)
 
 void Player_Main::HopSmashEnd(const StateInfo _Info)
 {
+	Force_.FrictionX_ = Value_.DefaultFriction;
+	Force_.Gravity_ = Value_.DefaultGravity;
 	AttackEnd();
+	JumpLogicEnd();
 }
 
 void Player_Main::GoreCrossStart(const StateInfo _Info)

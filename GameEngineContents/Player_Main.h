@@ -88,6 +88,8 @@ private:
 	//캐릭터의 애니메이션 함수 초기화
 	void InitAniFunc();
 
+	void HopSmashAniFunc();
+
 	void UpperSlashAniFunc();
 
 	void GoreCrossAniFun();
@@ -184,6 +186,11 @@ private:
 	GameEngineTextureRenderer* CapRenderer_b_;
 	GameEngineTextureRenderer* CapRenderer_c_;
 
+	void ChangeDelayMotion(PlayerAnimations _Motion)
+	{
+		AvatarManager_.ChangeMotion(_Motion);
+	}
+
 	//슈퍼아머 & 잔상
 	std::vector<GameEngineTextureRenderer*> AllCopyRenderer_;
 	float4 SuperArmorScale_;
@@ -208,6 +215,8 @@ private:
 	void JumpStart(const StateInfo _Info);
 	void JumpUpdate(float _DeltaTime, const StateInfo _Info);
 	void JumpEnd(const StateInfo _Info);
+
+	void JumpLogicEnd();
 
 	void AirborneStart(const StateInfo _Info);
 	void AirborneUpdate(float _DeltaTime, const StateInfo _Info);
@@ -238,6 +247,13 @@ private:
 	void InitDefaultValue();
 	struct DefaultValue
 	{
+		//힘& 중력 & 마찰력
+		float DefaultFriction = 700.0f;
+		float DefaultGravity = 700.0f;
+
+		float HopSmashGravity = 1200.0f;
+		float HopSmashFriction = 1200.0f;
+
 		//Pos&Scale
 		float4 HitAbovePos;
 		float4 HitAboveScale;

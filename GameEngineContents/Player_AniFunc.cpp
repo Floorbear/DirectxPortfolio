@@ -200,6 +200,57 @@ void Player_Main::InitAniFunc()
 	UpperSlashAniFunc();
 
 	GoreCrossAniFun();
+
+	HopSmashAniFunc();
+}
+
+void Player_Main::HopSmashAniFunc()
+{
+	//HopSmash_0
+	MainRenderer_->AnimationBindFrame("HopSmash_0",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (Force_.ForceY_ < 120.f)
+			{
+				Force_.ForceY_ -= 150.f;//200
+				StartSuperArmor(0.43f);
+				AvatarManager_.ChangeMotion(PlayerAnimations::HopSmash_1);
+			}
+		});
+	//HopSmash_1
+	MainRenderer_->AnimationBindFrame("HopSmash_1",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.CurFrame == _Desc.Frames.size() - 1)
+			{
+				AvatarManager_.ChangeMotion(PlayerAnimations::HopSmash_2);
+			}
+		});
+	//HopSmash_2
+	MainRenderer_->AnimationBindFrame("HopSmash_2",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.CurFrame == 1)//첫번째 프레임
+			{
+				SetAttackCol(Value_.UpperSlashPos, Value_.UpeerSlashScale);
+				//Set Attack
+				CurAttackData_.AttackName = "HopSmash";
+				CurAttackData_.Att = CalAtt(Value_.AutoAttackAtt);
+				CurAttackData_.Type = AttackType::Below;
+				CurAttackData_.XForce = 50.0f;
+				CurAttackData_.ZPos = static_cast<int>(GetBotPos().y);
+				CurAttackData_.Stiffness = 0.07f;
+				CurAttackData_.RStiffness = 0.04f;
+				CurAttackData_.AttCount++;
+				Force_.ForceX_ = 70.0f;
+				CurAttackData_.AttEffect = Effect::SlashSRight;
+			}
+			if (_Desc.CurFrame == 3)//마지막 프레임
+			{
+				CurAttackData_.AttCount++;
+				CurAttackData_.AttEffect = Effect::SlashSHori;
+			}
+		});
 }
 
 void Player_Main::UpperSlashAniFunc()
@@ -211,7 +262,7 @@ void Player_Main::UpperSlashAniFunc()
 			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start)
 			{
 				//슈퍼아머 set
-				StartSuperArmor(0.35f);
+				StartSuperArmor(0.29f);
 			}
 			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 1)
 			{

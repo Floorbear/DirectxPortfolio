@@ -57,7 +57,11 @@ void ContentsCore::Start()
 	GameEngineInput::GetInst()->CreateKey("Z", 'Z');
 	GameEngineInput::GetInst()->CreateKey("X", 'X');
 	GameEngineInput::GetInst()->CreateKey("C", 'C');
+
 	GameEngineInput::GetInst()->CreateKey("A", 'A');
+	GameEngineInput::GetInst()->CreateKey("S", 'S');
+	GameEngineInput::GetInst()->CreateKey("D", 'D');
+
 	GameEngineInput::GetInst()->CreateKey("Q", 'Q');
 	GameEngineInput::GetInst()->CreateKey("W", 'W');
 	GameEngineInput::GetInst()->CreateKey("E", 'E');
@@ -170,7 +174,7 @@ void ContentsCore::Start()
 	CreateLevel<Vilmark_4>("Vilmark_4");
 	CreateLevel<Vilmark_5>("Vilmark_5");
 
-	ChangeLevel("Vilmark_5");
+	ChangeLevel("Vilmark_0");
 
 	GameEngineGUI::CreateGUIWindow<GameEngineStatusWindow>("EngineStatus", nullptr);
 	GameEngineGUI::CreateGUIWindow<DNFDebugGUI>("DNFDebug", nullptr);

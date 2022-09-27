@@ -211,6 +211,9 @@
     <ClInclude Include="SummonCircle.h">
       <Filter>Monster\Skill</Filter>
     </ClInclude>
+    <ClInclude Include="HopSmash.h">
+      <Filter>Player\Skill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -366,6 +369,9 @@
     </ClCompile>
     <ClCompile Include="SummonCircle.cpp">
       <Filter>Monster\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="HopSmash.cpp">
+      <Filter>Player\Skill</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -143,8 +143,8 @@ void Player_Main::Start()
 
 	InitSkillCoolTime();
 
-	Force_.FrictionX_ = 700.0f;
-	Force_.Gravity_ = 700.0f;
+	Force_.FrictionX_ = Value_.DefaultFriction;
+	Force_.Gravity_ = Value_.DefaultGravity;
 	Force_.SetTransfrom(&GetTransform());
 
 	DNFDebugGUI::AddMutableValue("Temp1", &DNFGlobalValue::Temp1);
@@ -156,8 +156,8 @@ void Player_Main::Update(float _DeltaTime)
 	{
 		return;
 	}
-	CoolTimeUpdate(_DeltaTime);
 	CopyRendererUpdate(_DeltaTime);
+	CoolTimeUpdate(_DeltaTime);
 	UpdateShakeCamera(_DeltaTime);
 	StiffnessUpdate(_DeltaTime);
 	if (Stiffness_ > 0)
@@ -188,6 +188,7 @@ void Player_Main::Update(float _DeltaTime)
 		CheckColMap();
 		ChaseCamera(_DeltaTime);
 	}
+	AvatarManager_.UpdateMotion();
 	ShadowUpdate();
 }
 
@@ -409,6 +410,10 @@ void Player_Main::CopyRendererUpdate(float _DeltaTime)
 		{
 			SuperArmorScale_.y = Value_.SuperArmorScale.y;
 		}
+		if (i.second->GetCurTexture() == nullptr)
+		{
+			continue;
+		}
 		AllCopyRenderer_[count]->SetTexture(i.second->GetCurTexture());
 		AllCopyRenderer_[count]->GetTransform().SetLocalScale(SuperArmorScale_);
 
@@ -552,7 +557,7 @@ void Player_Main::InitSkillCoolTime()
 {
 	CreateSkillCoolTime("UpperSlash", 2.0f);
 	CreateSkillCoolTime("GoreCross", 3.0f);
-	CreateSkillCoolTime("HopSmash", 1.0f);
+	CreateSkillCoolTime("HopSmash", 4.0f);
 }
 
 void Player_Main::CoolTimeUpdate(float _DeltaTime)

@@ -241,99 +241,7 @@ void AvatarManager::LinkPlayerToAvatar(Player_Main* _Player)
 
 void AvatarManager::ChangeMotion(PlayerAnimations _Animation)
 {
-	//애니메이션 이름 선택
-	std::string AniName = EnumToString(_Animation);
-
-	//헤어
-	{
-		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Hair]);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Hair);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Hair);
-		for (; StartIter != EndIter; StartIter++)
-		{
-			StartIter->second->ChangeFrameAnimation(AniName + PartName);
-		}
-	}
-	//피부
-	{
-		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Skin]);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Skin);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Skin);
-		for (; StartIter != EndIter; StartIter++)
-		{
-			StartIter->second->ChangeFrameAnimation(AniName + PartName);
-		}
-	}
-	//그림자
-	{
-		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Shadow]);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Shadow);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Shadow);
-		for (; StartIter != EndIter; StartIter++)
-		{
-			StartIter->second->ChangeFrameAnimation(AniName + PartName);
-		}
-	}
-	//팬츠
-	{
-		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Pants]);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Pants);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Pants);
-		for (; StartIter != EndIter; StartIter++)
-		{
-			StartIter->second->ChangeFrameAnimation(AniName + PartName);
-		}
-	}
-	//코트
-	{
-		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Coat]);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Coat);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Coat);
-		for (; StartIter != EndIter; StartIter++)
-		{
-			StartIter->second->ChangeFrameAnimation(AniName + PartName);
-		}
-	}
-	//신발
-	{
-		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Shoes]);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Shoes);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Shoes);
-		for (; StartIter != EndIter; StartIter++)
-		{
-			StartIter->second->ChangeFrameAnimation(AniName + PartName);
-		}
-	}
-	//벨트
-	{
-		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Belt]);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Belt);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Belt);
-		for (; StartIter != EndIter; StartIter++)
-		{
-			StartIter->second->ChangeFrameAnimation(AniName + PartName);
-		}
-	}
-	//모자
-	{
-		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Cap]);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Cap);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Cap);
-		for (; StartIter != EndIter; StartIter++)
-		{
-			StartIter->second->ChangeFrameAnimation(AniName + PartName);
-		}
-	}
-	//무기
-	{
-		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Weapon]);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Weapon);
-		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Weapon);
-		for (; StartIter != EndIter; StartIter++)
-		{
-			StartIter->second->ChangeFrameAnimation(AniName + PartName);
-		}
-	}
+	NextMotion_ = std::bind(&AvatarManager::ChangeLastUpdateMotion, this, _Animation);
 }
 
 void AvatarManager::ChangeAvatar(AvatarType _Type, AvatarParts _Parts)
@@ -497,6 +405,112 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 		break;
 	}
 	return "";
+}
+
+void AvatarManager::UpdateMotion()
+{
+	if (NextMotion_ != nullptr)
+	{
+		NextMotion_();
+		NextMotion_ = nullptr;
+	}
+}
+
+void AvatarManager::ChangeLastUpdateMotion(PlayerAnimations _Animation)
+{
+	//애니메이션 이름 선택
+	std::string AniName = EnumToString(_Animation);
+
+	//헤어
+	{
+		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Hair]);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Hair);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Hair);
+		for (; StartIter != EndIter; StartIter++)
+		{
+			StartIter->second->ChangeFrameAnimation(AniName + PartName);
+		}
+	}
+	//피부
+	{
+		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Skin]);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Skin);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Skin);
+		for (; StartIter != EndIter; StartIter++)
+		{
+			StartIter->second->ChangeFrameAnimation(AniName + PartName);
+		}
+	}
+	//그림자
+	{
+		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Shadow]);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Shadow);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Shadow);
+		for (; StartIter != EndIter; StartIter++)
+		{
+			StartIter->second->ChangeFrameAnimation(AniName + PartName);
+		}
+	}
+	//팬츠
+	{
+		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Pants]);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Pants);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Pants);
+		for (; StartIter != EndIter; StartIter++)
+		{
+			StartIter->second->ChangeFrameAnimation(AniName + PartName);
+		}
+	}
+	//코트
+	{
+		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Coat]);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Coat);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Coat);
+		for (; StartIter != EndIter; StartIter++)
+		{
+			StartIter->second->ChangeFrameAnimation(AniName + PartName);
+		}
+	}
+	//신발
+	{
+		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Shoes]);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Shoes);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Shoes);
+		for (; StartIter != EndIter; StartIter++)
+		{
+			StartIter->second->ChangeFrameAnimation(AniName + PartName);
+		}
+	}
+	//벨트
+	{
+		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Belt]);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Belt);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Belt);
+		for (; StartIter != EndIter; StartIter++)
+		{
+			StartIter->second->ChangeFrameAnimation(AniName + PartName);
+		}
+	}
+	//모자
+	{
+		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Cap]);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Cap);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Cap);
+		for (; StartIter != EndIter; StartIter++)
+		{
+			StartIter->second->ChangeFrameAnimation(AniName + PartName);
+		}
+	}
+	//무기
+	{
+		std::string PartName = EnumToString(CurAvatar_[AvatarParts::Weapon]);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator StartIter = RenderList_.lower_bound(AvatarParts::Weapon);
+		std::multimap<AvatarParts, GameEngineTextureRenderer*>::iterator EndIter = RenderList_.upper_bound(AvatarParts::Weapon);
+		for (; StartIter != EndIter; StartIter++)
+		{
+			StartIter->second->ChangeFrameAnimation(AniName + PartName);
+		}
+	}
 }
 
 std::string AvatarManager::EnumToString(AvatarType _Type)
