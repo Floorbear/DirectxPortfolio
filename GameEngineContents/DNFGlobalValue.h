@@ -9,7 +9,9 @@ enum MonsterType
 	CielM,
 	HeartFoxM,
 	TauCaptainM,
-	MiniTauM
+	MiniTauM,
+	MecaTauM,
+	RunnerM
 };
 
 enum class ColOrder

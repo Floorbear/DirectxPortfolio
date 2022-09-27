@@ -4,6 +4,8 @@
 #include <GameEngineCore/GameEngineCollision.h>
 #include "DNFContentsMinimal.h"
 
+#include "Runner.h"
+#include "SummonCircle.h"
 #include "MonsterHP.h"
 #include "Player_Main.h"
 HyperMecaCow::HyperMecaCow() :
@@ -45,7 +47,7 @@ HyperMecaCow::HyperMecaCow() :
 
 	Value_.Speed = 170.0f;
 
-	Value_.Type = MonsterType::TauCaptainM;
+	Value_.Type = MonsterType::MecaTauM;
 	Value_.DieParticleName = "DieParticleBrown";
 	Value_.DieParticleSize = { 1.5f,1.5f,1.5f };
 	MaxHP_ = 1700000;
@@ -139,6 +141,7 @@ void HyperMecaCow::Start()
 	//상태 추가
 	Attack_2_CoolTimer_.StartTimer();
 	Breath_CoolTimer.StartTimer();
+	Runner_CoolTimer.StartTimer();
 	StateManager_.CreateStateMember("Attack_2", std::bind(&HyperMecaCow::Attack_2_Update, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&HyperMecaCow::Attack_2_Start, this, std::placeholders::_1),
 		std::bind(&HyperMecaCow::Attack_2_End, this, std::placeholders::_1));
@@ -150,6 +153,9 @@ void HyperMecaCow::Start()
 	StateManager_.CreateStateMember("Breath", std::bind(&HyperMecaCow::Breath_Update, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&HyperMecaCow::Breath_Start, this, std::placeholders::_1),
 		std::bind(&HyperMecaCow::Breath_End, this, std::placeholders::_1));
+	StateManager_.CreateStateMember("SpawnRunner", std::bind(&HyperMecaCow::SpawnRunner_Update, this, std::placeholders::_1, std::placeholders::_2)
+		, std::bind(&HyperMecaCow::SpawnRunner_Start, this, std::placeholders::_1),
+		std::bind(&HyperMecaCow::SpawnRunner_End, this, std::placeholders::_1));
 }
 
 void HyperMecaCow::Update(float _DeltaTime)
@@ -171,6 +177,10 @@ void HyperMecaCow::CheckCoolTime(float _DeltaTime)
 	if (Breath_CoolTimer.IsTimerOn() == true)
 	{
 		Breath_CoolTimer.Update(_DeltaTime);
+	}
+	if (Runner_CoolTimer.IsTimerOn() == true)
+	{
+		Runner_CoolTimer.Update(_DeltaTime);
 	}
 }
 
@@ -246,7 +256,7 @@ void HyperMecaCow::Attack_2_Update(float _DeltaTime, const StateInfo _Info)
 		Attack_2_Change_Timer_.Update(_DeltaTime);
 		if (Attack_2_Change_Timer_.IsTimerOn() == false)
 		{
-			StateManager_.ChangeState("Idle");
+			StateManager_.ChangeState("Chase");
 			return;
 		}
 	}
@@ -290,7 +300,7 @@ void HyperMecaCow::UpperAttack_Update(float _DeltaTime, const StateInfo _Info)
 {
 	if (IsUpperAttackEnd == true)
 	{
-		StateManager_.ChangeState("Idle");
+		StateManager_.ChangeState("Chase");
 	}
 }
 
@@ -309,6 +319,27 @@ void HyperMecaCow::UpperAttack_End(const StateInfo _Info)
 	CurAttackData_ = {};
 
 	AttackCol_->GetTransform().SetLocalScale(Attack_1_Scale_);
+}
+
+void HyperMecaCow::SpawnRunner_Start(const StateInfo _Info)
+{
+	StartSuperArmor(2.9f);
+	ChangeDNFAnimation("SpawnRunner");
+	WeaponRenderer_->Off();
+}
+void HyperMecaCow::SpawnRunner_Update(float _DeltaTime, const StateInfo _Info)
+{
+	if (IsSpawnRunner_ == true)
+	{
+		StateManager_.ChangeState("Chase");
+	}
+}
+void HyperMecaCow::SpawnRunner_End(const StateInfo _Info)
+{
+	WeaponRenderer_->On();
+	//공격이 끝난 직후 로직
+	IsSpawnRunner_ = false;
+	Runner_CoolTimer.StartTimer();
 }
 
 void HyperMecaCow::Breath_Start(const StateInfo _Info)
@@ -337,7 +368,7 @@ void HyperMecaCow::Breath_Update(float _DeltaTime, const StateInfo _Info)
 {
 	if (IsBreathEnd_ == true)
 	{
-		StateManager_.ChangeState("Idle");
+		StateManager_.ChangeState("Chase");
 	}
 }
 
@@ -359,6 +390,39 @@ void HyperMecaCow::Breath_End(const StateInfo _Info)
 
 	AttackCol_->GetTransform().SetLocalScale(Attack_1_Scale_);
 	AttackCol_->GetTransform().SetLocalPosition(Attack_1_Pos_);
+}
+
+void HyperMecaCow::SpawnRunner()
+{
+	std::vector<float4> SpawnPos;
+	SpawnPos.reserve(3);
+	float4 CurPos = GetTransform().GetWorldPosition();
+
+	for (int i = 0; i < 3; i++)
+	{
+		float4 _SpawnWorldPos = {};
+		//랜덤Pos를 구하고 Break
+		float RandomPosX = GameEngineRandom::MainRandom.RandomFloat(CurPos.x - 300.0f, CurPos.x + 300.0f);
+		if (RandomPosX > 1210)
+		{
+			RandomPosX = 1209.f;
+		}
+		if (RandomPosX < 150)
+		{
+			RandomPosX = 151.f;
+		}
+		float RandomPosY = GameEngineRandom::MainRandom.RandomFloat(-479.f, -349.f);
+		_SpawnWorldPos.x = RandomPosX;
+		_SpawnWorldPos.y = RandomPosY;
+		SpawnPos.push_back(_SpawnWorldPos);
+	}
+
+	for (auto i : SpawnPos)
+	{
+		SummonCircle* NewCircle = GetLevel()->CreateActor< SummonCircle>();
+		NewCircle->GetTransform().SetWorldPosition(i);
+		NewCircle->SummonMonster<Runner>();
+	}
 }
 
 void HyperMecaCow::CreateDNFAnimation(const std::string& _AnimationName, const FrameAnimation_DESC& _Desc)
@@ -387,6 +451,7 @@ void HyperMecaCow::CreateMonsterAni()
 	CreateDNFAnimation("UpperAttack", FrameAnimation_DESC("hypermecacow_body", UpperAttackFrames, AniSpeed_, false));
 	std::vector<unsigned int> ShoutFrames = { 28,29,30,31,29,30,31,29,30,31 ,29,30,31,29,30,31 }; //로봇소환, Breath 애니함수 별도 구현을 위해
 	CreateDNFAnimation("Breath", FrameAnimation_DESC("hypermecacow_body", ShoutFrames, AniSpeed_, false));
+	CreateDNFAnimation("SpawnRunner", FrameAnimation_DESC("hypermecacow_body", ShoutFrames, AniSpeed_, false));
 
 	CreateDNFAnimation("Hit", FrameAnimation_DESC("hypermecacow_body", Tau_Hit_Start, Tau_Hit_End, AniSpeed_, false));
 	CreateDNFAnimation("Down", FrameAnimation_DESC("hypermecacow_body", Tau_Down_Start, Tau_Down_End, AniSpeed_, false));
@@ -485,6 +550,25 @@ void HyperMecaCow::CreateMonsterAniFunc()
 			IsUpperAttackEnd = true;
 			UpperAttack_CoolTimer_.StartTimer();
 			AttackCol_->Off();
+		}
+	);
+
+	//랜드러너
+	MainRenderer_->AnimationBindFrame("SpawnRunner",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.CurFrame == 4)
+			{
+				Player_->ShakeCamera(13.0f, 0.55f);
+				SpawnRunner();
+			}
+		}
+	);
+
+	MainRenderer_->AnimationBindEnd("SpawnRunner",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			IsSpawnRunner_ = true;
 		}
 	);
 
@@ -590,7 +674,7 @@ std::string HyperMecaCow::CheckAdditionalPattern(float _DeltaTime)
 	{
 		//밥상 뒤집기 하면 적이 맞을꺼 같냐
 		if (IsZPosHit(static_cast<int>(Player_->GetBotPos().y + 10.0f)) == true &&
-			abs(Player_->GetTransform().GetWorldPosition().x - GetTransform().GetWorldPosition().x) < AttackCol_->GetTransform().GetLocalScale().Half().Half().x)
+			abs(Player_->GetTransform().GetWorldPosition().x - GetTransform().GetWorldPosition().x) < AttackCol_->GetTransform().GetLocalScale().Half().x)
 		{
 			return "UpperAttack";
 		}
@@ -604,6 +688,11 @@ std::string HyperMecaCow::CheckAdditionalPattern(float _DeltaTime)
 		{
 			return "Breath";
 		}
+	}
+
+	if (Runner_CoolTimer.IsTimerOn() == false)
+	{
+		return "SpawnRunner";
 	}
 	return "";
 }

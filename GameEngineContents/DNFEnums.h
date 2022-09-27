@@ -50,5 +50,9 @@ enum class PlayerAnimations
 	Hit,
 	GoreCross,
 	GoreCross_0,
-	GoreCross_1
+	GoreCross_1,
+	HopSmash,
+	HopSmash_0,
+	HopSmash_1,
+	HopSmash_2
 };

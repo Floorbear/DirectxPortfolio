@@ -102,6 +102,7 @@ void Player_Main::InitDefaultValue()
 
 	MPConsumption_.insert(std::make_pair("UpperSlash", Value_.UpperSlash_MP));
 	MPConsumption_.insert(std::make_pair("GoreCross", Value_.GoreCross_MP));
+	MPConsumption_.insert(std::make_pair("HopSmash", Value_.HopSmash_MP));
 }
 
 Player_Main::~Player_Main()
@@ -318,6 +319,10 @@ void Player_Main::InitState()
 	StateManager_.CreateStateMember("UpperSlash", std::bind(&Player_Main::UpperSlashUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::UpperSlashStart, this, std::placeholders::_1),
 		std::bind(&Player_Main::UpperSlashEnd, this, std::placeholders::_1));
+
+	StateManager_.CreateStateMember("HopSmash", std::bind(&Player_Main::HopSmashUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::HopSmashStart, this, std::placeholders::_1),
+		std::bind(&Player_Main::HopSmashEnd, this, std::placeholders::_1));
 
 	StateManager_.CreateStateMember("GoreCross", std::bind(&Player_Main::GoreCrossUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::GoreCrossStart, this, std::placeholders::_1),
@@ -547,6 +552,7 @@ void Player_Main::InitSkillCoolTime()
 {
 	CreateSkillCoolTime("UpperSlash", 2.0f);
 	CreateSkillCoolTime("GoreCross", 3.0f);
+	CreateSkillCoolTime("HopSmash", 1.0f);
 }
 
 void Player_Main::CoolTimeUpdate(float _DeltaTime)

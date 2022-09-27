@@ -88,6 +88,10 @@ private:
 	//캐릭터의 애니메이션 함수 초기화
 	void InitAniFunc();
 
+	void UpperSlashAniFunc();
+
+	void GoreCrossAniFun();
+
 	void SetAttackCol(const float4& _Pos, const float4& _Scale); //Col On & Set
 	//다음 공격키를 선입력 받는다.
 	// 다음 공격의 애니메이션을 Enum으로 알아오고, 다음 공격이 있다는 bool을 true로 변환, 그 결과를 bool로 return
@@ -219,6 +223,10 @@ private:
 	void UpperSlashUpdate(float _DeltaTime, const StateInfo _Info);
 	void UpperSlashEnd(const StateInfo _Info);
 
+	void HopSmashStart(const StateInfo _Info);
+	void HopSmashUpdate(float _DeltaTime, const StateInfo _Info);
+	void HopSmashEnd(const StateInfo _Info);
+
 	void GoreCrossStart(const StateInfo _Info);
 	void GoreCrossUpdate(float _DeltaTime, const StateInfo _Info);
 	void GoreCrossEnd(const StateInfo _Info);
@@ -260,6 +268,7 @@ private:
 		//마나 소비량
 		int UpperSlash_MP = 70;
 		int GoreCross_MP = 120;
+		int HopSmash_MP = 120;
 
 		float Down_Time = 1.3f;
 		float Down_God_Time = 0.48f;

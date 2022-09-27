@@ -266,6 +266,54 @@ void Player_Main::UpperSlashEnd(const StateInfo _Info)
 	AttackEnd();
 }
 
+void Player_Main::HopSmashStart(const StateInfo _Info)
+{
+	IsAttack_End_ = false;
+	SkillCoolTime_["HopSmash"]->StartTimer();
+	CurMP_ -= Value_.HopSmash_MP;
+
+	AvatarManager_.ChangeMotion(PlayerAnimations::HopSmash_0);
+	Force_.ForceY_ = 400.0f;
+	Force_.ForceX_ = 400.0f;
+	Force_.OnGravity();
+	GroundYPos_ = GetTransform().GetWorldPosition().y;
+	OnAir_ = true;
+
+	//우선 1프레임 위로 보낸다 > 착지 로직 발동하지 않게 하기 위에
+	Force_.Update(GameEngineTime::GetInst()->GetDeltaTime());
+}
+
+void Player_Main::HopSmashUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	//평소에는 False
+	if (IsAttack_End_ == true)
+	{
+		if (CheckAttackKey() == true)
+		{
+			IsAttack_End_ = false;
+			IsReadyNextAttack_ = false;
+			StateManager_.ChangeState(AvatarManager_.EnumToString(NextAttackAni_));
+			return;
+		}
+
+		if (IsPressMoveKey() == false)
+		{
+			StateManager_.ChangeState("Idle");
+			return;
+		}
+		else
+		{
+			StateManager_.ChangeState("Move");
+			return;
+		}
+	}
+}
+
+void Player_Main::HopSmashEnd(const StateInfo _Info)
+{
+	AttackEnd();
+}
+
 void Player_Main::GoreCrossStart(const StateInfo _Info)
 {
 	IsAttack_End_ = false;

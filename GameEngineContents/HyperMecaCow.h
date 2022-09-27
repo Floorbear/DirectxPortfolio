@@ -42,21 +42,29 @@ protected:
 	Timer AdditonAttack_Timer_; //일단 이 시간이 지난후, 쿨타임이 다된 브레스, 밥상뒤집기, 돌진 등에서 한 패턴을 사용한다.
 
 	//Attack_2 관련
-	float Attack_2_CoolTime = 18.0f;
+	float Attack_2_CoolTime = 20.0f;
 	Timer Attack_2_CoolTimer_ = 20.0f;
 	Timer Attack_2_Wait_Timer_;
 	Timer Attack_2_Change_Timer_;
 
 	//밥상 뒤집기 패턴관련
 	bool IsUpperAttackEnd = false;
-	Timer UpperAttack_CoolTimer_ = 10.0f;
+	Timer UpperAttack_CoolTimer_ = 14.0f;
 
 	//브레스 패턴 관련
 	GameEngineTextureRenderer* BreathFront_;
 	GameEngineTextureRenderer* BreathBack_;
 	bool IsBreathEnd_ = false;
 	float4 BreathPos_ = { 180.f,9.f ,0 };
-	Timer Breath_CoolTimer = 2.0f;
+	Timer Breath_CoolTimer = 7.0f;
+
+	//랜드러너 소환
+	void SpawnRunner_Start(const StateInfo _Info);
+	void SpawnRunner_Update(float _DeltaTime, const StateInfo _Info);
+	void SpawnRunner_End(const StateInfo _Info);
+	void SpawnRunner();
+	bool IsSpawnRunner_ = false;
+	Timer Runner_CoolTimer = 10.1f;
 
 	float4 Attack_2_Pos_ = { 0.0f,-38.0f,-500.0f };
 };

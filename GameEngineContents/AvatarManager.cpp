@@ -422,6 +422,10 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 
 	CurRenderer->CreateFrameAnimationFolder("GoreCross_0" + Name, FrameAnimation_DESC(_AvatarFolderName, GoreCross_0_Start, GoreCross_0_End, GoreCrossIter, false));
 	CurRenderer->CreateFrameAnimationFolder("GoreCross_1" + Name, FrameAnimation_DESC(_AvatarFolderName, GoreCross_1_Start, GoreCross_1_End, GoreCrossIter, false));
+
+	CurRenderer->CreateFrameAnimationFolder("HopSmash_0" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Start, Jump_Motion_Middle, 0.06f, false));
+	CurRenderer->CreateFrameAnimationFolder("HopSmash_1" + Name, FrameAnimation_DESC(_AvatarFolderName, HopSmash_1_Start, HopSmash_1_End, Iter_2, false));
+	CurRenderer->CreateFrameAnimationFolder("HopSmash_2" + Name, FrameAnimation_DESC(_AvatarFolderName, HopSmash_2_Start, HopSmash_2_End, Iter_2, false));
 }
 
 std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
@@ -477,7 +481,18 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 	case PlayerAnimations::GoreCross_1:
 		return "GoreCross_1";
 		break;
-
+	case PlayerAnimations::HopSmash: //State ÀüÀÌ¿כ
+		return "HopSmash";
+		break;
+	case PlayerAnimations::HopSmash_0:
+		return "HopSmash_0";
+		break;
+	case PlayerAnimations::HopSmash_1:
+		return "HopSmash_1";
+		break;
+	case PlayerAnimations::HopSmash_2:
+		return "HopSmash_2";
+		break;
 	default:
 		break;
 	}

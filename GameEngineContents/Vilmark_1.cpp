@@ -21,7 +21,7 @@ void Vilmark_1::Start()
 	VilmarkMap_->MakeRightDoor();
 
 	//-320보다 작아야
-	CrazyIvan* Monster = CreateMonster<CrazyIvan>({ 423,-340 });
+	CrazyIvan* Monster = CreateMonster<CrazyIvan>({ 423,-351 });
 	CrazyIvan* Monster1 = CreateMonster<CrazyIvan>({ 494,-359 });
 	CrazyIvan* Monster2 = CreateMonster<CrazyIvan>({ 414,-442 });
 	CrazyIvan* Monster3 = CreateMonster<CrazyIvan>({ 572,-376 });

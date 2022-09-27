@@ -9,6 +9,7 @@
 
 bool Player_Main::CheckAttackKey()
 {
+	//평타
 	if (GameEngineInput::GetInst()->IsPress("X") == true)
 	{
 		IsReadyNextAttack_ = true;
@@ -48,6 +49,11 @@ bool Player_Main::CheckAttackKey()
 		return CheckCanUsingSkill("GoreCross", PlayerAnimations::GoreCross);
 	}
 
+	if (GameEngineInput::GetInst()->IsPress("S") == true)
+	{
+		return CheckCanUsingSkill("HopSmash", PlayerAnimations::HopSmash);
+	}
+
 	return false;
 }
 
@@ -60,14 +66,14 @@ bool Player_Main::CheckCanUsingSkill(std::string _SkillName, PlayerAnimations _C
 		return false;
 	}
 
-	//어퍼슬래쉬를 사용해서 쿨타임이 돌고있는 상태면 무시한다.
+	//해당 스킬을 사용해서 쿨타임이 돌고있는 상태면 무시한다.
 	if (SkillCoolTime_[_SkillName]->IsTimerOn() == true)
 	{
 		IsReadyNextAttack_ = false;
 		return false;
 	}
 
-	//어퍼 슬래쉬를 사용할 MP가 없다면 False
+	//해당 스킬을 사용할 MP가 없다면 False
 	if (CurMP_ < MPConsumption_[_SkillName])
 	{
 		IsReadyNextAttack_ = false;
@@ -191,6 +197,13 @@ void Player_Main::InitAniFunc()
 			}
 		});
 
+	UpperSlashAniFunc();
+
+	GoreCrossAniFun();
+}
+
+void Player_Main::UpperSlashAniFunc()
+{
 	//UpperSlash
 	MainRenderer_->AnimationBindFrame("UpperSlash",
 		[&](const FrameAnimation_DESC& _Desc)
@@ -198,7 +211,7 @@ void Player_Main::InitAniFunc()
 			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start)
 			{
 				//슈퍼아머 set
-				StartSuperArmor(0.7f);
+				StartSuperArmor(0.35f);
 			}
 			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 1)
 			{
@@ -229,7 +242,10 @@ void Player_Main::InitAniFunc()
 				IsAttack_End_ = true;
 			}
 		});
+}
 
+void Player_Main::GoreCrossAniFun()
+{
 	//GoreCross_0
 	MainRenderer_->AnimationBindFrame("GoreCross_0",
 		[&](const FrameAnimation_DESC& _Desc)

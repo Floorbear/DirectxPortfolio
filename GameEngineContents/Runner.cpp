@@ -16,7 +16,7 @@ Runner::Runner() :
 	MaxHP_ = 120000;
 	CurHP_ = MaxHP_;
 
-	Value_.Type = MonsterType::CrazyIvanM;
+	Value_.Type = MonsterType::RunnerM;
 	Value_.MonsterTextureSize_ = { 105.0f,94.0f,1.0f };
 	Value_.DieParticleName = "DieParticleRobot";
 	Value_.DieParticleSize = { 1.0f,1.0f,1.0f };
@@ -42,7 +42,7 @@ Runner::Runner() :
 
 	Value_.Attack_1_CoolTime = 10.0f;
 
-	Value_.Speed = 70.0f;
+	Value_.Speed = 140.0f;
 
 	Value_.ChaseAccPos = { 0,-55.f,0 };
 	ShadowAirAcc_ = 0.31f;
@@ -67,7 +67,6 @@ void Runner::Start()
 		GameEngineFolderTexture::Load(Dir.GetFullPath());
 	}
 	InitMonster();
-	StartDebug();
 	//State추가
 
 	//Transition 수정
@@ -115,7 +114,6 @@ void Runner::Start()
 void Runner::Update(float _DeltaTime)
 {
 	UpdateMonster(_DeltaTime);
-	UpdateDebug();
 }
 
 void Runner::End()
@@ -171,7 +169,7 @@ void Runner::SelfDestruct_Update(float _DeltaTime, const StateInfo _Info)
 		MainRenderer_->Off();
 		DieAlpha_ = 0.0f;
 		IsDieEffect_ = true;
-		Player_->ShakeCamera(13.0f, 0.35f);
+		//Player_->ShakeCamera(8.0f, 0.35f);
 		SelfDestructCol_Timer_.StartTimer(0.13f);
 	}
 

@@ -24,10 +24,10 @@ void Vilmark_2::Start()
 
 	////빌마르크 방 3꺼
 
-	TauCaptain* MonsterBoss = CreateMonster<TauCaptain>(float4(1079, -342));
+	TauCaptain* MonsterBoss = CreateMonster<TauCaptain>(float4(1079, -352));
 	////몬스터 생성
 	float4 AccPos = { 0,-30.f };
-	MiniTau* Monster0 = CreateMonster<MiniTau>(AccPos + float4(573, -342));
+	MiniTau* Monster0 = CreateMonster<MiniTau>(AccPos + float4(573, -352));
 	MiniTau* Monster1 = CreateMonster<MiniTau>(AccPos + float4(697, -365));
 	MiniTau* Monster2 = CreateMonster<MiniTau>(AccPos + float4(782, -418));
 	MiniTau* Monster3 = CreateMonster<MiniTau>(AccPos + float4(869, -340));

@@ -34,6 +34,11 @@
 #define GoreCross_1_Start 199
 #define GoreCross_1_End 203
 
+#define HopSmash_1_Start 204
+#define HopSmash_1_End 205
+#define HopSmash_2_Start 206
+#define HopSmash_2_End 209
+
 //·ç°¡·ç
 #define Lugaru_Attack_1_Start 0
 #define Lugaru_Attack_1_End 5

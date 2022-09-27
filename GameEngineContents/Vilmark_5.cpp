@@ -21,9 +21,9 @@ void Vilmark_5::Start()
 	VilmarkMap_->MakeLeftDoor();
 	float4 AccPos = {};
 
-	Runner* Monster2 = CreateMonster<Runner>({ { 800,-430 } });
-	Runner* Monster3 = CreateMonster<Runner>({ { 750,-430 } });
-	HyperMecaCow* Boss = CreateMonster< HyperMecaCow>({ { 700,-430 } });
+	//Runner* Monster2 = CreateMonster<Runner>({ { 800,-430 } });
+	//Runner* Monster3 = CreateMonster<Runner>({ { 750,-430 } });
+	//HyperMecaCow* Boss = CreateMonster< HyperMecaCow>({ { 700,-430 } });
 }
 
 void Vilmark_5::Update(float _DeltaTime)
