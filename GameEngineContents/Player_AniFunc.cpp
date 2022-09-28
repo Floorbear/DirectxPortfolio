@@ -101,6 +101,11 @@ bool Player_Main::CheckAttackKey()
 		return CheckCanUsingSkill("Frenzy", PlayerAnimations::Frenzy);
 	}
 
+	if (GameEngineInput::GetInst()->IsPress("E") == true)
+	{
+		return CheckCanUsingSkill("Fury", PlayerAnimations::Fury);
+	}
+
 	return false;
 }
 
@@ -134,11 +139,26 @@ bool Player_Main::CheckCanUsingSkill(std::string _SkillName, PlayerAnimations _C
 
 void Player_Main::InitAniFunc()
 {
-	//Jump
+	//ÇÁ·»Áö
 	MainRenderer_->AnimationBindEnd("Frenzy",
 		[&](const FrameAnimation_DESC& _Desc)
 		{
 			IsFrenzy_ = true;
+		});
+	//ÆøÁÖ
+	MainRenderer_->AnimationBindFrame("Fury",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.CurFrame == 1)
+			{
+				ShakeCamera(12.5f, 0.55f);
+				StartSuperArmor(8.0f);
+			}
+		});
+	MainRenderer_->AnimationBindEnd("Fury",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			StateManager_.ChangeState("Idle");
 		});
 
 	AutoAttackAniFunc();

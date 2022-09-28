@@ -323,6 +323,7 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 	CurRenderer->CreateFrameAnimationFolder("AutoAttack_2" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_2_Start, AutoAttack_2_End, Iter_2, false));
 	CurRenderer->CreateFrameAnimationFolder("UpperSlash" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_2_Start, AutoAttack_2_End, Iter_2, false));
 	CurRenderer->CreateFrameAnimationFolder("Buff" + Name, FrameAnimation_DESC(_AvatarFolderName, BuffOn_Start, BuffOn_End, Iter_1, false));
+	CurRenderer->CreateFrameAnimationFolder("Fury" + Name, FrameAnimation_DESC(_AvatarFolderName, BuffOn_Start, BuffOn_End, Iter_1 * 0.5f, false));
 	CurRenderer->CreateFrameAnimationFolder("Hit" + Name, FrameAnimation_DESC(_AvatarFolderName, Hit_Start, Hit_End, 0.04f, false));
 	CurRenderer->CreateFrameAnimationFolder("Down" + Name, FrameAnimation_DESC(_AvatarFolderName, Down_Start, Down_End, 0.04f, false));
 	CurRenderer->CreateFrameAnimationFolder("Jump_Start" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Start, Jump_Motion_Middle, 0.06f, false));
@@ -355,6 +356,9 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 		break;
 	case PlayerAnimations::Buff:
 		return "Buff";
+		break;
+	case PlayerAnimations::Fury:
+		return "Fury";
 		break;
 	case PlayerAnimations::Move:
 		return "Move";

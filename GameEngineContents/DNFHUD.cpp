@@ -8,10 +8,11 @@
 #include "GaugeRenderer.h"
 #include <GameEngineCore/GameEngineUIRenderer.h>
 
-#define UpperSlash_Icon 13
+#define Fury_Icon 2
 #define GoreCross_Icon 7
 #define HopSmash_Icon 8
 #define Frenzy_Icon 10
+#define UpperSlash_Icon 13
 
 DNFHUD::DNFHUD() :
 	PrevHp_(-1),
@@ -31,6 +32,7 @@ DNFHUD::DNFHUD() :
 	StringToInt_.insert(std::make_pair("GoreCross", GoreCross_Icon));
 	StringToInt_.insert(std::make_pair("HopSmash", HopSmash_Icon));
 	StringToInt_.insert(std::make_pair("Frenzy", Frenzy_Icon));
+	StringToInt_.insert(std::make_pair("Fury", Fury_Icon));
 }
 
 DNFHUD::~DNFHUD()
@@ -203,6 +205,10 @@ void DNFHUD::SkillRendererInit()
 		//NewSkillIcon->SetPivot(PIVOTMODE::CENTER);
 		SkillIcon_.push_back(NewSkillIcon);
 	}
+
+	SkillIcon_[Fury_Icon]->On();
+	SkillIcon_[Fury_Icon]->SetTexture("Fury.png");
+	SkillIcon_[Fury_Icon]->GetTransform().SetLocalScale({ 28,28 });
 
 	SkillIcon_[UpperSlash_Icon]->On();
 	SkillIcon_[UpperSlash_Icon]->SetTexture("UpperSlash.png");

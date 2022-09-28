@@ -108,6 +108,7 @@ void Player_Main::InitDefaultValue()
 	MPConsumption_.insert(std::make_pair("GoreCross", Value_.GoreCross_MP));
 	MPConsumption_.insert(std::make_pair("HopSmash", Value_.HopSmash_MP));
 	MPConsumption_.insert(std::make_pair("Frenzy", 1));
+	MPConsumption_.insert(std::make_pair("Fury", Value_.Fury_MP));
 }
 
 Player_Main::~Player_Main()
@@ -347,6 +348,9 @@ void Player_Main::InitState()
 
 	StateManager_.CreateStateMember("Frenzy", std::bind(&Player_Main::FrenzyUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::FrenzyStart, this, std::placeholders::_1));
+
+	StateManager_.CreateStateMember("Fury", std::bind(&Player_Main::FuryUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::FuryStart, this, std::placeholders::_1));
 }
 
 void Player_Main::StartSuperArmor(float _SuperArmorTime)
@@ -386,7 +390,14 @@ void Player_Main::StartSuperArmor(float _SuperArmorTime)
 		i->GetPixelData().MulColor = float4(99999.f, 0, 0, 0.6f);
 	}
 	IsSuperArmor_ = true;
-	SuperArmorTimer_.StartTimer(_SuperArmorTime);
+	if (SuperArmorTimer_.IsTimerOn() == true)
+	{
+		SuperArmorTimer_ += _SuperArmorTime;
+	}
+	else
+	{
+		SuperArmorTimer_.StartTimer(_SuperArmorTime);
+	}
 }
 
 void Player_Main::CopyRendererUpdate(float _DeltaTime)
@@ -569,6 +580,7 @@ void Player_Main::InitSkillCoolTime()
 	CreateSkillCoolTime("GoreCross", 3.0f);
 	CreateSkillCoolTime("HopSmash", 4.0f);
 	CreateSkillCoolTime("Frenzy", 5.0f);
+	CreateSkillCoolTime("Fury", 43.0f);
 }
 
 void Player_Main::CoolTimeUpdate(float _DeltaTime)

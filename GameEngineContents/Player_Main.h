@@ -259,6 +259,9 @@ private:
 	void FrenzyStart(const StateInfo _Info);
 	void FrenzyUpdate(float _DeltaTime, const StateInfo _Info);
 
+	void FuryStart(const StateInfo _Info);
+	void FuryUpdate(float _DeltaTime, const StateInfo _Info);
+
 	void HitStart(const StateInfo _Info);
 	void HitUpdate(float _DeltaTime, const StateInfo _Info);
 
@@ -299,12 +302,13 @@ private:
 
 		//마나, 체력
 		int Default_HP = 30000;
-		int Default_MP = 15000;
+		int Default_MP = 20000;
 
 		//마나 소비량
 		int UpperSlash_MP = 70;
 		int GoreCross_MP = 120;
 		int HopSmash_MP = 120;
+		int Fury_MP = 100;
 
 		float Down_Time = 1.3f;
 		float Down_God_Time = 0.48f;

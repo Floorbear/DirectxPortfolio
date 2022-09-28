@@ -515,6 +515,16 @@ void Player_Main::FrenzyUpdate(float _DeltaTime, const StateInfo _Info)
 	}
 }
 
+void Player_Main::FuryStart(const StateInfo _Info)
+{
+	AvatarManager_.ChangeMotion(PlayerAnimations::Fury);
+	SkillCoolTime_["Fury"]->StartTimer();
+}
+
+void Player_Main::FuryUpdate(float _DeltaTime, const StateInfo _Info)
+{
+}
+
 void Player_Main::HitStart(const StateInfo _Info)
 {
 	AvatarManager_.ChangeMotion(PlayerAnimations::Hit);

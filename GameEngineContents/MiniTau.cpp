@@ -242,10 +242,9 @@ void MiniTau::CreateMonsterAniFunc()
 				CurAttackData_.AttackName = "Attack_1";
 				CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
 				CurAttackData_.Font = 2;
-				CurAttackData_.XForce = 300.0f;
-				//CurAttackData_.YForce = 950.0f;
-				CurAttackData_.Stiffness = 0.35f;
-				CurAttackData_.RStiffness = 0.21f;
+				CurAttackData_.XForce = 100.0f;
+				CurAttackData_.Stiffness = 0.15f;
+				CurAttackData_.RStiffness = 0.11f;
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.AttCount++;
 				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
