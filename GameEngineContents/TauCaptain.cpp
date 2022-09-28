@@ -84,6 +84,7 @@ void TauCaptain::Start()
 
 	//추가 패턴의 확률 추가
 	//Transition_
+	Attack_2_CoolTimer_.StartTimer(Attack_2_CoolTime * 0.7f);
 
 	StateManager_.CreateStateMember("Attack_2", std::bind(&TauCaptain::Attack_2_Update, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&TauCaptain::Attack_2_Start, this, std::placeholders::_1),
@@ -256,6 +257,10 @@ void TauCaptain::CreateMonsterAniFunc()
 				CurAttackData_.AttEffect = Effect::SlashSLeft;
 				AttackCol_->GetTransform().SetLocalPosition(Attack_1_Pos_);
 				AttackCol_->On();
+			}
+			if (_Desc.Frames[_Desc.CurFrame - 1] == 5)
+			{
+				AttackCol_->Off();
 			}
 		}
 	);

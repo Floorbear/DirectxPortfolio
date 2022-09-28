@@ -9,6 +9,17 @@
 #define AutoAttack_2_Start 33
 #define AutoAttack_2_End 41
 
+#define Frenzy_Start 159
+#define Frenzy_End 170
+#define Frenzy_AutoAttack_0_Start 188
+#define Frenzy_AutoAttack_0_End 193
+#define Frenzy_AutoAttack_1_Start 194
+#define Frenzy_AutoAttack_1_End 198
+#define Frenzy_AutoAttack_2_Start 199
+#define Frenzy_AutoAttack_2_End 203
+#define Frenzy_AutoAttack_3_Start 204
+#define Frenzy_AutoAttack_3_End 209
+
 #define Idle_Start 176
 #define Idle_End 179
 

@@ -61,10 +61,12 @@ void ContentsCore::Start()
 	GameEngineInput::GetInst()->CreateKey("A", 'A');
 	GameEngineInput::GetInst()->CreateKey("S", 'S');
 	GameEngineInput::GetInst()->CreateKey("D", 'D');
+	GameEngineInput::GetInst()->CreateKey("F", 'F');
 
 	GameEngineInput::GetInst()->CreateKey("Q", 'Q');
 	GameEngineInput::GetInst()->CreateKey("W", 'W');
 	GameEngineInput::GetInst()->CreateKey("E", 'E');
+	GameEngineInput::GetInst()->CreateKey("R", 'E');
 
 	GameEngineInput::GetInst()->CreateKey("Left", VK_LEFT);
 	GameEngineInput::GetInst()->CreateKey("Right", VK_RIGHT);

@@ -328,6 +328,12 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 	CurRenderer->CreateFrameAnimationFolder("Jump_Start" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Start, Jump_Motion_Middle, 0.06f, false));
 	CurRenderer->CreateFrameAnimationFolder("Jump_End" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Middle + 1, Jump_Motion_End, 0.06f, false));
 
+	CurRenderer->CreateFrameAnimationFolder("Frenzy" + Name, FrameAnimation_DESC(_AvatarFolderName, Frenzy_Start, Frenzy_End, Iter_1, false));
+	CurRenderer->CreateFrameAnimationFolder("Frenzy_AutoAttack_0" + Name, FrameAnimation_DESC(_AvatarFolderName, Frenzy_AutoAttack_0_Start, Frenzy_AutoAttack_0_End, Iter_2 * 2.3f, false));
+	CurRenderer->CreateFrameAnimationFolder("Frenzy_AutoAttack_1" + Name, FrameAnimation_DESC(_AvatarFolderName, Frenzy_AutoAttack_1_Start, Frenzy_AutoAttack_1_End, Iter_2 * 2.3f, false));
+	CurRenderer->CreateFrameAnimationFolder("Frenzy_AutoAttack_2" + Name, FrameAnimation_DESC(_AvatarFolderName, Frenzy_AutoAttack_2_Start, Frenzy_AutoAttack_2_End, Iter_2 * 2.3f, false));
+	CurRenderer->CreateFrameAnimationFolder("Frenzy_AutoAttack_3" + Name, FrameAnimation_DESC(_AvatarFolderName, Frenzy_AutoAttack_3_Start, Frenzy_AutoAttack_3_End, Iter_2 * 2.3f, false));
+
 	CurRenderer->CreateFrameAnimationFolder("GoreCross_0" + Name, FrameAnimation_DESC(_AvatarFolderName, GoreCross_0_Start, GoreCross_0_End, GoreCrossIter, false));
 	CurRenderer->CreateFrameAnimationFolder("GoreCross_1" + Name, FrameAnimation_DESC(_AvatarFolderName, GoreCross_1_Start, GoreCross_1_End, GoreCrossIter, false));
 
@@ -364,6 +370,21 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 		break;
 	case PlayerAnimations::AutoAttack_2:
 		return "AutoAttack_2";
+		break;
+	case PlayerAnimations::Frenzy:
+		return "Frenzy";
+		break;
+	case PlayerAnimations::Frenzy_AutoAttack_0:
+		return "Frenzy_AutoAttack_0";
+		break;
+	case PlayerAnimations::Frenzy_AutoAttack_1:
+		return "Frenzy_AutoAttack_1";
+		break;
+	case PlayerAnimations::Frenzy_AutoAttack_2:
+		return "Frenzy_AutoAttack_2";
+		break;
+	case PlayerAnimations::Frenzy_AutoAttack_3:
+		return "Frenzy_AutoAttack_3";
 		break;
 	case PlayerAnimations::Jump_Start:
 		return "Jump_Start";

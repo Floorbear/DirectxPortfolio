@@ -13,30 +13,72 @@ bool Player_Main::CheckAttackKey()
 	if (GameEngineInput::GetInst()->IsPress("X") == true)
 	{
 		IsReadyNextAttack_ = true;
-		//아예 다른 공격
-		if (CurAttackData_.AttackName != "AutoAttack")
+		if (IsFrenzy_ == false)
 		{
-			NextAttackAni_ = PlayerAnimations::AutoAttack;
+			//아예 다른 공격
+			if (CurAttackData_.AttackName != "AutoAttack")
+			{
+				NextAttackAni_ = PlayerAnimations::AutoAttack;
+				return true;
+			}
+			//같은 공격인데 이미 공격횟수를 전부 했음
+			if (CurAttackData_.AttCount >= 3)
+			{
+				IsReadyNextAttack_ = false;
+				return false;
+			}
+			switch (CurAttackData_.AttCount)
+			{
+			case 1:
+				NextAttackAni_ = PlayerAnimations::AutoAttack_1;
+				break;
+			case 2:
+				NextAttackAni_ = PlayerAnimations::AutoAttack_2;
+				break;
+			default:
+				break;
+			}
 			return true;
 		}
-		//같은 공격인데 이미 공격횟수를 전부 했음
-		if (CurAttackData_.AttCount >= 3)
+		else
 		{
-			IsReadyNextAttack_ = false;
-			return false;
+			//아예 다른 공격
+			if (CurAttackData_.AttackName != "Frenzy_AutoAttack")
+			{
+				NextAttackAni_ = PlayerAnimations::AutoAttack; //일단오토어택을 해서 AutoAttack State로 전이한다.
+				return true;
+			}
+			//같은 공격인데 이미 공격횟수를 전부 했음
+			if (CurAttackData_.AttCount >= 8)
+			{
+				IsReadyNextAttack_ = false;
+				return false;
+			}
+			switch (CurAttackData_.AttCount)
+			{
+			case 1:
+				NextAttackAni_ = PlayerAnimations::Frenzy_AutoAttack_1;
+				break;
+			case 2:
+				NextAttackAni_ = PlayerAnimations::Frenzy_AutoAttack_1;
+				break;
+			case 3:
+				NextAttackAni_ = PlayerAnimations::Frenzy_AutoAttack_2;
+				break;
+			case 4:
+				NextAttackAni_ = PlayerAnimations::Frenzy_AutoAttack_2;
+				break;
+			case 5:
+				NextAttackAni_ = PlayerAnimations::Frenzy_AutoAttack_3;
+				break;
+			case 6:
+				NextAttackAni_ = PlayerAnimations::Frenzy_AutoAttack_3;
+				break;
+			default:
+				break;
+			}
+			return true;
 		}
-		switch (CurAttackData_.AttCount)
-		{
-		case 1:
-			NextAttackAni_ = PlayerAnimations::AutoAttack_1;
-			break;
-		case 2:
-			NextAttackAni_ = PlayerAnimations::AutoAttack_2;
-			break;
-		default:
-			break;
-		}
-		return true;
 	}
 
 	if (GameEngineInput::GetInst()->IsPress("Z") == true)
@@ -52,6 +94,11 @@ bool Player_Main::CheckAttackKey()
 	if (GameEngineInput::GetInst()->IsPress("S") == true)
 	{
 		return CheckCanUsingSkill("HopSmash", PlayerAnimations::HopSmash);
+	}
+
+	if (GameEngineInput::GetInst()->IsPress("F") == true)
+	{
+		return CheckCanUsingSkill("Frenzy", PlayerAnimations::Frenzy);
 	}
 
 	return false;
@@ -86,6 +133,186 @@ bool Player_Main::CheckCanUsingSkill(std::string _SkillName, PlayerAnimations _C
 }
 
 void Player_Main::InitAniFunc()
+{
+	//Jump
+	MainRenderer_->AnimationBindEnd("Frenzy",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			IsFrenzy_ = true;
+		});
+
+	AutoAttackAniFunc();
+
+	Frenzy_AutoAttackAniFunc();
+
+	UpperSlashAniFunc();
+
+	GoreCrossAniFun();
+
+	HopSmashAniFunc();
+}
+
+void Player_Main::Frenzy_AutoAttackAniFunc()
+{
+	//AutoAttack_0
+	MainRenderer_->AnimationBindFrame("Frenzy_AutoAttack_0",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.Frames[_Desc.CurFrame - 1] >= Frenzy_AutoAttack_0_Start + 1)
+			{
+				CheckAttackKey();
+			}
+
+			if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_0_Start + 2)
+			{
+				SetAttackCol(Value_.AutoAttackPos, Value_.AutoAttackScale);
+				//Set Attack
+				CurAttackData_.Type = AttackType::Above;
+				CurAttackData_.AttackName = "Frenzy_AutoAttack";
+				CurAttackData_.Att = CalAtt(Value_.FrenzyAtt);
+				CurAttackData_.XForce = FrenzyXForce;
+				CurAttackData_.Stiffness = FrenzyStif;
+				CurAttackData_.RStiffness = FrenzyRStif;
+				CurAttackData_.Bleeding = 17;
+				CurAttackData_.AttCount = 0;
+				CurAttackData_.AttCount++;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
+				CurAttackData_.AttEffect = Effect::SlashSRight;
+			}
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_0_End - 1)
+			{
+				CurAttackData_.Att = CalAtt(Value_.FrenzyAtt);
+				CurAttackData_.AttCount++;
+				CurAttackData_.AttEffect = Effect::SlashSLeft;
+			}
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_0_End)
+			{
+				AttackCol_->Off();
+				IsAttack_End_ = true;
+			}
+		});
+
+	//AutoAttack_1
+	MainRenderer_->AnimationBindFrame("Frenzy_AutoAttack_1",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.Frames[_Desc.CurFrame - 1] >= Frenzy_AutoAttack_1_Start + 1)
+			{
+				CheckAttackKey();
+			}
+
+			if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_1_Start + 2)
+			{
+				SetAttackCol(Value_.AutoAttackPos, Value_.AutoAttackScale);
+				//Set Attack
+				CurAttackData_.Att = CalAtt(Value_.FrenzyAtt);
+				CurAttackData_.Type = AttackType::Above;
+				CurAttackData_.AttackName = "Frenzy_AutoAttack";
+				CurAttackData_.XForce = FrenzyXForce;
+				CurAttackData_.Stiffness = FrenzyStif;
+				CurAttackData_.Bleeding = 17;
+
+				CurAttackData_.RStiffness = FrenzyRStif;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
+				CurAttackData_.AttCount++;
+				Force_.ForceX_ = 70.0f;
+				CurAttackData_.AttEffect = Effect::SlashSRight;
+			}
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_1_End - 1)
+			{
+				CurAttackData_.Att = CalAtt(Value_.FrenzyAtt);
+				CurAttackData_.AttCount++;
+				CurAttackData_.AttEffect = Effect::SlashSHori;
+			}
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_1_End)
+			{
+				AttackCol_->Off();
+				IsAttack_End_ = true;
+			}
+		});
+
+	//AutoAttack_2
+	MainRenderer_->AnimationBindFrame("Frenzy_AutoAttack_2",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.Frames[_Desc.CurFrame - 1] >= Frenzy_AutoAttack_2_Start + 1)
+			{
+				CheckAttackKey();
+			}
+
+			if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_2_Start + 2)
+			{
+				SetAttackCol(Value_.UpperSlashPos, Value_.UpeerSlashScale);
+				//Set Attack
+				CurAttackData_.Att = CalAtt(Value_.FrenzyAtt);
+				CurAttackData_.Type = AttackType::Below;
+				CurAttackData_.AttackName = "Frenzy_AutoAttack";
+				CurAttackData_.XForce = FrenzyXForce;
+				CurAttackData_.Stiffness = FrenzyStif;
+				CurAttackData_.Bleeding = 17;
+
+				CurAttackData_.YForce = 240.0f;
+
+				CurAttackData_.RStiffness = FrenzyRStif;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
+				CurAttackData_.AttCount++;
+				Force_.ForceX_ = 70.0f;
+				CurAttackData_.AttEffect = Effect::SlashSLeft;
+			}
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_2_End - 1)
+			{
+				CurAttackData_.Att = CalAtt(Value_.FrenzyAtt);
+				CurAttackData_.AttCount++;
+				CurAttackData_.AttEffect = Effect::SlashSHori;
+			}
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_2_End)
+			{
+				AttackCol_->Off();
+				IsAttack_End_ = true;
+			}
+		});
+
+	//AutoAttack_3
+	MainRenderer_->AnimationBindFrame("Frenzy_AutoAttack_3",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.Frames[_Desc.CurFrame - 1] >= Frenzy_AutoAttack_3_Start + 1)
+			{
+				CheckAttackKey();
+			}
+			if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_3_Start + 2)
+			{
+				SetAttackCol(Value_.UpperSlashPos, Value_.UpeerSlashScale);
+				//Set Attack
+				CurAttackData_.Att = CalAtt(Value_.FrenzyAtt);
+				CurAttackData_.Type = AttackType::Below;
+				CurAttackData_.AttackName = "Frenzy_AutoAttack";
+				CurAttackData_.XForce = FrenzyXForce;
+				CurAttackData_.Stiffness = FrenzyStif;
+				CurAttackData_.Bleeding = 17;
+
+				CurAttackData_.RStiffness = FrenzyRStif;
+				CurAttackData_.YForce = 100.0f;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
+				CurAttackData_.AttCount++;
+				Force_.ForceX_ = 70.0f;
+				CurAttackData_.AttEffect = Effect::SlashSHori;
+			}
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_3_End - 1)
+			{
+				CurAttackData_.Att = CalAtt(Value_.FrenzyAtt);
+				CurAttackData_.AttCount++;
+				CurAttackData_.AttEffect = Effect::SlashSRight;
+			}
+			else if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_3_End)
+			{
+				AttackCol_->Off();
+				IsAttack_End_ = true;
+			}
+		});
+}
+
+void Player_Main::AutoAttackAniFunc()
 {
 	//AutoAttack_0
 	MainRenderer_->AnimationBindFrame("AutoAttack_0",
@@ -196,12 +423,6 @@ void Player_Main::InitAniFunc()
 				AvatarManager_.ChangeMotion(PlayerAnimations::Jump_End);
 			}
 		});
-
-	UpperSlashAniFunc();
-
-	GoreCrossAniFun();
-
-	HopSmashAniFunc();
 }
 
 void Player_Main::HopSmashAniFunc()

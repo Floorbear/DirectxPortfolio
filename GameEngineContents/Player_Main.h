@@ -88,6 +88,10 @@ private:
 	//캐릭터의 애니메이션 함수 초기화
 	void InitAniFunc();
 
+	void Frenzy_AutoAttackAniFunc();
+
+	void AutoAttackAniFunc();
+
 	void HopSmashAniFunc();
 
 	void UpperSlashAniFunc();
@@ -206,6 +210,18 @@ private:
 
 	bool IsPressMoveKey();
 
+	//프렌지 상태 관련
+	bool IsFrenzy_ = false;
+	float FrenzyXForce = 35.f;
+	float FrenzyStif = 0.07f;
+	float FrenzyRStif = 0.055f;
+	GameEngineTextureRenderer* Frenzy_Upper_ = nullptr;
+	GameEngineTextureRenderer* Frenzy_Under_ = nullptr;
+	GameEngineTextureRenderer* Frenzy_Trail_ = nullptr;
+	GameEngineTextureRenderer* Blood_Effect_ = nullptr;
+
+	void Frenzy_Init();
+
 	void IdleStart(const StateInfo _Info);
 	void IdleUpdate(float _DeltaTime, const StateInfo _Info);
 
@@ -239,6 +255,9 @@ private:
 	void GoreCrossStart(const StateInfo _Info);
 	void GoreCrossUpdate(float _DeltaTime, const StateInfo _Info);
 	void GoreCrossEnd(const StateInfo _Info);
+
+	void FrenzyStart(const StateInfo _Info);
+	void FrenzyUpdate(float _DeltaTime, const StateInfo _Info);
 
 	void HitStart(const StateInfo _Info);
 	void HitUpdate(float _DeltaTime, const StateInfo _Info);
@@ -275,6 +294,7 @@ private:
 		//공격력
 		int UpperSlashAtt;
 		int AutoAttackAtt;
+		int FrenzyAtt = 5000;
 		int GoreCrossAtt = 15000;
 
 		//마나, 체력

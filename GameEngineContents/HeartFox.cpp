@@ -137,7 +137,7 @@ void HeartFox::Attack_2_Start(const StateInfo _Info)
 {
 	if (IsAngry_ == true)
 	{
-		StartSuperArmor(1.5f);
+		StartSuperArmor(2.3f);
 	}
 	//Flip Check
 	float4 PlayerPos = Player_->GetTransform().GetWorldPosition();
@@ -221,8 +221,8 @@ void HeartFox::Attack_2_End(const StateInfo _Info)
 void HeartFox::Angry_Start(const StateInfo _Info)
 {
 	StartSuperArmor(1.5f);
-	LugaruValue.Attack_2_CoolTime = 3.0f;
-	Value_.Attack_1_CoolTime = 2.5f;
+	LugaruValue.Attack_2_CoolTime = 3.3f;
+	Value_.Attack_1_CoolTime = 1.3f;
 	Value_.Speed = 200.0f;
 	ChangeDNFAnimation("Angry");
 }
@@ -264,7 +264,7 @@ void HeartFox::CreateMonsterAniFunc()
 			{
 				if (IsAngry_ == true)
 				{
-					StartSuperArmor(0.7f);
+					StartSuperArmor(1.5f);
 				}
 			}
 			if (_Desc.Frames[_Desc.CurFrame - 1] == Lugaru_Attack_1_Start + 1)

@@ -6,6 +6,64 @@
 #include "Player_Main.h"
 #include "HopSmash.h"
 
+void Player_Main::Frenzy_Init()
+{
+	//프렌지 텍스처가 없으면 로드한다.
+	if (GameEngineFolderTexture::Find("sword_blood_upper") == nullptr)
+	{
+		{
+			GameEngineDirectory Dir;
+			Dir.MoveParentToExitsChildDirectory("ContentsResources");
+			Dir.Move("ContentsResources");
+			Dir.Move("FolderTexture");
+			Dir.Move("SkillTexture");
+			Dir.Move("Frenzy");
+			std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
+			for (GameEngineDirectory Dir_i : Dirs)
+			{
+				GameEngineFolderTexture::Load(Dir_i.GetFullPath());
+			}
+		}
+	}
+	float Iter_2 = 0.027f;
+
+	Frenzy_Upper_ = CreateComponent<GameEngineTextureRenderer>();
+	Frenzy_Upper_->CreateFrameAnimationFolder("Frenzy_AutoAttack_0", FrameAnimation_DESC("sword_blood_upper", 0, 5, Iter_2 * 2.3f, false));
+	Frenzy_Upper_->CreateFrameAnimationFolder("Frenzy_AutoAttack_1", FrameAnimation_DESC("sword_blood_upper", 6, 10, Iter_2 * 2.3f, false));
+	Frenzy_Upper_->CreateFrameAnimationFolder("Frenzy_AutoAttack_2", FrameAnimation_DESC("sword_blood_upper", 11, 15, Iter_2 * 2.3f, false));
+	Frenzy_Upper_->CreateFrameAnimationFolder("Frenzy_AutoAttack_3", FrameAnimation_DESC("sword_blood_upper", 16, 21, Iter_2 * 2.3f, false));
+	Frenzy_Upper_->ChangeFrameAnimation("Frenzy_AutoAttack_0");
+	Frenzy_Upper_->SetScaleModeImage();
+	Frenzy_Upper_->Off();
+
+	Frenzy_Under_ = CreateComponent<GameEngineTextureRenderer>();
+	Frenzy_Under_->CreateFrameAnimationFolder("Frenzy_AutoAttack_0", FrameAnimation_DESC("sword_blood_under", 0, 5, Iter_2 * 2.3f, false));
+	Frenzy_Under_->CreateFrameAnimationFolder("Frenzy_AutoAttack_1", FrameAnimation_DESC("sword_blood_under", 6, 10, Iter_2 * 2.3f, false));
+	Frenzy_Under_->CreateFrameAnimationFolder("Frenzy_AutoAttack_2", FrameAnimation_DESC("sword_blood_under", 11, 15, Iter_2 * 2.3f, false));
+	Frenzy_Under_->CreateFrameAnimationFolder("Frenzy_AutoAttack_3", FrameAnimation_DESC("sword_blood_under", 16, 21, Iter_2 * 2.3f, false));
+	Frenzy_Under_->ChangeFrameAnimation("Frenzy_AutoAttack_0");
+	Frenzy_Under_->SetScaleModeImage();
+	Frenzy_Under_->Off();
+
+	Frenzy_Trail_ = CreateComponent<GameEngineTextureRenderer>();
+	Frenzy_Trail_->CreateFrameAnimationFolder("Frenzy_AutoAttack_0", FrameAnimation_DESC("blood-energy", 0, 5, Iter_2 * 2.3f, false));
+	Frenzy_Trail_->CreateFrameAnimationFolder("Frenzy_AutoAttack_1", FrameAnimation_DESC("blood-energy", 6, 10, Iter_2 * 2.3f, false));
+	Frenzy_Trail_->CreateFrameAnimationFolder("Frenzy_AutoAttack_2", FrameAnimation_DESC("blood-energy", 11, 15, Iter_2 * 2.3f, false));
+	Frenzy_Trail_->CreateFrameAnimationFolder("Frenzy_AutoAttack_3", FrameAnimation_DESC("blood-energy", 16, 21, Iter_2 * 2.3f, false));
+	Frenzy_Trail_->ChangeFrameAnimation("Frenzy_AutoAttack_0");
+	Frenzy_Trail_->SetScaleModeImage();
+	Frenzy_Trail_->GetTransform().SetLocalMove({ 0,0,-20 });
+	Frenzy_Trail_->Off();
+
+	Blood_Effect_ = CreateComponent<GameEngineTextureRenderer>();
+	Blood_Effect_->CreateFrameAnimationFolder("Default", FrameAnimation_DESC("blood-spirits", 0.13f, true));
+	Blood_Effect_->ChangeFrameAnimation("Default");
+	Blood_Effect_->SetScaleModeImage();
+	Blood_Effect_->GetTransform().SetLocalMove({ -20,-10,-20 });
+	Blood_Effect_->GetPixelData().MulColor.a = 0.7f;
+	Blood_Effect_->Off();
+}
+
 void Player_Main::IdleStart(const StateInfo _Info)
 {
 	AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
@@ -191,7 +249,24 @@ void Player_Main::DownUpdate(float _DeltaTime, const StateInfo _Info)
 
 void Player_Main::AutoAttackStart(const StateInfo _Info)
 {
-	AvatarManager_.ChangeMotion(PlayerAnimations::AutoAttack_0);
+	if (IsFrenzy_ == false)
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::AutoAttack_0);
+	}
+	else
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::Frenzy_AutoAttack_0);
+		Frenzy_Upper_->CurAnimationReset();
+		Frenzy_Under_->CurAnimationReset();
+		Frenzy_Trail_->CurAnimationReset();
+
+		Frenzy_Upper_->On();
+		Frenzy_Under_->On();
+		Frenzy_Trail_->On();
+		Frenzy_Upper_->ChangeFrameAnimation("Frenzy_AutoAttack_0");
+		Frenzy_Under_->ChangeFrameAnimation("Frenzy_AutoAttack_0");
+		Frenzy_Trail_->ChangeFrameAnimation("Frenzy_AutoAttack_0");
+	}
 }
 
 void Player_Main::AutoAttackUpdate(float _DeltaTime, const StateInfo _Info)
@@ -201,15 +276,38 @@ void Player_Main::AutoAttackUpdate(float _DeltaTime, const StateInfo _Info)
 	{
 		if (IsReadyNextAttack_ == true)
 		{
-			if (NextAttackAni_ == PlayerAnimations::AutoAttack_1 || NextAttackAni_ == PlayerAnimations::AutoAttack_2)
+			if (IsFrenzy_ == false) //프렌지 상태가 아니면 평범한 평타
 			{
-				AvatarManager_.ChangeMotion(NextAttackAni_);
-				IsAttack_End_ = false;
-				IsReadyNextAttack_ = false;
+				if (NextAttackAni_ == PlayerAnimations::AutoAttack_1 || NextAttackAni_ == PlayerAnimations::AutoAttack_2)
+				{
+					AvatarManager_.ChangeMotion(NextAttackAni_);
+					IsAttack_End_ = false;
+					IsReadyNextAttack_ = false;
+					return;
+				}
+			}
+			else //프렌지 상태면 특수한 평타
+			{
+				if (NextAttackAni_ == PlayerAnimations::Frenzy_AutoAttack_1 || NextAttackAni_ == PlayerAnimations::Frenzy_AutoAttack_2 || NextAttackAni_ == PlayerAnimations::Frenzy_AutoAttack_3)
+				{
+					AvatarManager_.ChangeMotion(NextAttackAni_);
+
+					std::string AniName = AvatarManager_.EnumToString(NextAttackAni_);
+					Frenzy_Upper_->ChangeFrameAnimation(AniName);
+					Frenzy_Under_->ChangeFrameAnimation(AniName);
+					Frenzy_Trail_->ChangeFrameAnimation(AniName);
+
+					IsAttack_End_ = false;
+					IsReadyNextAttack_ = false;
+					return;
+				}
+			}
+			//평타외 다른 스킬이 입력들어오면 그상태로 바꾼다.
+			if (NextAttackAni_ != PlayerAnimations::AutoAttack) //이 조건은 평타 한번만 누른 상태 == AutoAttack이 되기 때문에 AutoAttack을 한번 더 들어오기 때문에 예외처리
+			{
+				StateManager_.ChangeState(AvatarManager_.EnumToString(NextAttackAni_));
 				return;
 			}
-			StateManager_.ChangeState(AvatarManager_.EnumToString(NextAttackAni_));
-			return;
 		}
 
 		if (IsPressMoveKey() == false)
@@ -228,6 +326,11 @@ void Player_Main::AutoAttackUpdate(float _DeltaTime, const StateInfo _Info)
 void Player_Main::AutoAttackEnd(const StateInfo _Info)
 {
 	AttackEnd();
+
+	//프렌지 종료
+	Frenzy_Upper_->Off();
+	Frenzy_Under_->Off();
+	Frenzy_Trail_->Off();
 }
 
 void Player_Main::UpperSlashStart(const StateInfo _Info)
@@ -303,8 +406,8 @@ void Player_Main::HopSmashUpdate(float _DeltaTime, const StateInfo _Info)
 
 		CurAttackData_.AttCount++;
 		CurAttackData_.AttEffect = Effect::SlashSRight;
-		CurAttackData_.Stiffness = 0.32f;
-		CurAttackData_.RStiffness = 0.31f;
+		CurAttackData_.Stiffness = 0.22f;
+		CurAttackData_.RStiffness = 0.21f;
 		CurAttackData_.YForce = 350.0f;
 		CurAttackData_.Bleeding = 85;
 		CurAttackData_.ZPos = 0;
@@ -383,6 +486,33 @@ void Player_Main::GoreCrossUpdate(float _DeltaTime, const StateInfo _Info)
 void Player_Main::GoreCrossEnd(const StateInfo _Info)
 {
 	AttackEnd();
+}
+
+void Player_Main::FrenzyStart(const StateInfo _Info)
+{
+	if (IsFrenzy_ == false)
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::Frenzy);
+	}
+	SkillCoolTime_["Frenzy"]->StartTimer();
+}
+
+void Player_Main::FrenzyUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	if (IsFrenzy_ == true && StateManager_.GetCurStateTime() < 0.1f) //끄는 경우
+	{
+		IsFrenzy_ = false;
+		Blood_Effect_->Off();
+		StateManager_.ChangeState("Idle");
+		return;
+	}
+
+	if (IsFrenzy_ == true) //키는 경우
+	{
+		Blood_Effect_->On();
+		StateManager_.ChangeState("Idle");
+		return;
+	}
 }
 
 void Player_Main::HitStart(const StateInfo _Info)

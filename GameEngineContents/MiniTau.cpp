@@ -253,6 +253,10 @@ void MiniTau::CreateMonsterAniFunc()
 				AttackCol_->GetTransform().SetLocalPosition(Attack_1_Pos_);
 				AttackCol_->On();
 			}
+			if (_Desc.Frames[_Desc.CurFrame - 1] == 5)
+			{
+				AttackCol_->Off();
+			}
 		}
 	);
 

@@ -41,7 +41,7 @@ CrazyIvan::CrazyIvan() :
 	ShadowPos_ = { -10.f,-28.f,500.f,1.f };
 	BotPos_ = { 0,-58.f,0 };
 
-	Value_.Attack_1_CoolTime = 10.0f;
+	Value_.Attack_1_CoolTime = 15.0f;
 
 	Value_.Speed = 70.0f;
 }
@@ -110,6 +110,7 @@ void CrazyIvan::Start()
 		Back.AddValue("Back", -1);
 		Transition_.insert(std::make_pair("Back", Back));
 	}
+	Attack_1_Timer_.StartTimer(Value_.Attack_1_CoolTime);
 }
 
 void CrazyIvan::Update(float _DeltaTime)

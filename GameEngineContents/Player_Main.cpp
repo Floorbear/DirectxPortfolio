@@ -64,6 +64,10 @@ Player_Main::Player_Main() :
 	AllDNFRenderer_.push_back(&BeltRenderer_d_);
 	AllDNFRenderer_.push_back(&ShoesRenderer_a_);
 	AllDNFRenderer_.push_back(&ShoesRenderer_b_);
+	AllDNFRenderer_.push_back(&Frenzy_Upper_);
+	AllDNFRenderer_.push_back(&Frenzy_Under_);
+	AllDNFRenderer_.push_back(&Frenzy_Trail_);//Frenzy_Trail_
+
 	AllCopyRenderer_.reserve(20);
 }
 
@@ -103,6 +107,7 @@ void Player_Main::InitDefaultValue()
 	MPConsumption_.insert(std::make_pair("UpperSlash", Value_.UpperSlash_MP));
 	MPConsumption_.insert(std::make_pair("GoreCross", Value_.GoreCross_MP));
 	MPConsumption_.insert(std::make_pair("HopSmash", Value_.HopSmash_MP));
+	MPConsumption_.insert(std::make_pair("Frenzy", 1));
 }
 
 Player_Main::~Player_Main()
@@ -143,6 +148,8 @@ void Player_Main::Start()
 
 	InitSkillCoolTime();
 
+	Frenzy_Init();
+
 	Force_.FrictionX_ = Value_.DefaultFriction;
 	Force_.Gravity_ = Value_.DefaultGravity;
 	Force_.SetTransfrom(&GetTransform());
@@ -158,12 +165,12 @@ void Player_Main::Update(float _DeltaTime)
 	}
 	CopyRendererUpdate(_DeltaTime);
 	CoolTimeUpdate(_DeltaTime);
-	UpdateShakeCamera(_DeltaTime);
 	StiffnessUpdate(_DeltaTime);
 	if (Stiffness_ > 0)
 	{
 		return;
 	}
+	UpdateShakeCamera(_DeltaTime);
 	if (SuperArmorTimer_.IsTimerOn() == true)
 	{
 		SuperArmorTimer_.Update(_DeltaTime);
@@ -337,6 +344,9 @@ void Player_Main::InitState()
 
 	StateManager_.CreateStateMember("Down", std::bind(&Player_Main::DownUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::DownStart, this, std::placeholders::_1));
+
+	StateManager_.CreateStateMember("Frenzy", std::bind(&Player_Main::FrenzyUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::FrenzyStart, this, std::placeholders::_1));
 }
 
 void Player_Main::StartSuperArmor(float _SuperArmorTime)
@@ -558,6 +568,7 @@ void Player_Main::InitSkillCoolTime()
 	CreateSkillCoolTime("UpperSlash", 2.0f);
 	CreateSkillCoolTime("GoreCross", 3.0f);
 	CreateSkillCoolTime("HopSmash", 4.0f);
+	CreateSkillCoolTime("Frenzy", 5.0f);
 }
 
 void Player_Main::CoolTimeUpdate(float _DeltaTime)
