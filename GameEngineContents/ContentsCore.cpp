@@ -4,6 +4,7 @@
 #include "DNFDebugGUI.h"
 #include "DNFAvatarGUI.h"
 
+#include <GameEngineBase/GameEngineSound.h>
 #include "GameEngineContents/SeriaRoom.h"
 #include "GameEngineContents/Elvenguard.h"
 #include "GameEngineContents/Elvenguard_Front.h"
@@ -135,11 +136,21 @@ void ContentsCore::Start()
 		}
 	}
 
-	//Dir.Move("BlackSet");
-	//GameEngineFolderTexture::Load(Dir.GetFullPath());
+	//BGM 사운드 로드
+	{
+		GameEngineDirectory Dir;
+		Dir.MoveParentToExitsChildDirectory("ContentsResources");
+		Dir.Move("ContentsResources");
+		Dir.Move("Sounds");
+		Dir.Move("Bgm");
 
-	// 이걸 해줘야 합니다.
-	// GameEngineTexture::Cut("Boss_Left.bmp", 5, 7);
+		std::vector<GameEngineFile> Sounds = Dir.GetAllFile();
+
+		for (size_t i = 0; i < Sounds.size(); i++)
+		{
+			GameEngineSound::LoadRessource(Sounds[i].GetFullPath());
+		}
+	}
 
 	//쉐이더 컴파일
 	{

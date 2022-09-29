@@ -4,8 +4,9 @@
 #include "VilmarkMap.h"
 
 #include "HyperMecaCow.h"
-#include "Runner.h"
-
+#include "Generator.h"
+#include "CrazyIvan.h"
+#include "TauCaptain.h"
 Vilmark_5::Vilmark_5()
 {
 	StageNumber_ = 5;
@@ -38,4 +39,11 @@ void Vilmark_5::End()
 void Vilmark_5::DNFOnEvent()
 {
 	VilmarkStartLevel();
+	if (IsFirstEntrance_ == true)
+	{
+		DNFGlobalValue::Bgm_.Stop();
+		DNFGlobalValue::Bgm_ = GameEngineSound::SoundPlayControl("vilmark_boss.wav", 999);
+
+		IsFirstEntrance_ = false;
+	}
 }

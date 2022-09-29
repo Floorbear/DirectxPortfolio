@@ -11,3 +11,5 @@ Player_Main* DNFGlobalValue::CurrentPlayer_ = nullptr;
 DNFHUD* DNFGlobalValue::CurrentHUD_ = nullptr;
 
 float4 DNFGlobalValue::Temp1 = {};
+
+GameEngineSoundPlayer DNFGlobalValue::Bgm_ = {};

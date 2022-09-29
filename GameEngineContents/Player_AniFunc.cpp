@@ -490,6 +490,7 @@ void Player_Main::HopSmashAniFunc()
 			{
 				CurAttackData_.AttCount++;
 				CurAttackData_.AttEffect = Effect::SlashSHori;
+				ShakeCamera(7.5f, 0.45f);
 			}
 		});
 }

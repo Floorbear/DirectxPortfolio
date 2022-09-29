@@ -15,7 +15,7 @@ CrazyIvan::CrazyIvan() :
 	SelfDestructCol_Timer_()
 {
 	//MaxHP_ = 600000;//기본체려
-	MaxHP_ = 320000;
+	MaxHP_ = 120000;
 	CurHP_ = MaxHP_;
 
 	Value_.Type = MonsterType::CrazyIvanM;
@@ -41,7 +41,7 @@ CrazyIvan::CrazyIvan() :
 	ShadowPos_ = { -10.f,-28.f,500.f,1.f };
 	BotPos_ = { 0,-58.f,0 };
 
-	Value_.Attack_1_CoolTime = 15.0f;
+	Value_.Attack_1_CoolTime = 24.0f;
 
 	Value_.Speed = 70.0f;
 }
@@ -308,7 +308,7 @@ std::string CrazyIvan::CheckAdditionalPattern(float _DeltaTime)
 {
 	if (Check_SelfDestruct_Timer_.IsTimerOn() == false) //최초의 타이머 Set
 	{
-		float RandomValue = GameEngineRandom::MainRandom.RandomFloat(4.5f, 6.3f);
+		float RandomValue = GameEngineRandom::MainRandom.RandomFloat(7.5f, 9.3f);
 		Check_SelfDestruct_Timer_.StartTimer(RandomValue);
 	}
 	else

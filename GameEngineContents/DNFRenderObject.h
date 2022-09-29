@@ -87,9 +87,28 @@ public:
 		return CurHP_;
 	}
 
+	inline float4 GetBotPos() //자폭 공격 추적에서 사용
+	{
+		if (OnAir_ == true)
+		{
+			float4 DownPos = GetTransform().GetWorldPosition();
+			DownPos.y = GroundYPos_ + BotPos_.y;
+			return DownPos;
+		}
+		else
+		{
+			float4 DownPos = GetTransform().GetWorldPosition();
+			DownPos.y += BotPos_.y;
+			return DownPos;
+		}
+	}
+
 	AttackData CurAttackData_;
 
 protected:
+	//콜라이더 충돌 관련 함수
+	void ObjectColCheck();
+	bool ObjectColLogic(GameEngineCollision* _This, GameEngineCollision* _Other);
 	//픽셀충돌 관련 함수
 	//이동량(미래에 이동할 양)을 매게변수로
 	bool CanMove(const float4& _MoveValue);

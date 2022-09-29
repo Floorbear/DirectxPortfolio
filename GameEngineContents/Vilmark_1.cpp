@@ -4,6 +4,7 @@
 #include "VilmarkMap.h"
 #include "CrazyIvan.h"
 #include "CrazyIvanCaptain.h"
+#include "Generator.h"
 
 Vilmark_1::Vilmark_1()
 {
@@ -20,11 +21,22 @@ void Vilmark_1::Start()
 	VilmarkMap_->MakeLeftDoor();
 	VilmarkMap_->MakeRightDoor();
 
-	//-320보다 작아야
-	CrazyIvan* Monster = CreateMonster<CrazyIvan>({ 423,-351 });
-	CrazyIvan* Monster1 = CreateMonster<CrazyIvan>({ 494,-359 });
-	CrazyIvan* Monster2 = CreateMonster<CrazyIvan>({ 414,-442 });
-	CrazyIvan* Monster3 = CreateMonster<CrazyIvan>({ 572,-376 });
+	{
+		Generator* NewGe = CreateActor<Generator>();
+		NewGe->Init< CrazyIvan>(14, 2.5f);//3.5
+		NewGe->GetTransform().SetWorldPosition({ 554,-439 ,-439 });
+	}
+	{
+		Generator* NewGe = CreateActor<Generator>();
+		NewGe->Init< CrazyIvan>(14, 2.5f);//3.5
+		NewGe->GetTransform().SetWorldPosition({ 772,-502 ,-472 });
+	}
+	{
+		Generator* NewGe = CreateActor<Generator>();
+		NewGe->Init< CrazyIvan>(14, 2.5f);//3.5
+		NewGe->GetTransform().SetWorldPosition({ 772,-406 ,-406 });
+	}
+
 	CrazyIvanCaptain* MonsterBoss = CreateMonster<CrazyIvanCaptain>({ 1040,-376 });
 }
 

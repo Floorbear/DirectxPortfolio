@@ -178,6 +178,13 @@ void TauCaptain::Attack_2_Update(float _DeltaTime, const StateInfo _Info)
 	}
 
 	Force_.ForceX_ += Value_.Speed * 10.0f * _DeltaTime;
+	//오브젝트에 박았어
+	if (BotCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::Object, CollisionType::CT_OBB2D) == true)
+	{
+		Player_->ShakeCamera(11.5f, 0.35f);
+		StateManager_.ChangeState("Hit");
+		return;
+	}
 
 	//픽셀충돌 범위 밖에 도달했어
 	if (CheckColMap() == false)

@@ -1,6 +1,7 @@
 #include "PreCompile.h"
 #include "Vilmark_0.h"
 
+#include <GameEngineBase/GameEngineSound.h>
 #include "CrazyIvan.h"
 #include "Bloodlugaru.h"
 #include "Ciel.h"
@@ -48,4 +49,11 @@ void Vilmark_0::End()
 void Vilmark_0::DNFOnEvent()
 {
 	VilmarkStartLevel();
+	if (IsFirstEntrance_ == true)
+	{
+		DNFGlobalValue::Bgm_.Stop();
+		DNFGlobalValue::Bgm_ = GameEngineSound::SoundPlayControl("vilmark.wav", 999);
+
+		IsFirstEntrance_ = false;
+	}
 }

@@ -411,7 +411,6 @@ void Player_Main::HopSmashUpdate(float _DeltaTime, const StateInfo _Info)
 		CurAttackData_.YForce = 350.0f;
 		CurAttackData_.Bleeding = 85;
 		CurAttackData_.ZPos = 0;
-		ShakeCamera(7.5f, 0.30f);
 		IsReadyNextAttack_ = false;
 		IsAttack_End_ = true;
 		JumpLogicEnd();

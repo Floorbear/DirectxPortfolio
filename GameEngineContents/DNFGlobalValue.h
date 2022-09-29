@@ -24,6 +24,7 @@ enum class ColOrder
 	PlayerAttack,
 	DoorRight,
 	DoorLeft,
+	Object,
 	Debug
 };
 
@@ -49,4 +50,6 @@ public:
 	static DNFHUD* CurrentHUD_;
 
 	static float4 Temp1;
+
+	static GameEngineSoundPlayer Bgm_;
 };

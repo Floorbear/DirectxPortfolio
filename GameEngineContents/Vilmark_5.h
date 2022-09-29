@@ -17,4 +17,6 @@ protected:
 	void End() override;
 
 	void DNFOnEvent() override;
+private:
+	bool IsFirstEntrance_ = true;
 };

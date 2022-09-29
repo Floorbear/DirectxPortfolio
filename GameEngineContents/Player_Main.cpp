@@ -193,6 +193,7 @@ void Player_Main::Update(float _DeltaTime)
 	//제한된 범위 밖으로 못나가는 카메라& 캐릭터
 	if (DNFGlobalValue::CurrentLevel != nullptr)
 	{
+		ObjectColCheck();
 		CheckColMap();
 		ChaseCamera(_DeltaTime);
 	}

@@ -354,6 +354,94 @@ EffectActor* DNFRenderObject::SetEffect(Effect _Effect, float4 _WorldPos, float4
 	return NewEffect;
 }
 
+void DNFRenderObject::ObjectColCheck()
+{
+	BotCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::Object, CollisionType::CT_OBB2D,
+		std::bind(&DNFRenderObject::ObjectColLogic, this, std::placeholders::_1, std::placeholders::_2));
+}
+
+bool DNFRenderObject::ObjectColLogic(GameEngineCollision* _This, GameEngineCollision* _Other)
+{
+	//픽셀충돌범위를 넘어가면 이전 위치로 고정시킨다.
+	float4 TargetPos = _Other->GetTransform().GetWorldPosition();
+	float4 CurPos = BotCol_->GetTransform().GetWorldPosition();
+	float4 Dir = CurPos - TargetPos;
+	Dir.Normalize();
+
+	if (Dir.y > 0 && Dir.x > 0)//1사분면
+	{
+		if (Dir.y > Dir.x) //위에서 아래로
+		{
+			Dir = float4::UP;
+		}
+		else
+		{
+			Dir = float4::RIGHT;
+		}
+	}
+	else if (Dir.y > 0 && Dir.x < 0)//2사분면
+	{
+		float absX = abs(Dir.x);
+		if (Dir.y > absX) //위에서 아래로
+		{
+			Dir = float4::UP;
+		}
+		else
+		{
+			Dir = float4::LEFT;
+		}
+	}
+	else if (Dir.y < 0 && Dir.x < 0)//3사분면
+	{
+		float absX = abs(Dir.x);
+		float absY = abs(Dir.y);
+		if (absY > absX) //아래서 위
+		{
+			Dir = float4::DOWN;
+		}
+		else
+		{
+			Dir = float4::LEFT;
+		}
+	}
+	else if (Dir.y < 0 && Dir.x > 0)//4사분면
+	{
+		float absY = abs(Dir.y);
+		if (absY > Dir.x) //아래서 위
+		{
+			Dir = float4::DOWN;
+		}
+		else
+		{
+			Dir = float4::RIGHT;
+		}
+	}
+	//else {
+	//	Dir = float4::RIGHT * 50.0f;
+	//}
+
+	Dir *= 0.5f;
+	GetTransform().SetWorldPosition(PrevPos_ + Dir);
+	//if (OnAir_ == false)
+	//{
+	//
+	//}
+	//else //체공중입니다
+	//{
+	//	//float4 DownPos = GetTransform().GetWorldPosition();
+	//	//DownPos.y = -GroundYPos_ - BotPos_.y;
+	//	if (IsColObject == true)
+	//	{
+	//		//float4 MoveDir = GetTransform().GetWorldPosition() - PrevPos_;
+	//		//MoveDir.Normalize();
+	//		//MoveDir *= 1.0f;
+	//		GetTransform().SetWorldPosition(PrevPos_ /*- MoveDir*/);
+	//		Force_.ForceX_ = 0.f;
+	//	}
+	//}
+	return false;
+}
+
 bool DNFRenderObject::CanMove(const float4& _MoveValue)
 {
 	float4 MapScale = GetDNFLevel()->GetMapScale();
@@ -407,7 +495,8 @@ void DNFRenderObject::DNFUpdate()
 	ErrorCheck();
 	ZSort();
 	//BotCol 업데이트
-	BotCol_->GetTransform().SetLocalPosition(float4(BotPos_.x, BotPos_.y, -500));
+	BotCol_->GetTransform().SetWorldPosition(GetBotPos());
+	//BotCol_->GetTransform().SetLocalPosition(float4(BotPos_.x, BotPos_.y, -500));
 }
 
 void DNFRenderObject::DNFStart()
@@ -418,9 +507,10 @@ void DNFRenderObject::DNFStart()
 	//BotCol
 	BotCol_ = CreateComponent<GameEngineCollision>("Col");
 	BotCol_->SetDebugSetting(CollisionType::CT_OBB2D, float4(1.0f, 0.0f, 1.0f, 0.5f));
-	BotCol_->GetTransform().SetLocalScale(float4(5, 5, 1));
+	BotCol_->GetTransform().SetLocalScale(float4(15, 5, 1));
 	BotCol_->GetTransform().SetLocalMove(float4(0, 0, -500));
 	BotCol_->ChangeOrder(ColOrder::Debug);
+	BotCol_->DetachObject();
 
 	//이전 액터 위치
 	PrevPos_ = GetTransform().GetWorldPosition();

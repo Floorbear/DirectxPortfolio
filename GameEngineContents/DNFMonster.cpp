@@ -103,6 +103,7 @@ void DNFMonster::UpdateMonster(float _DeltaTime)
 	StateManager_.Update(_DeltaTime);
 
 	//제한된 범위 밖을 나가지 못하게
+	ObjectColCheck();
 	CheckColMap();
 	DNFUpdate();
 }
