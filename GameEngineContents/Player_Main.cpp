@@ -141,6 +141,22 @@ void Player_Main::Start()
 		AllCopyRenderer_.push_back(NewRenderer);
 	}
 
+	//사운드 로드
+	{
+		GameEngineDirectory Dir;
+		Dir.MoveParentToExitsChildDirectory("ContentsResources");
+		Dir.Move("ContentsResources");
+		Dir.Move("Sounds");
+		Dir.Move("Player");
+
+		std::vector<GameEngineFile> Sounds = Dir.GetAllFile();
+
+		for (size_t i = 0; i < Sounds.size(); i++)
+		{
+			GameEngineSound::LoadRessource(Sounds[i].GetFullPath());
+		}
+	}
+
 	//스테이트 초기화
 	InitState();
 	StateManager_.ChangeState("Idle");
@@ -203,6 +219,22 @@ void Player_Main::Update(float _DeltaTime)
 
 void Player_Main::End()
 {
+}
+
+void Player_Main::AutoAttackSound()
+{
+	GameEngineSound::SoundPlayOneShot(GetRandomSound("sm_atk_0", 1, 3) + ".wav");
+	GameEngineSoundPlayer Sound = GameEngineSound::SoundPlayControl(GetRandomSound("swdc_0", 1, 5) + ".wav");
+	Sound.Volume(3.0f);
+	CurAttackData_.AttackSound = GetRandomSound("slessSwd_hit_0", 1, 2) + ".wav";
+}
+
+std::string Player_Main::GetRandomSound(std::string _SoundBase, int _Min, int _Max)
+{
+	std::string SoundName = _SoundBase;
+	int Number = GameEngineRandom::MainRandom.RandomInt(_Min, _Max);
+	SoundName = SoundName + std::to_string(Number);
+	return SoundName;
 }
 
 void Player_Main::ChaseCamera(float _DeltaTime)

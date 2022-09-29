@@ -167,6 +167,7 @@ void Player_Main::AirborneStart(const StateInfo _Info)
 {
 	AvatarManager_.ChangeMotion(PlayerAnimations::Hit);
 	ResetDNFAnimation();
+	GameEngineSound::SoundPlayOneShot(GetRandomSound("sm_dmg_0", 1, 3) + ".wav");
 	//ChangeHitColTrans("Hit");
 	//플레이어를 마주보는 방향으로 Flip
 	//FlipX(-Player_->GetDirX());
@@ -205,6 +206,8 @@ void Player_Main::DownStart(const StateInfo _Info)
 {
 	AvatarManager_.ChangeMotion(PlayerAnimations::Down);
 	//ChangeHitColTrans("Down");
+
+	GameEngineSound::SoundPlayOneShot("mon_fall_down_02.wav");
 	Down_Timer_.StartTimer(Value_.Down_Time);
 	Force_.ForceX_ += -PrevHitData_.XForce;
 
@@ -403,7 +406,7 @@ void Player_Main::HopSmashUpdate(float _DeltaTime, const StateInfo _Info)
 		MovePos.x = GetDirX().x * MovePos.x;
 		New->GetTransform().SetWorldPosition(SpawnPos + MovePos);
 		New->GetTransform().SetLocalScale({ GetDirX().x,1,1 });
-
+		GameEngineSound::SoundPlayOneShot("boongsan_explo.wav");
 		CurAttackData_.AttCount++;
 		CurAttackData_.AttEffect = Effect::SlashSRight;
 		CurAttackData_.Stiffness = 0.22f;
@@ -532,6 +535,7 @@ void Player_Main::HitStart(const StateInfo _Info)
 	Hit_Timer_ = 0.65f;
 	Hit_Timer_.StartTimer();
 
+	GameEngineSound::SoundPlayOneShot(GetRandomSound("sm_dmg_0", 1, 3) + ".wav");
 	//플레이어를 마주보는 방향으로 Flip
 	//FlipX(-Player_->GetDirX());
 	Force_.ForceX_ += -PrevHitData_.XForce;

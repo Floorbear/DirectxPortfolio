@@ -155,6 +155,7 @@ void GoreCross::Update(float _DeltaTime)
 		//도중에 공격 딱 한번 더하는거 추가
 		if (*MoveTimer_.GetIterTime() < 0.08f && IsAttCountPlus_ == false)
 		{
+			GameEngineSound::SoundPlayOneShot("gorecross_atk3.wav");
 			Player_Main* Player = DNFGlobalValue::CurrentLevel->GetPlayer();
 			Player->GetAttData().AttCount++;
 			Player->GetAttData().XForce = 30.0f;

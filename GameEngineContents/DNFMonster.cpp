@@ -554,7 +554,8 @@ void DNFMonster::DownStart(const StateInfo _Info)
 	ChangeHitColTrans("Down");
 	Down_Timer_.StartTimer(Value_.Down_Time);
 	Force_.ForceX_ += -PrevHitData_.XForce;
-
+	GameEngineSoundPlayer Sound = GameEngineSound::SoundPlayControl("mon_fall_down_02.wav");
+	Sound.Volume(0.6f);
 	GetTransform().SetLocalMove(float4(0, Force_.ForceY_ * GameEngineTime::GetDeltaTime()));
 }
 
@@ -739,6 +740,8 @@ void DNFMonster::UpdateBleeding(float _DeltaTime)
 		{
 			//Æ½
 
+			//»ç¿îµå
+			GameEngineSound::SoundPlayOneShot("blood_drop.wav");
 			//µ¥¹ÌÁö ¶ß´Â°Å
 			float Damage = static_cast<float>(MaxHP_) * 0.0025f;
 			Damage = GameEngineRandom::MainRandom.RandomFloat(Damage * 0.7f, Damage * 1.3f);

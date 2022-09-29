@@ -15,6 +15,7 @@ struct AttackData
 {
 	int ZPos = 0; // ZPos == 0 > 공격이 Z축의 영향을 받지 않는다.
 	std::string AttackName = "";
+	std::string AttackSound = "";//확장자 붙여라
 	int AttCount = 0;
 	int MaxAttCount = 10;
 	AttackType Type = AttackType::Above;

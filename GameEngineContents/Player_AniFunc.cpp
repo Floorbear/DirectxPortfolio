@@ -81,27 +81,27 @@ bool Player_Main::CheckAttackKey()
 		}
 	}
 
-	if (GameEngineInput::GetInst()->IsPress("Z") == true)
+	if (GameEngineInput::GetInst()->IsDown("Z") == true)
 	{
 		return CheckCanUsingSkill("UpperSlash", PlayerAnimations::UpperSlash);
 	}
 
-	if (GameEngineInput::GetInst()->IsPress("A") == true)
+	if (GameEngineInput::GetInst()->IsDown("A") == true)
 	{
 		return CheckCanUsingSkill("GoreCross", PlayerAnimations::GoreCross);
 	}
 
-	if (GameEngineInput::GetInst()->IsPress("S") == true)
+	if (GameEngineInput::GetInst()->IsDown("S") == true)
 	{
 		return CheckCanUsingSkill("HopSmash", PlayerAnimations::HopSmash);
 	}
 
-	if (GameEngineInput::GetInst()->IsPress("F") == true)
+	if (GameEngineInput::GetInst()->IsDown("F") == true)
 	{
 		return CheckCanUsingSkill("Frenzy", PlayerAnimations::Frenzy);
 	}
 
-	if (GameEngineInput::GetInst()->IsPress("E") == true)
+	if (GameEngineInput::GetInst()->IsDown("E") == true)
 	{
 		return CheckCanUsingSkill("Fury", PlayerAnimations::Fury);
 	}
@@ -122,6 +122,7 @@ bool Player_Main::CheckCanUsingSkill(std::string _SkillName, PlayerAnimations _C
 	if (SkillCoolTime_[_SkillName]->IsTimerOn() == true)
 	{
 		IsReadyNextAttack_ = false;
+		GameEngineSound::SoundPlayOneShot("sm_cooltime.wav");
 		return false;
 	}
 
@@ -129,6 +130,7 @@ bool Player_Main::CheckCanUsingSkill(std::string _SkillName, PlayerAnimations _C
 	if (CurMP_ < MPConsumption_[_SkillName])
 	{
 		IsReadyNextAttack_ = false;
+		GameEngineSound::SoundPlayOneShot("sm_cooltime.wav");
 		return false;
 	}
 
@@ -143,6 +145,7 @@ void Player_Main::InitAniFunc()
 	MainRenderer_->AnimationBindEnd("Frenzy",
 		[&](const FrameAnimation_DESC& _Desc)
 		{
+			GameEngineSound::SoundPlayOneShot("sm_frenzy.wav");
 			IsFrenzy_ = true;
 		});
 	//폭주
@@ -151,6 +154,7 @@ void Player_Main::InitAniFunc()
 		{
 			if (_Desc.CurFrame == 1)
 			{
+				GameEngineSound::SoundPlayOneShot("sm_congestion.wav");
 				ShakeCamera(12.5f, 0.55f);
 				StartSuperArmor(8.0f);
 			}
@@ -181,6 +185,10 @@ void Player_Main::Frenzy_AutoAttackAniFunc()
 			if (_Desc.Frames[_Desc.CurFrame - 1] >= Frenzy_AutoAttack_0_Start + 1)
 			{
 				CheckAttackKey();
+			}
+			if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_0_Start + 1)
+			{
+				AutoAttackSound();
 			}
 
 			if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_0_Start + 2)
@@ -220,6 +228,10 @@ void Player_Main::Frenzy_AutoAttackAniFunc()
 			{
 				CheckAttackKey();
 			}
+			if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_1_Start + 1)
+			{
+				AutoAttackSound();
+			}
 
 			if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_1_Start + 2)
 			{
@@ -258,6 +270,10 @@ void Player_Main::Frenzy_AutoAttackAniFunc()
 			if (_Desc.Frames[_Desc.CurFrame - 1] >= Frenzy_AutoAttack_2_Start + 1)
 			{
 				CheckAttackKey();
+			}
+			if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_2_Start + 1)
+			{
+				AutoAttackSound();
 			}
 
 			if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_2_Start + 2)
@@ -299,6 +315,10 @@ void Player_Main::Frenzy_AutoAttackAniFunc()
 			if (_Desc.Frames[_Desc.CurFrame - 1] >= Frenzy_AutoAttack_3_Start + 1)
 			{
 				CheckAttackKey();
+			}
+			if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_3_Start + 1)
+			{
+				AutoAttackSound();
 			}
 			if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_3_Start + 2)
 			{
@@ -342,6 +362,10 @@ void Player_Main::AutoAttackAniFunc()
 			{
 				CheckAttackKey();
 			}
+			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_0_Start + 3)
+			{
+				AutoAttackSound();
+			}
 
 			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_0_Start + 3)
 			{
@@ -376,6 +400,10 @@ void Player_Main::AutoAttackAniFunc()
 			{
 				CheckAttackKey();
 			}
+			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_1_Start + 3)
+			{
+				AutoAttackSound();
+			}
 
 			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_1_Start + 3)
 			{
@@ -409,8 +437,10 @@ void Player_Main::AutoAttackAniFunc()
 			{
 				CheckAttackKey();
 			}
+
 			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 3)
 			{
+				AutoAttackSound();
 				SetAttackCol(Value_.UpperSlashPos, Value_.UpeerSlashScale);
 				//Set Attack
 				CurAttackData_.Att = CalAtt(Value_.AutoAttackAtt);
@@ -473,6 +503,10 @@ void Player_Main::HopSmashAniFunc()
 		{
 			if (_Desc.CurFrame == 1)//첫번째 프레임
 			{
+				GameEngineSound::SoundPlayOneShot("sm_boongsan.wav");
+				GameEngineSoundPlayer Sound = GameEngineSound::SoundPlayControl(GetRandomSound("swdc_0", 1, 5) + ".wav");
+				Sound.Volume(3.0f);
+				CurAttackData_.AttackSound = CurAttackData_.AttackSound = GetRandomSound("slessSwd_hit_0", 1, 2) + ".wav";
 				SetAttackCol(Value_.UpperSlashPos, Value_.UpeerSlashScale);
 				//Set Attack
 				CurAttackData_.AttackName = "HopSmash";
@@ -505,11 +539,14 @@ void Player_Main::UpperSlashAniFunc()
 			{
 				//슈퍼아머 set
 				StartSuperArmor(0.29f);
+				GameEngineSound::SoundPlayOneShot("sm_upslash.wav");
+				GameEngineSound::SoundPlayOneShot(GetRandomSound("upper_slash_0", 1, 2) + ".wav");
 			}
 			if (_Desc.Frames[_Desc.CurFrame - 1] == AutoAttack_2_Start + 1)
 			{
 				SetAttackCol(Value_.UpperSlashPos, Value_.UpeerSlashScale);
 				//Set Attack
+				CurAttackData_.AttackSound = CurAttackData_.AttackSound = GetRandomSound("slessSwd_hit_0", 1, 2) + ".wav";
 				CurAttackData_.AttackName = "UpperSlash";
 				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.Att = CalAtt(Value_.UpperSlashAtt);
@@ -545,6 +582,11 @@ void Player_Main::GoreCrossAniFun()
 		{
 			if (_Desc.Frames[_Desc.CurFrame - 1] == GoreCross_0_Start + 1)
 			{
+				//사운드
+				GameEngineSound::SoundPlayOneShot("sm_gorecross.wav");
+				GameEngineSound::SoundPlayOneShot("upper_slash_01.wav");
+
+				CurAttackData_.AttackSound = CurAttackData_.AttackSound = "gorecross_hit_01.wav";
 				SetAttackCol(Value_.GoreCrossSpawnPos, Value_.GoreCrossScale);
 				CurAttackData_.AttackName = "GoreCross";
 				CurAttackData_.Type = AttackType::Below;
@@ -569,6 +611,8 @@ void Player_Main::GoreCrossAniFun()
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == GoreCross_0_End - 4)
 			{
+				GameEngineSound::SoundPlayOneShot("upper_slash_02.wav");
+				CurAttackData_.AttackSound = CurAttackData_.AttackSound = "gorecross_hit_02.wav";
 				CurAttackData_.Att = CalAtt(Value_.GoreCrossAtt);
 				CurAttackData_.AttCount++;
 				CurAttackData_.AttEffect = Effect::SlashSRight;

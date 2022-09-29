@@ -57,6 +57,9 @@ protected:
 	//}
 
 private:
+	//사운드 관련
+	void AutoAttackSound();
+	std::string GetRandomSound(std::string _SoundBase, int _Min, int _Max);
 	//카메라 추적
 	void ChaseCamera(float _DeltaTime);
 

@@ -226,6 +226,11 @@ bool DNFRenderObject::HitCheck(AttackType _Type, DNFRenderObject* _Other)
 	//출혈
 	CheckBleeding(Data.Bleeding);
 
+	//무기로 부터 나는 타격음
+	if (Data.AttackSound != "")
+	{
+		GameEngineSound::SoundPlayOneShot(Data.AttackSound);
+	}
 	if (IsSuperArmor_ == true)
 	{
 		return true;
