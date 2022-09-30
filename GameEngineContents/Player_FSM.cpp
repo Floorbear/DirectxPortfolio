@@ -5,6 +5,7 @@
 #include "DNFContentsMinimal.h"
 #include "Player_Main.h"
 #include "HopSmash.h"
+#include "Outragebreak.h"
 
 void Player_Main::Frenzy_Init()
 {
@@ -18,6 +19,24 @@ void Player_Main::Frenzy_Init()
 			Dir.Move("FolderTexture");
 			Dir.Move("SkillTexture");
 			Dir.Move("Frenzy");
+			std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
+			for (GameEngineDirectory Dir_i : Dirs)
+			{
+				GameEngineFolderTexture::Load(Dir_i.GetFullPath());
+			}
+		}
+	}
+
+	//아웃레이지 브레이크 텍스처가 없으면 로드한다
+	if (GameEngineFolderTexture::Find("outragebreak_bloodsword_none") == nullptr)
+	{
+		{
+			GameEngineDirectory Dir;
+			Dir.MoveParentToExitsChildDirectory("ContentsResources");
+			Dir.Move("ContentsResources");
+			Dir.Move("FolderTexture");
+			Dir.Move("SkillTexture");
+			Dir.Move("Outragebreak");
 			std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
 			for (GameEngineDirectory Dir_i : Dirs)
 			{
@@ -62,6 +81,16 @@ void Player_Main::Frenzy_Init()
 	Blood_Effect_->GetTransform().SetLocalMove({ -20,-10,-20 });
 	Blood_Effect_->GetPixelData().MulColor.a = 0.7f;
 	Blood_Effect_->Off();
+
+	Outragebreak_Sword_ = CreateComponent<GameEngineTextureRenderer>();
+	Outragebreak_Sword_->CreateFrameAnimationFolder("Outragebreak_0", FrameAnimation_DESC("outragebreak_bloodsword_none", 0, 9, Iter_2 * 3.0f, false));
+	Outragebreak_Sword_->CreateFrameAnimationFolder("Outragebreak_1", FrameAnimation_DESC("outragebreak_bloodsword_none", 10, 10, Iter_2 * 3.0f, false));
+	Outragebreak_Sword_->CreateFrameAnimationFolder("Outragebreak_2", FrameAnimation_DESC("outragebreak_bloodsword_none", 11, 12, Iter_2 * 3.0f, false));
+	Outragebreak_Sword_->CreateFrameAnimationFolder("Outragebreak_3", FrameAnimation_DESC("outragebreak_bloodsword_none", 13, 19, Iter_2 * 3.0f, false));
+	Outragebreak_Sword_->ChangeFrameAnimation("Outragebreak_0");
+	Outragebreak_Sword_->SetScaleModeImage();
+	Outragebreak_Sword_->GetTransform().SetLocalMove({ 0,0,-20 });
+	Outragebreak_Sword_->Off();
 }
 
 void Player_Main::IdleStart(const StateInfo _Info)
@@ -449,6 +478,104 @@ void Player_Main::HopSmashEnd(const StateInfo _Info)
 	Force_.Gravity_ = Value_.DefaultGravity;
 	AttackEnd();
 	JumpLogicEnd();
+}
+
+void Player_Main::OutragebreakStart(const StateInfo _Info)
+{
+	IsAttack_End_ = false;
+	SkillCoolTime_["Outragebreak"]->StartTimer();
+	CurMP_ -= Value_.HopSmash_MP;
+
+	WeaponRenderer_b_->Off();
+	WeaponRenderer_c_->Off();
+
+	Outragebreak_Sword_->CurAnimationReset();
+	Outragebreak_Sword_->On();
+	Outragebreak_Sword_->ChangeFrameAnimation("Outragebreak_0");
+	Outragebreak_Sword_->GetTransform().SetLocalPosition({ 143,-10,-20 });
+
+	AvatarManager_.ChangeMotion(PlayerAnimations::Outragebreak_0);
+}
+
+void Player_Main::OutragebreakUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	//점프해서 바로 딱 착지한 상태임
+	if (GetTransform().GetWorldPosition().y <= GroundYPos_ && StateManager_.GetCurStateTime() >= 0.92f && IsAttack_End_ == false && IsOutragebreak_first_ == true)
+	{
+		IsOutragebreak_first_ = false;
+		AvatarManager_.ChangeMotion(PlayerAnimations::Outragebreak_3);
+		Outragebreak_Sword_->ChangeFrameAnimation("Outragebreak_3");
+		ShakeCamera(13.5f, 0.45f);
+
+		Outragebreak* New = GetLevel()->CreateActor<Outragebreak>();
+		float4 SpawnPos = GetTransform().GetWorldPosition();
+		float4 MovePos = { 40,8, };
+		MovePos.x = GetDirX().x * MovePos.x;
+		New->GetTransform().SetWorldPosition(SpawnPos + MovePos);
+		New->GetTransform().SetLocalScale(float4(GetDirX().x * 1.55f, 1 * 1.12f, 1) /** DNFGlobalValue::Temp1.w*/);
+
+		GameEngineSound::SoundPlayOneShot("sm_outrage_break_02.wav");
+		GameEngineSound::SoundPlayOneShot("outrage_swing.wav");
+		//GameEngineSoundPlayer Sound = GameEngineSound::SoundPlayControl(GetRandomSound("swdc_0", 1, 5) + ".wav");
+		//Sound.Volume(3.0f);
+		//CurAttackData_.AttackSound = CurAttackData_.AttackSound = GetRandomSound("slessSwd_hit_0", 1, 2) + ".wav";
+
+		//
+
+			//Set Attack
+		SetAttackCol(Value_.OutrageBreakPos, Value_.OutrageBreakScale);
+		CurAttackData_.AttackName = "Outragebreak";
+		CurAttackData_.Att = CalAtt(Value_.OutrageBreakAtt);
+		CurAttackData_.Type = AttackType::Below;
+		CurAttackData_.XForce = 50.0f;
+
+		CurAttackData_.AttCount++;
+		CurAttackData_.AttEffect = Effect::SlashSRight;
+		CurAttackData_.Stiffness = 0.22f;
+		CurAttackData_.RStiffness = 0.21f;
+		CurAttackData_.YForce = 650.0f;
+		CurAttackData_.Bleeding = 85;
+		CurAttackData_.ZPos = 0;
+		//IsReadyNextAttack_ = false;
+		//IsAttack_End_ = true;
+		JumpLogicEnd();
+		return;
+	}
+	//평소에는 False
+	if (IsAttack_End_ == true)
+	{
+		if (CheckAttackKey() == true)
+		{
+			IsAttack_End_ = false;
+			IsReadyNextAttack_ = false;
+			StateManager_.ChangeState(AvatarManager_.EnumToString(NextAttackAni_));
+			return;
+		}
+
+		if (IsPressMoveKey() == false)
+		{
+			StateManager_.ChangeState("Idle");
+			return;
+		}
+		else
+		{
+			StateManager_.ChangeState("Move");
+			return;
+		}
+	}
+}
+
+void Player_Main::OutragebreakEnd(const StateInfo _Info)
+{
+	IsOutragebreak_first_ = true;
+	Force_.FrictionX_ = Value_.DefaultFriction;
+	Force_.Gravity_ = Value_.DefaultGravity;
+	AttackEnd();
+	JumpLogicEnd();
+
+	WeaponRenderer_b_->On();
+	WeaponRenderer_c_->On();
+	Outragebreak_Sword_->Off();
 }
 
 void Player_Main::GoreCrossStart(const StateInfo _Info)

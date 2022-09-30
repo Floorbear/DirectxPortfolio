@@ -24,7 +24,6 @@ void Vilmark_0::Start()
 	VilmarkMap_->FadeTimeAcc_ = 0.25f;
 	VilmarkMap_->MakeRightDoor();
 	VilmarkMap_->MakeLogo();
-	//CrazyIvanCaptain* Monster = CreateMonster<CrazyIvanCaptain>({ { 700,-400 } });
 	float4 AccPos = {};
 	Bloodlugaru* Monster = CreateMonster<Bloodlugaru>(AccPos + float4(579, -352));
 	Bloodlugaru* Monster1 = CreateMonster<Bloodlugaru>(AccPos + float4(697, -365));
@@ -32,9 +31,6 @@ void Vilmark_0::Start()
 	Bloodlugaru* Monster3 = CreateMonster<Bloodlugaru>(AccPos + float4(869, -351));
 	Bloodlugaru* Monster4 = CreateMonster<Bloodlugaru>(AccPos + float4(918, -379));
 	Bloodlugaru* Monster5 = CreateMonster<Bloodlugaru>(AccPos + float4(1014, -433));
-
-	//Bloodlugaru* Monster2 = CreateMonster<Bloodlugaru>({ { 800,-430 } });
-	//Bloodlugaru* Monster3 = CreateMonster<Bloodlugaru>({ { 750,-430 } });
 }
 
 void Vilmark_0::Update(float _DeltaTime)

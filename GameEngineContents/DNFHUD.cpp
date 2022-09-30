@@ -8,6 +8,7 @@
 #include "GaugeRenderer.h"
 #include <GameEngineCore/GameEngineUIRenderer.h>
 
+#define Outragebreak_Icon 1
 #define Fury_Icon 2
 #define GoreCross_Icon 7
 #define HopSmash_Icon 8
@@ -33,6 +34,7 @@ DNFHUD::DNFHUD() :
 	StringToInt_.insert(std::make_pair("HopSmash", HopSmash_Icon));
 	StringToInt_.insert(std::make_pair("Frenzy", Frenzy_Icon));
 	StringToInt_.insert(std::make_pair("Fury", Fury_Icon));
+	StringToInt_.insert(std::make_pair("Outragebreak", Outragebreak_Icon));
 }
 
 DNFHUD::~DNFHUD()
@@ -205,6 +207,10 @@ void DNFHUD::SkillRendererInit()
 		//NewSkillIcon->SetPivot(PIVOTMODE::CENTER);
 		SkillIcon_.push_back(NewSkillIcon);
 	}
+
+	SkillIcon_[Outragebreak_Icon]->On();
+	SkillIcon_[Outragebreak_Icon]->SetTexture("Outragebreak.png");
+	SkillIcon_[Outragebreak_Icon]->GetTransform().SetLocalScale({ 28,28 });
 
 	SkillIcon_[Fury_Icon]->On();
 	SkillIcon_[Fury_Icon]->SetTexture("Fury.png");

@@ -41,6 +41,7 @@ public:
 	inline void CurAttEnd()
 	{
 		IsAttack_End_ = true;
+		AttackCol_->Off();
 	}
 
 	int PrevMapPos_; // 0 : 나는 이전맵에서 오른쪽에 있었다, 1: 나는 왼쪽에 있었다
@@ -57,9 +58,12 @@ protected:
 	//}
 
 private:
+
 	//사운드 관련
 	void AutoAttackSound();
+public:
 	std::string GetRandomSound(std::string _SoundBase, int _Min, int _Max);
+private:
 	//카메라 추적
 	void ChaseCamera(float _DeltaTime);
 
@@ -74,6 +78,8 @@ private:
 
 	//캐릭터의 애니메이션 함수 초기화
 	void InitAniFunc();
+
+	void OutragebreakAniFunc();
 
 	void Frenzy_AutoAttackAniFunc();
 
@@ -128,7 +134,9 @@ private:
 	GameEngineCollision* BottomAttackCol_;
 	int AttackCount_;
 	void AttackEnd();
+public:
 	int CalAtt(int _Value);	//현재 공격의 공격력 계산
+private:
 
 	bool  IsAttack_End_; //"일단" 공격 1회가 끝나면 IsAttack_End == true > 이후 ReadyNextAttack 분기에 따라
 	bool IsReadyNextAttack_;
@@ -207,6 +215,10 @@ private:
 	GameEngineTextureRenderer* Frenzy_Trail_ = nullptr;
 	GameEngineTextureRenderer* Blood_Effect_ = nullptr;
 
+	//아웃뷁 관련
+	GameEngineTextureRenderer* Outragebreak_Sword_ = nullptr;
+	bool IsOutragebreak_first_ = true;
+
 	void Frenzy_Init();
 
 	void IdleStart(const StateInfo _Info);
@@ -238,6 +250,10 @@ private:
 	void HopSmashStart(const StateInfo _Info);
 	void HopSmashUpdate(float _DeltaTime, const StateInfo _Info);
 	void HopSmashEnd(const StateInfo _Info);
+
+	void OutragebreakStart(const StateInfo _Info);
+	void OutragebreakUpdate(float _DeltaTime, const StateInfo _Info);
+	void OutragebreakEnd(const StateInfo _Info);
 
 	void GoreCrossStart(const StateInfo _Info);
 	void GoreCrossUpdate(float _DeltaTime, const StateInfo _Info);
@@ -275,6 +291,9 @@ private:
 		float4 GoreCrossPos;
 		float4 GoreCrossScale;
 
+		float4 OutrageBreakPos = float4(145, -45, -500);
+		float4 OutrageBreakScale = float4(420, 180, 1);
+
 		float4 SuperArmorPos;
 		float4 SuperArmorScale;
 
@@ -286,6 +305,7 @@ private:
 		int AutoAttackAtt;
 		int FrenzyAtt = 5000;
 		int GoreCrossAtt = 15000;
+		int OutrageBreakAtt = 22000;
 
 		//마나, 체력
 		int Default_HP = 30000;
@@ -296,9 +316,11 @@ private:
 		int GoreCross_MP = 120;
 		int HopSmash_MP = 120;
 		int Fury_MP = 100;
+		int Outragebreak_MP = 400;
 
 		float Down_Time = 1.3f;
 		float Down_God_Time = 0.48f;
 	};
+public:
 	DefaultValue Value_;
 };

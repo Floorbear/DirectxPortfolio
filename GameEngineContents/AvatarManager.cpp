@@ -341,6 +341,11 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 	CurRenderer->CreateFrameAnimationFolder("HopSmash_0" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Start, Jump_Motion_Middle, 0.06f, false));
 	CurRenderer->CreateFrameAnimationFolder("HopSmash_1" + Name, FrameAnimation_DESC(_AvatarFolderName, HopSmash_1_Start, HopSmash_1_End, Iter_2, false));
 	CurRenderer->CreateFrameAnimationFolder("HopSmash_2" + Name, FrameAnimation_DESC(_AvatarFolderName, HopSmash_2_Start, HopSmash_2_End, Iter_2, false));
+
+	CurRenderer->CreateFrameAnimationFolder("Outragebreak_0" + Name, FrameAnimation_DESC(_AvatarFolderName, Guard_Start, Guard_End, Iter_2, false));
+	CurRenderer->CreateFrameAnimationFolder("Outragebreak_1" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Start, Jump_Motion_Middle, 0.06f, false));
+	CurRenderer->CreateFrameAnimationFolder("Outragebreak_2" + Name, FrameAnimation_DESC(_AvatarFolderName, HopSmash_1_Start, HopSmash_1_End, Iter_2, false));
+	CurRenderer->CreateFrameAnimationFolder("Outragebreak_3" + Name, FrameAnimation_DESC(_AvatarFolderName, HopSmash_2_Start, HopSmash_2_End, Iter_2, false));
 }
 
 std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
@@ -425,6 +430,21 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 		break;
 	case PlayerAnimations::HopSmash_2:
 		return "HopSmash_2";
+		break;
+	case PlayerAnimations::Outragebreak: //State ÀüÀÌ¿כ
+		return "Outragebreak";
+		break;
+	case PlayerAnimations::Outragebreak_0:
+		return "Outragebreak_0";
+		break;
+	case PlayerAnimations::Outragebreak_1:
+		return "Outragebreak_1";
+		break;
+	case PlayerAnimations::Outragebreak_2:
+		return "Outragebreak_2";
+		break;
+	case PlayerAnimations::Outragebreak_3:
+		return "Outragebreak_3";
 		break;
 	default:
 		break;

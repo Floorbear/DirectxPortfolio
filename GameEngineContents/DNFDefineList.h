@@ -29,6 +29,9 @@
 #define Move_Start 180
 #define Move_End 187
 
+#define Guard_Start 123
+#define Guard_End 124
+
 #define Jump_Motion_Start 125
 #define Jump_Motion_Middle 127
 #define Jump_Motion_End 131

@@ -214,6 +214,10 @@
     <ClInclude Include="HopSmash.h">
       <Filter>Player\Skill</Filter>
     </ClInclude>
+    <ClInclude Include="Generator.h" />
+    <ClInclude Include="Outragebreak.h">
+      <Filter>Player\Skill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -371,6 +375,10 @@
       <Filter>Monster\Skill</Filter>
     </ClCompile>
     <ClCompile Include="HopSmash.cpp">
+      <Filter>Player\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="Generator.cpp" />
+    <ClCompile Include="Outragebreak.cpp">
       <Filter>Player\Skill</Filter>
     </ClCompile>
   </ItemGroup>

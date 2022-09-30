@@ -103,7 +103,7 @@ void DieEffect::Update(float _DeltaTime)
 
 void DieEffect::UpdateParticle(float _DeltaTime)
 {
-	ParticleTime_ += _DeltaTime;
+	ParticleTime_ += _DeltaTime * DieTimeAcc_;
 	for (int i = 0; i < 10; i++)
 	{
 		if (Force_[i].ForceY_ <= 0 && Force_[i].GetTransform()->GetLocalPosition().y <= RandomYSize_[i] - 20.0f)
@@ -140,4 +140,14 @@ void DieEffect::DieFlashUpdate(float _DeltaTime)
 
 void DieEffect::End()
 {
+}
+
+void DieEffect::Option(bool _SpawnDieFlash, float _DieTimeAcc)
+{
+	if (_SpawnDieFlash == false)
+	{
+		DieFlash_->Off();
+	}
+
+	DieTimeAcc_ = _DieTimeAcc;
 }

@@ -14,6 +14,7 @@ public:
 	DieEffect& operator=(const DieEffect&& _Other) noexcept = delete;
 
 	void Init(std::string _ParticleFolderName);
+	void Option(bool _SpawnDieFlash, float _DieTimeAcc);
 protected:
 	void Start() override;
 	void Update(float _DeltaTime) override;
@@ -21,6 +22,7 @@ protected:
 	void DieFlashUpdate(float _DeltaTime);
 	void End() override;
 
+	float DieTimeAcc_ = 1.f;
 private:
 	float DieFlashAlpha_;
 	float ScaleRatio_;

@@ -60,5 +60,10 @@ enum class PlayerAnimations
 	HopSmash,
 	HopSmash_0,
 	HopSmash_1,
-	HopSmash_2
+	HopSmash_2,
+	Outragebreak,
+	Outragebreak_0,
+	Outragebreak_1,
+	Outragebreak_2,
+	Outragebreak_3
 };

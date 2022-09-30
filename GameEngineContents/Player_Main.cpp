@@ -109,6 +109,7 @@ void Player_Main::InitDefaultValue()
 	MPConsumption_.insert(std::make_pair("HopSmash", Value_.HopSmash_MP));
 	MPConsumption_.insert(std::make_pair("Frenzy", 1));
 	MPConsumption_.insert(std::make_pair("Fury", Value_.Fury_MP));
+	MPConsumption_.insert(std::make_pair("Outragebreak", Value_.Outragebreak_MP));
 }
 
 Player_Main::~Player_Main()
@@ -160,18 +161,20 @@ void Player_Main::Start()
 	//스테이트 초기화
 	InitState();
 	StateManager_.ChangeState("Idle");
+	Frenzy_Init();
 
 	InitAniFunc();
 
 	InitSkillCoolTime();
-
-	Frenzy_Init();
 
 	Force_.FrictionX_ = Value_.DefaultFriction;
 	Force_.Gravity_ = Value_.DefaultGravity;
 	Force_.SetTransfrom(&GetTransform());
 
 	DNFDebugGUI::AddMutableValue("Temp1", &DNFGlobalValue::Temp1);
+
+	DNFDebugGUI::AddMutableValue("Pos", &Value_.OutrageBreakPos);
+	DNFDebugGUI::AddMutableValue("Sca", &Value_.OutrageBreakScale);
 }
 
 void Player_Main::Update(float _DeltaTime)
@@ -365,6 +368,10 @@ void Player_Main::InitState()
 	StateManager_.CreateStateMember("HopSmash", std::bind(&Player_Main::HopSmashUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::HopSmashStart, this, std::placeholders::_1),
 		std::bind(&Player_Main::HopSmashEnd, this, std::placeholders::_1));
+
+	StateManager_.CreateStateMember("Outragebreak", std::bind(&Player_Main::OutragebreakUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::OutragebreakStart, this, std::placeholders::_1),
+		std::bind(&Player_Main::OutragebreakEnd, this, std::placeholders::_1));
 
 	StateManager_.CreateStateMember("GoreCross", std::bind(&Player_Main::GoreCrossUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::GoreCrossStart, this, std::placeholders::_1),
@@ -614,6 +621,7 @@ void Player_Main::InitSkillCoolTime()
 	CreateSkillCoolTime("HopSmash", 4.0f);
 	CreateSkillCoolTime("Frenzy", 5.0f);
 	CreateSkillCoolTime("Fury", 43.0f);
+	CreateSkillCoolTime("Outragebreak", 34.0f);
 }
 
 void Player_Main::CoolTimeUpdate(float _DeltaTime)

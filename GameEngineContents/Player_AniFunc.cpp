@@ -106,6 +106,11 @@ bool Player_Main::CheckAttackKey()
 		return CheckCanUsingSkill("Fury", PlayerAnimations::Fury);
 	}
 
+	if (GameEngineInput::GetInst()->IsDown("W") == true)
+	{
+		return CheckCanUsingSkill("Outragebreak", PlayerAnimations::Outragebreak);
+	}
+
 	return false;
 }
 
@@ -174,6 +179,101 @@ void Player_Main::InitAniFunc()
 	GoreCrossAniFun();
 
 	HopSmashAniFunc();
+
+	OutragebreakAniFunc();
+}
+
+void Player_Main::OutragebreakAniFunc()
+{
+	//OutRageBreak_0 >> 가드상태
+	Outragebreak_Sword_->AnimationBindFrame("Outragebreak_0",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.CurFrame == 1)
+			{
+				StartSuperArmor(3.43f);
+				GameEngineSound::SoundPlayOneShot("sm_outrage_break_01.wav");
+			}
+			if (_Desc.CurFrame == _Desc.Frames.size() - 1)
+			{
+				AvatarManager_.ChangeMotion(PlayerAnimations::Outragebreak_1);
+				Outragebreak_Sword_->ChangeFrameAnimation("Outragebreak_1");
+
+				Force_.ForceX_ = 300.f; //350.0f
+				Force_.ForceY_ = 700.f; //390.0f
+				Force_.Gravity_ = 1300;
+				Force_.OnGravity();
+				GroundYPos_ = GetTransform().GetWorldPosition().y;
+				OnAir_ = true;
+
+				//우선 1프레임 위로 보낸다 > 착지 로직 발동하지 않게 하기 위에
+				Force_.Update(GameEngineTime::GetInst()->GetDeltaTime());
+			}
+		});
+
+	//OutRageBreak_1 >>
+	Outragebreak_Sword_->AnimationBindFrame("Outragebreak_1",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.CurFrame == 0)
+			{
+				Outragebreak_Sword_->GetTransform().SetLocalPosition({ 143,-10,-20 });
+			}
+		});
+
+	//OutRageBreak_1 >> 점프해서 올라가는 상태
+	MainRenderer_->AnimationBindFrame("Outragebreak_1",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.CurFrame == 2)
+			{
+			}
+
+			//내려찍기 전 모션취하기
+			if (Force_.ForceY_ < 420.f)
+			{
+				Force_.ForceY_ -= 600.f;//200
+				Outragebreak_Sword_->GetTransform().SetLocalPosition({ 133,-10,-20 });
+				AvatarManager_.ChangeMotion(PlayerAnimations::Outragebreak_2);
+				Outragebreak_Sword_->ChangeFrameAnimation("Outragebreak_2");
+			}
+
+			//내려찍는 모션 취하기
+			/*if (_Desc.CurFrame == _Desc.Frames.size() - 1)
+			{
+				AvatarManager_.ChangeMotion(PlayerAnimations::HopSmash_2);
+			}*/
+		});
+	//OutRageBreak_2 >> 추락하면서 내려가는 상태
+	MainRenderer_->AnimationBindFrame("Outragebreak_2",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			//if (_Desc.CurFrame == 1)//첫번째 프레임
+			//{
+			//	GameEngineSound::SoundPlayOneShot("sm_boongsan.wav");
+			//	GameEngineSoundPlayer Sound = GameEngineSound::SoundPlayControl(GetRandomSound("swdc_0", 1, 5) + ".wav");
+			//	Sound.Volume(3.0f);
+			//	CurAttackData_.AttackSound = CurAttackData_.AttackSound = GetRandomSound("slessSwd_hit_0", 1, 2) + ".wav";
+			//	SetAttackCol(Value_.UpperSlashPos, Value_.UpeerSlashScale);
+			//	//Set Attack
+			//	CurAttackData_.AttackName = "HopSmash";
+			//	CurAttackData_.Att = CalAtt(Value_.AutoAttackAtt);
+			//	CurAttackData_.Type = AttackType::Below;
+			//	CurAttackData_.XForce = 50.0f;
+			//	CurAttackData_.ZPos = static_cast<int>(GetBotPos().y);
+			//	CurAttackData_.Stiffness = 0.07f;
+			//	CurAttackData_.RStiffness = 0.04f;
+			//	CurAttackData_.AttCount++;
+			//	Force_.ForceX_ = 70.0f;
+			//	CurAttackData_.AttEffect = Effect::SlashSRight;
+			//}
+			//if (_Desc.CurFrame == 3)//마지막 프레임
+			//{
+			//	CurAttackData_.AttCount++;
+			//	CurAttackData_.AttEffect = Effect::SlashSHori;
+			//	ShakeCamera(7.5f, 0.45f);
+			//}
+		});
 }
 
 void Player_Main::Frenzy_AutoAttackAniFunc()
