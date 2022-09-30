@@ -28,28 +28,28 @@ void Player_Main::Frenzy_Init()
 	float Iter_2 = 0.027f;
 
 	Frenzy_Upper_ = CreateComponent<GameEngineTextureRenderer>();
-	Frenzy_Upper_->CreateFrameAnimationFolder("Frenzy_AutoAttack_0", FrameAnimation_DESC("sword_blood_upper", 0, 5, Iter_2 * 2.3f, false));
-	Frenzy_Upper_->CreateFrameAnimationFolder("Frenzy_AutoAttack_1", FrameAnimation_DESC("sword_blood_upper", 6, 10, Iter_2 * 2.3f, false));
-	Frenzy_Upper_->CreateFrameAnimationFolder("Frenzy_AutoAttack_2", FrameAnimation_DESC("sword_blood_upper", 11, 15, Iter_2 * 2.3f, false));
-	Frenzy_Upper_->CreateFrameAnimationFolder("Frenzy_AutoAttack_3", FrameAnimation_DESC("sword_blood_upper", 16, 21, Iter_2 * 2.3f, false));
+	Frenzy_Upper_->CreateFrameAnimationFolder("Frenzy_AutoAttack_0", FrameAnimation_DESC("sword_blood_upper", 0, 5, Iter_2 * 2.1f, false));
+	Frenzy_Upper_->CreateFrameAnimationFolder("Frenzy_AutoAttack_1", FrameAnimation_DESC("sword_blood_upper", 6, 10, Iter_2 * 2.1f, false));
+	Frenzy_Upper_->CreateFrameAnimationFolder("Frenzy_AutoAttack_2", FrameAnimation_DESC("sword_blood_upper", 11, 15, Iter_2 * 2.1f, false));
+	Frenzy_Upper_->CreateFrameAnimationFolder("Frenzy_AutoAttack_3", FrameAnimation_DESC("sword_blood_upper", 16, 21, Iter_2 * 2.1f, false));
 	Frenzy_Upper_->ChangeFrameAnimation("Frenzy_AutoAttack_0");
 	Frenzy_Upper_->SetScaleModeImage();
 	Frenzy_Upper_->Off();
 
 	Frenzy_Under_ = CreateComponent<GameEngineTextureRenderer>();
-	Frenzy_Under_->CreateFrameAnimationFolder("Frenzy_AutoAttack_0", FrameAnimation_DESC("sword_blood_under", 0, 5, Iter_2 * 2.3f, false));
-	Frenzy_Under_->CreateFrameAnimationFolder("Frenzy_AutoAttack_1", FrameAnimation_DESC("sword_blood_under", 6, 10, Iter_2 * 2.3f, false));
-	Frenzy_Under_->CreateFrameAnimationFolder("Frenzy_AutoAttack_2", FrameAnimation_DESC("sword_blood_under", 11, 15, Iter_2 * 2.3f, false));
-	Frenzy_Under_->CreateFrameAnimationFolder("Frenzy_AutoAttack_3", FrameAnimation_DESC("sword_blood_under", 16, 21, Iter_2 * 2.3f, false));
+	Frenzy_Under_->CreateFrameAnimationFolder("Frenzy_AutoAttack_0", FrameAnimation_DESC("sword_blood_under", 0, 5, Iter_2 * 2.1f, false));
+	Frenzy_Under_->CreateFrameAnimationFolder("Frenzy_AutoAttack_1", FrameAnimation_DESC("sword_blood_under", 6, 10, Iter_2 * 2.1f, false));
+	Frenzy_Under_->CreateFrameAnimationFolder("Frenzy_AutoAttack_2", FrameAnimation_DESC("sword_blood_under", 11, 15, Iter_2 * 2.1f, false));
+	Frenzy_Under_->CreateFrameAnimationFolder("Frenzy_AutoAttack_3", FrameAnimation_DESC("sword_blood_under", 16, 21, Iter_2 * 2.1f, false));
 	Frenzy_Under_->ChangeFrameAnimation("Frenzy_AutoAttack_0");
 	Frenzy_Under_->SetScaleModeImage();
 	Frenzy_Under_->Off();
 
 	Frenzy_Trail_ = CreateComponent<GameEngineTextureRenderer>();
-	Frenzy_Trail_->CreateFrameAnimationFolder("Frenzy_AutoAttack_0", FrameAnimation_DESC("blood-energy", 0, 5, Iter_2 * 2.3f, false));
-	Frenzy_Trail_->CreateFrameAnimationFolder("Frenzy_AutoAttack_1", FrameAnimation_DESC("blood-energy", 6, 10, Iter_2 * 2.3f, false));
-	Frenzy_Trail_->CreateFrameAnimationFolder("Frenzy_AutoAttack_2", FrameAnimation_DESC("blood-energy", 11, 15, Iter_2 * 2.3f, false));
-	Frenzy_Trail_->CreateFrameAnimationFolder("Frenzy_AutoAttack_3", FrameAnimation_DESC("blood-energy", 16, 21, Iter_2 * 2.3f, false));
+	Frenzy_Trail_->CreateFrameAnimationFolder("Frenzy_AutoAttack_0", FrameAnimation_DESC("blood-energy", 0, 5, Iter_2 * 2.1f, false));
+	Frenzy_Trail_->CreateFrameAnimationFolder("Frenzy_AutoAttack_1", FrameAnimation_DESC("blood-energy", 6, 10, Iter_2 * 2.1f, false));
+	Frenzy_Trail_->CreateFrameAnimationFolder("Frenzy_AutoAttack_3", FrameAnimation_DESC("blood-energy", 16, 21, Iter_2 * 2.1f, false));
+	Frenzy_Trail_->CreateFrameAnimationFolder("Frenzy_AutoAttack_2", FrameAnimation_DESC("blood-energy", 11, 15, Iter_2 * 2.1f, false));
 	Frenzy_Trail_->ChangeFrameAnimation("Frenzy_AutoAttack_0");
 	Frenzy_Trail_->SetScaleModeImage();
 	Frenzy_Trail_->GetTransform().SetLocalMove({ 0,0,-20 });
