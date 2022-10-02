@@ -3,10 +3,9 @@
 
 #include "VilmarkMap.h"
 
+#include "DNFDebugGUI.h"
 #include "HyperMecaCow.h"
-#include "Generator.h"
-#include "CrazyIvan.h"
-#include "TauCaptain.h"
+#include "ExtremOverkill.h"
 Vilmark_5::Vilmark_5()
 {
 	StageNumber_ = 5;
@@ -22,13 +21,19 @@ void Vilmark_5::Start()
 	VilmarkMap_->MakeLeftDoor();
 	float4 AccPos = {};
 
-	//Runner* Monster2 = CreateMonster<Runner>({ { 800,-430 } });
-	//Runner* Monster3 = CreateMonster<Runner>({ { 750,-430 } });
-	HyperMecaCow* Boss = CreateMonster< HyperMecaCow>({ { 700,-430 } });
+	//HyperMecaCow* Boss = CreateMonster< HyperMecaCow>({ { 700,-420 } });
+	DNFDebugGUI::AddMutableValue("DebugInt", &DebugInt);
 }
 
 void Vilmark_5::Update(float _DeltaTime)
 {
+	//디버깅용 구문
+	if (DebugInt == 0)
+	{
+		DebugInt = 1;
+		ExtremOverkill* Newkill = CreateActor<ExtremOverkill>();
+		Newkill->GetTransform().SetWorldPosition({ 600,-400 });
+	}
 	VilmarkUpdate(_DeltaTime);
 }
 

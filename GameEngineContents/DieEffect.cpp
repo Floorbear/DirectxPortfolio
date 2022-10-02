@@ -38,7 +38,7 @@ void DieEffect::Init(std::string _ParticleFolderName)
 	//DieParticle ·£´ý ¹èÄ¡
 	for (auto i : DieParticle_)
 	{
-		ScaleRatio_ = reinterpret_cast<GameEngineActor*>(i->GetParent())->GetTransform().GetLocalScale().x;
+		ScaleRatio_ = dynamic_cast<GameEngineActor*>(i->GetParent())->GetTransform().GetLocalScale().x;
 		float XPos = GameEngineRandom::MainRandom.RandomFloat(-Value.SpawnSizeParticleX * ScaleRatio_ / 2.f, Value.SpawnSizeParticleX * ScaleRatio_ / 2.f);
 		float YPos = GameEngineRandom::MainRandom.RandomFloat(-Value.SpawnSizeParticleY * ScaleRatio_ / 2.f, Value.SpawnSizeParticleY * ScaleRatio_ / 2.f);
 
@@ -106,7 +106,7 @@ void DieEffect::UpdateParticle(float _DeltaTime)
 	ParticleTime_ += _DeltaTime * DieTimeAcc_;
 	for (int i = 0; i < 10; i++)
 	{
-		if (Force_[i].ForceY_ <= 0 && Force_[i].GetTransform()->GetLocalPosition().y <= RandomYSize_[i] - 20.0f)
+		if (Force_[i].ForceY_ <= 0 && Force_[i].GetTransform()->GetLocalPosition().y <= RandomYSize_[i] - 20.0f + OptionYPos_)
 		{
 			continue;
 		}
@@ -142,7 +142,7 @@ void DieEffect::End()
 {
 }
 
-void DieEffect::Option(bool _SpawnDieFlash, float _DieTimeAcc)
+void DieEffect::Option(bool _SpawnDieFlash, float _DieTimeAcc, float AccYPos)
 {
 	if (_SpawnDieFlash == false)
 	{
@@ -150,4 +150,5 @@ void DieEffect::Option(bool _SpawnDieFlash, float _DieTimeAcc)
 	}
 
 	DieTimeAcc_ = _DieTimeAcc;
+	OptionYPos_ = AccYPos;
 }

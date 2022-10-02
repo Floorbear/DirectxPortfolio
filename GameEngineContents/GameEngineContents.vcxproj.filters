@@ -218,6 +218,12 @@
     <ClInclude Include="Outragebreak.h">
       <Filter>Player\Skill</Filter>
     </ClInclude>
+    <ClInclude Include="ExtremOverkill.h">
+      <Filter>Player\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="OverkillParticle.h">
+      <Filter>Player\Skill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -379,6 +385,12 @@
     </ClCompile>
     <ClCompile Include="Generator.cpp" />
     <ClCompile Include="Outragebreak.cpp">
+      <Filter>Player\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtremOverkill.cpp">
+      <Filter>Player\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="OverkillParticle.cpp">
       <Filter>Player\Skill</Filter>
     </ClCompile>
   </ItemGroup>

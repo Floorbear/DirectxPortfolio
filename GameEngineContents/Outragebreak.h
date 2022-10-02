@@ -17,8 +17,8 @@ protected:
 	void Start() override;
 	void BloodFunction(int _Index);
 	void Update(float _DeltaTime) override;
-	void StiffnessUpdate(float _DeltaTime);
 	void End() override;
+	void StiffnessUpdate(float _DeltaTime);
 
 	float GetDirX();
 

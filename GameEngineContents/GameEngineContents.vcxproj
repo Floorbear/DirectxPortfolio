@@ -262,6 +262,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Enums.h" />
+    <ClInclude Include="ExtremOverkill.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="GaugeRenderer.h">
       <SubType>
       </SubType>
@@ -299,6 +303,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Outragebreak.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="OverkillParticle.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -473,6 +481,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="ExtremOverkill.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="GaugeRenderer.cpp">
       <SubType>
       </SubType>
@@ -510,6 +522,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Outragebreak.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="OverkillParticle.cpp">
       <SubType>
       </SubType>
     </ClCompile>

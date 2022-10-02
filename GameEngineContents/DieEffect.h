@@ -14,7 +14,7 @@ public:
 	DieEffect& operator=(const DieEffect&& _Other) noexcept = delete;
 
 	void Init(std::string _ParticleFolderName);
-	void Option(bool _SpawnDieFlash, float _DieTimeAcc);
+	void Option(bool _SpawnDieFlash, float _DieTimeAcc, float AccYPos = 0.f);
 protected:
 	void Start() override;
 	void Update(float _DeltaTime) override;
@@ -34,6 +34,8 @@ private:
 	std::vector<float> RandomYSize_;
 	std::vector<float> RandomRot_;
 	float ParticleTime_;
+
+	float OptionYPos_ = 0.f;
 
 	struct DefaultValue
 	{

@@ -19,4 +19,6 @@ protected:
 	void DNFOnEvent() override;
 private:
 	bool IsFirstEntrance_ = true;
+
+	int DebugInt = 0;
 };
