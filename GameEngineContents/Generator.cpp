@@ -60,7 +60,7 @@ void Generator::Update(float _DeltaTime)
 			Death();
 			return;
 		}
-
+		GameEngineSound::SoundPlayControl("summon_equipment.wav");
 		SpawnFunction_();
 		SpawnCount_--;
 		SpawnTimer_.StartTimer();

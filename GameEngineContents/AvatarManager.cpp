@@ -346,6 +346,10 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 	CurRenderer->CreateFrameAnimationFolder("Outragebreak_1" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Start, Jump_Motion_Middle, 0.06f, false));
 	CurRenderer->CreateFrameAnimationFolder("Outragebreak_2" + Name, FrameAnimation_DESC(_AvatarFolderName, HopSmash_1_Start, HopSmash_1_End, Iter_2, false));
 	CurRenderer->CreateFrameAnimationFolder("Outragebreak_3" + Name, FrameAnimation_DESC(_AvatarFolderName, HopSmash_2_Start, HopSmash_2_End, Iter_2, false));
+
+	CurRenderer->CreateFrameAnimationFolder("ExtremOverkill_0" + Name, FrameAnimation_DESC(_AvatarFolderName, BuffOn_Start, BuffOn_End, Iter_1 * 0.8f, false));
+	CurRenderer->CreateFrameAnimationFolder("ExtremOverkill_1" + Name, FrameAnimation_DESC(_AvatarFolderName, ExtremOverkill_Start, ExtremOverkill_Start, Iter_2, false));
+	CurRenderer->CreateFrameAnimationFolder("ExtremOverkill_2" + Name, FrameAnimation_DESC(_AvatarFolderName, ExtremOverkill_Start + 1, ExtremOverkill_End, Iter_2, false));
 }
 
 std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
@@ -445,6 +449,18 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 		break;
 	case PlayerAnimations::Outragebreak_3:
 		return "Outragebreak_3";
+		break;
+	case PlayerAnimations::ExtremOverkill: //State ÀüÀÌ¿כ
+		return "ExtremOverkill";
+		break;
+	case PlayerAnimations::ExtremOverkill_0:
+		return "ExtremOverkill_0";
+		break;
+	case PlayerAnimations::ExtremOverkill_1:
+		return "ExtremOverkill_1";
+		break;
+	case PlayerAnimations::ExtremOverkill_2:
+		return "ExtremOverkill_2";
 		break;
 	default:
 		break;

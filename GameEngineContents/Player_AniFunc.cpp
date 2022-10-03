@@ -4,7 +4,7 @@
 
 #include "DNFContentsMinimal.h"
 #include "Player_Main.h"
-
+#include "ExtremOverkill.h"
 #include "GoreCross.h"
 
 bool Player_Main::CheckAttackKey()
@@ -106,6 +106,11 @@ bool Player_Main::CheckAttackKey()
 		return CheckCanUsingSkill("Fury", PlayerAnimations::Fury);
 	}
 
+	if (GameEngineInput::GetInst()->IsDown("R") == true)
+	{
+		return CheckCanUsingSkill("ExtremOverkill", PlayerAnimations::ExtremOverkill);
+	}
+
 	if (GameEngineInput::GetInst()->IsDown("W") == true)
 	{
 		return CheckCanUsingSkill("Outragebreak", PlayerAnimations::Outragebreak);
@@ -181,6 +186,115 @@ void Player_Main::InitAniFunc()
 	HopSmashAniFunc();
 
 	OutragebreakAniFunc();
+
+	ExtremOverkillAniFunc();
+}
+
+void Player_Main::ExtremOverkillAniFunc()
+{
+	//ExtremOverkill_0 >> 검 소환 상태
+	MainRenderer_->AnimationBindFrame("ExtremOverkill_0",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.CurFrame == 1)
+			{
+				GodTime_.StartTimer(1.5f);
+			}
+			if (_Desc.CurFrame == 4)
+			{
+				GameEngineSound::SoundPlayOneShot("frenzy_cast.wav");
+			}
+			if (_Desc.CurFrame == _Desc.Frames.size() - 1)
+			{
+				AvatarManager_.ChangeMotion(PlayerAnimations::ExtremOverkill_1);
+				EOKRenderer_->ChangeFrameAnimation("ExtremOverkill_1");
+				EOKRenderer_Dodge_->ChangeFrameAnimation("ExtremOverkill_1");
+			}
+		});
+
+	//ExtremOverkill_1 >> 검 내려찍기 직전 자세
+	EOKRenderer_->AnimationBindFrame("ExtremOverkill_1",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.CurFrame == 1)
+			{
+				StartSuperArmor(4.5f);
+			}
+			if (_Desc.CurFrame == _Desc.Frames.size() - 1)
+			{
+				AvatarManager_.ChangeMotion(PlayerAnimations::ExtremOverkill_2);
+			}
+		});
+
+	//ExtremOverkill_2 >> 검 내려찍기
+	MainRenderer_->AnimationBindFrame("ExtremOverkill_2",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.CurFrame == 1)
+			{
+				ShakeCamera(16, 0.5f);
+
+				EOKRenderer_->SetScaleRatio(2.0f);
+				EOKRenderer_Dodge_->SetScaleRatio(2.0f);
+
+				float4 EOKPos = { 130,70 };
+				EOKPos.z = -20.f;
+				EOKRenderer_Dodge_->GetTransform().SetLocalPosition(EOKPos);
+				EOKRenderer_->GetTransform().SetLocalPosition(EOKPos);
+
+				EOKRenderer_->ChangeFrameAnimation("ExtremOverkill_2");
+				EOKRenderer_Dodge_->ChangeFrameAnimation("ExtremOverkill_2");
+			}
+			if (_Desc.CurFrame == 2)
+			{
+				GameEngineSound::SoundPlayOneShot("sm_blood_rave_atk.wav");
+				GameEngineSoundPlayer Sound = GameEngineSound::SoundPlayControl("tslash_02.wav");
+				//Sound.Volume(3.0f);
+				CurAttackData_.AttackSound = CurAttackData_.AttackSound = GetRandomSound("slessSwd_hit_0", 1, 2) + ".wav";
+
+				SetAttackCol(Value_.ExtremOverKillPos, Value_.ExtremOverKillScale);
+				//Set Attack
+				CurAttackData_.AttackName = "ExtremOverKill";
+				CurAttackData_.Att = CalAtt(Value_.OutrageBreakAtt);
+				CurAttackData_.Type = AttackType::Below;
+				CurAttackData_.XForce = 20.0f;
+				CurAttackData_.YForce = 750.0f;
+				CurAttackData_.ZPos = 0;
+				CurAttackData_.Stiffness = 0.22f;
+				CurAttackData_.RStiffness = 0.21f;
+				CurAttackData_.AttCount = 0;
+				CurAttackData_.AttCount++;
+				CurAttackData_.AttEffect = Effect::SlashSRight;
+			}
+			if (_Desc.CurFrame == _Desc.Frames.size() - 1)
+			{
+			}
+		});
+
+	//검 다 내려찍고
+	EOKRenderer_->AnimationBindFrame("ExtremOverkill_2",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			//색관련
+			EOKRenderer_->GetPixelData().MulColor.a -= GameEngineTime::GetDeltaTime() * 8.0f;
+			EOKRenderer_Dodge_->GetPixelData().MulColor -= GameEngineTime::GetDeltaTime() * 8.0f;
+
+			if (EOKRenderer_->GetPixelData().MulColor.a <= 0)
+			{
+				EOKRenderer_->Off();
+				EOKRenderer_Dodge_->Off();
+			}
+		});
+
+	EOKRenderer_->AnimationBindEnd("ExtremOverkill_2",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			float4 MovePos = { 290,-60,450 };
+			MovePos.x = MovePos.x * GetDirX().x;
+			float4 SpawnPos = GetTransform().GetWorldPosition() + MovePos;
+			ExtremOverkill* Newkill = GetLevel()->CreateActor<ExtremOverkill>();
+			Newkill->GetTransform().SetWorldPosition(SpawnPos);
+		});
 }
 
 void Player_Main::OutragebreakAniFunc()

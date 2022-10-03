@@ -7,7 +7,8 @@
 #include "HopSmash.h"
 #include "Outragebreak.h"
 
-void Player_Main::Frenzy_Init()
+//렌더러추가
+void Player_Main::AddRenderer_Init()
 {
 	//프렌지 텍스처가 없으면 로드한다.
 	if (GameEngineFolderTexture::Find("sword_blood_upper") == nullptr)
@@ -37,6 +38,24 @@ void Player_Main::Frenzy_Init()
 			Dir.Move("FolderTexture");
 			Dir.Move("SkillTexture");
 			Dir.Move("Outragebreak");
+			std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
+			for (GameEngineDirectory Dir_i : Dirs)
+			{
+				GameEngineFolderTexture::Load(Dir_i.GetFullPath());
+			}
+		}
+	}
+
+	//익오킬 텍스처가 없으면 로드한다
+	if (GameEngineFolderTexture::Find("kaaa-d2") == nullptr)
+	{
+		{
+			GameEngineDirectory Dir;
+			Dir.MoveParentToExitsChildDirectory("ContentsResources");
+			Dir.Move("ContentsResources");
+			Dir.Move("FolderTexture");
+			Dir.Move("SkillTexture");
+			Dir.Move("ExtremOverkill");
 			std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
 			for (GameEngineDirectory Dir_i : Dirs)
 			{
@@ -91,6 +110,27 @@ void Player_Main::Frenzy_Init()
 	Outragebreak_Sword_->SetScaleModeImage();
 	Outragebreak_Sword_->GetTransform().SetLocalMove({ 0,0,-20 });
 	Outragebreak_Sword_->Off();
+
+	float4 EOKPos = { -50,0,-20 };
+
+	EOKRenderer_ = CreateComponent<GameEngineTextureRenderer>();
+	EOKRenderer_->CreateFrameAnimationFolder("ExtremOverkill_0", FrameAnimation_DESC("sword-normal", Iter_2 * 3.0f, false));
+	EOKRenderer_->CreateFrameAnimationFolder("ExtremOverkill_1", FrameAnimation_DESC("change-n", Iter_2 * 4.5f, false));
+	EOKRenderer_->CreateFrameAnimationFolder("ExtremOverkill_2", FrameAnimation_DESC("slash-n", Iter_2 * 3.0f, false));
+	EOKRenderer_->ChangeFrameAnimation("ExtremOverkill_0");
+	EOKRenderer_->SetScaleModeImage();
+	EOKRenderer_->GetTransform().SetLocalMove(EOKPos);
+	EOKRenderer_->Off();
+
+	EOKRenderer_Dodge_ = CreateComponent<GameEngineTextureRenderer>();
+	EOKRenderer_Dodge_->CreateFrameAnimationFolder("ExtremOverkill_0", FrameAnimation_DESC("sword-dodge", Iter_2 * 3.0f, false));
+	EOKRenderer_Dodge_->CreateFrameAnimationFolder("ExtremOverkill_1", FrameAnimation_DESC("change-d", Iter_2 * 4.5f, false));
+	EOKRenderer_Dodge_->CreateFrameAnimationFolder("ExtremOverkill_2", FrameAnimation_DESC("slash-d", Iter_2 * 3.0f, false));
+	EOKRenderer_Dodge_->ChangeFrameAnimation("ExtremOverkill_0");
+	EOKRenderer_Dodge_->GetPipeLine()->SetOutputMergerBlend("TransparentBlend");
+	EOKRenderer_Dodge_->SetScaleModeImage();
+	EOKRenderer_Dodge_->GetTransform().SetLocalMove(EOKPos);
+	EOKRenderer_Dodge_->Off();
 }
 
 void Player_Main::IdleStart(const StateInfo _Info)
@@ -436,6 +476,7 @@ void Player_Main::HopSmashUpdate(float _DeltaTime, const StateInfo _Info)
 		New->GetTransform().SetWorldPosition(SpawnPos + MovePos);
 		New->GetTransform().SetLocalScale({ GetDirX().x,1,1 });
 		GameEngineSound::SoundPlayOneShot("boongsan_explo.wav");
+		SetAttackCol(Value_.UpperSlashPos, Value_.HopSmashScale);
 		CurAttackData_.AttCount++;
 		CurAttackData_.AttEffect = Effect::SlashSRight;
 		CurAttackData_.Stiffness = 0.22f;
@@ -480,11 +521,12 @@ void Player_Main::HopSmashEnd(const StateInfo _Info)
 	JumpLogicEnd();
 }
 
+//아웃뷁스타트
 void Player_Main::OutragebreakStart(const StateInfo _Info)
 {
 	IsAttack_End_ = false;
 	SkillCoolTime_["Outragebreak"]->StartTimer();
-	CurMP_ -= Value_.HopSmash_MP;
+	CurMP_ -= Value_.Outragebreak_MP;
 
 	WeaponRenderer_b_->Off();
 	WeaponRenderer_c_->Off();
@@ -576,6 +618,69 @@ void Player_Main::OutragebreakEnd(const StateInfo _Info)
 	WeaponRenderer_b_->On();
 	WeaponRenderer_c_->On();
 	Outragebreak_Sword_->Off();
+}
+
+//익오킬스타트
+void Player_Main::ExtremOverkillStart(const StateInfo _Info)
+{
+	IsAttack_End_ = false;
+	SkillCoolTime_["ExtremOverkill"]->StartTimer();
+	CurMP_ -= Value_.Outragebreak_MP * 3;
+
+	WeaponRenderer_b_->Off();
+	WeaponRenderer_c_->Off();
+
+	float4 EOKPos = { -50,0,-20 };
+	EOKRenderer_Dodge_->SetScaleRatio(1.0f);
+	EOKRenderer_Dodge_->GetTransform().SetLocalPosition(EOKPos);
+	EOKRenderer_Dodge_->CurAnimationReset();
+	EOKRenderer_Dodge_->On();
+	EOKRenderer_Dodge_->ChangeFrameAnimation("ExtremOverkill_0");
+	EOKRenderer_Dodge_->GetPixelData().MulColor = { 1,1,1 };
+
+	EOKRenderer_->SetScaleRatio(1.0f);
+	EOKRenderer_->GetTransform().SetLocalPosition(EOKPos);
+	EOKRenderer_->CurAnimationReset();
+	EOKRenderer_->On();
+	EOKRenderer_->ChangeFrameAnimation("ExtremOverkill_0");
+	EOKRenderer_->GetPixelData().MulColor.a = 1.f;
+
+	AvatarManager_.ChangeMotion(PlayerAnimations::ExtremOverkill_0);
+}
+
+void Player_Main::ExtremOverkillUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	//평소에는 False
+	if (IsAttack_End_ == true)
+	{
+		if (CheckAttackKey() == true)
+		{
+			IsAttack_End_ = false;
+			IsReadyNextAttack_ = false;
+			StateManager_.ChangeState(AvatarManager_.EnumToString(NextAttackAni_));
+			return;
+		}
+
+		if (IsPressMoveKey() == false)
+		{
+			StateManager_.ChangeState("Idle");
+			return;
+		}
+		else
+		{
+			StateManager_.ChangeState("Move");
+			return;
+		}
+	}
+}
+
+void Player_Main::ExtremOverkillEnd(const StateInfo _Info)
+{
+	WeaponRenderer_b_->On();
+	WeaponRenderer_c_->On();
+	EOKRenderer_->Off();
+	EOKRenderer_Dodge_->Off();
+	AttackEnd();
 }
 
 void Player_Main::GoreCrossStart(const StateInfo _Info)

@@ -40,6 +40,10 @@ void Bloodlugaru::Start()
 
 	Value_.BleedingPos.y -= 50.0f;
 
+	//사운드 초기화
+	SetHitSound("bloodgaru_dmg_0", 2, 1.5f);
+	DieSound_ = "bloodgaru_slayer.wav";
+
 	//전이 추가
 	{
 		DNFTransition Attack_2;
@@ -81,6 +85,8 @@ void Bloodlugaru::Attack_2_Start(const StateInfo _Info)
 	{
 		GetTransform().PixLocalNegativeX();
 	}
+
+	GameEngineSound::SoundPlayControl("clawA_01.wav");
 
 	//TargetPos Set
 	Attack_2_TargetPos_ = PlayerPos;
@@ -166,6 +172,7 @@ void Bloodlugaru::CreateMonsterAniFunc()
 		{
 			if (_Desc.Frames[_Desc.CurFrame - 1] == Lugaru_Attack_1_Start + 1)
 			{
+				GameEngineSound::SoundPlayControl("clawA_01.wav");
 				//Set Attack
 				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.AttackName = "Attack_1";
@@ -175,6 +182,7 @@ void Bloodlugaru::CreateMonsterAniFunc()
 				//CurAttackData_.YForce = 300.0f;
 				CurAttackData_.Stiffness = 0.15f;
 				CurAttackData_.RStiffness = 0.11f;
+				CurAttackData_.AttackSound = "clawA_hit_01.wav";
 				CurAttackData_.AttCount = 0;
 				CurAttackData_.AttCount++;
 				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
@@ -184,6 +192,7 @@ void Bloodlugaru::CreateMonsterAniFunc()
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == Lugaru_Attack_1_Start + 3)
 			{
+				GameEngineSound::SoundPlayControl("clawA_01.wav");
 				CurAttackData_.AttCount++;
 				CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
 				CurAttackData_.AttEffect = Effect::SlashSRight;
@@ -210,6 +219,7 @@ void Bloodlugaru::CreateMonsterAniFunc()
 				CurAttackData_.Font = 2;
 				CurAttackData_.XForce = 100.0f;
 				//CurAttackData_.YForce = 300.0f;
+				CurAttackData_.AttackSound = "clawA_hit_01.wav";
 				CurAttackData_.Stiffness = 0.35f;
 				CurAttackData_.RStiffness = 0.21f;
 				CurAttackData_.AttCount = 0;

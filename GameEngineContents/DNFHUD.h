@@ -1,5 +1,6 @@
 #pragma once
 #include <GameEngineCore/GameEngineActor.h>
+#include "DNFMath.h"
 
 class GaugeRenderer;
 class DNFHUD : public GameEngineActor
@@ -16,6 +17,8 @@ public:
 protected:
 	void Start() override;
 	void Update(float _DeltaTime) override;
+
+	void CutSceneUpdate(float _DeltaTime);
 
 private:
 
@@ -45,6 +48,12 @@ private:
 	int PrevMP_;
 	float LerpMP_;
 	float GauageDelta_MP_;
+
+	//°¢¼º±â ÄÆ½Å
+	GameEngineUIRenderer* CutScene_ = nullptr;
+	float CutSceneAccTime_ = 0.f;
+	float4 RootPos_ = {};
+	float4 DestPos_ = {};
 
 	struct DefaultValue
 	{

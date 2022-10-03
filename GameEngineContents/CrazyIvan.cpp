@@ -111,6 +111,8 @@ void CrazyIvan::Start()
 		Transition_.insert(std::make_pair("Back", Back));
 	}
 	Attack_1_Timer_.StartTimer(Value_.Attack_1_CoolTime);
+
+	DieSound_ = "gbn_die_01.wav";
 }
 
 void CrazyIvan::Update(float _DeltaTime)
@@ -183,6 +185,9 @@ void CrazyIvan::SelfDestruct_Update(float _DeltaTime, const StateInfo _Info)
 		NewBoom->GetTransform().SetWorldPosition(AddPos + GetTransform().GetWorldPosition() + Value_.DieEffectAddPos);
 		NewBoom->GetTransform().SetLocalScale({ 0.5f,0.5f,0.5f });
 
+		//Sound
+		GameEngineSound::SoundPlayControl("bomb_01.wav");
+		CurAttackData_.AttackSound = "bomb_hit_01.wav";
 		//Set Attack
 		CurAttackData_.Type = AttackType::Below;
 		CurAttackData_.AttackName = "SelfDestruct";
@@ -235,6 +240,7 @@ void CrazyIvan::CreateMonsterAniFunc()
 		{
 			if (_Desc.Frames[_Desc.CurFrame - 1] == Ivan_Attack_1_Start + 1)
 			{
+				GameEngineSound::SoundPlayControl("gbn_thw.wav");
 				//Set Attack
 				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.AttackName = "Attack_1";

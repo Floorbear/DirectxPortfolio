@@ -21,8 +21,8 @@ void Vilmark_5::Start()
 	VilmarkMap_->MakeLeftDoor();
 	float4 AccPos = {};
 
-	//HyperMecaCow* Boss = CreateMonster< HyperMecaCow>({ { 700,-420 } });
-	DNFDebugGUI::AddMutableValue("DebugInt", &DebugInt);
+	HyperMecaCow* Boss = CreateMonster< HyperMecaCow>({ { 700,-420 } });
+	//DNFDebugGUI::AddMutableValue("DebugInt", &DebugInt);
 }
 
 void Vilmark_5::Update(float _DeltaTime)
@@ -31,8 +31,8 @@ void Vilmark_5::Update(float _DeltaTime)
 	if (DebugInt == 0)
 	{
 		DebugInt = 1;
-		ExtremOverkill* Newkill = CreateActor<ExtremOverkill>();
-		Newkill->GetTransform().SetWorldPosition({ 600,-400 });
+		//ExtremOverkill* Newkill = CreateActor<ExtremOverkill>();
+		//Newkill->GetTransform().SetWorldPosition({ 600,-400 });
 	}
 	VilmarkUpdate(_DeltaTime);
 }

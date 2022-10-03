@@ -108,6 +108,8 @@ void CrazyIvanCaptain::Start()
 		Back.AddValue("Back", -1);
 		Transition_.insert(std::make_pair("Back", Back));
 	}
+	//사운드 초기화
+	DieSound_ = "gbn_die_01.wav";
 }
 
 void CrazyIvanCaptain::Update(float _DeltaTime)
@@ -128,7 +130,7 @@ void CrazyIvanCaptain::CheckIvanFury()
 	if (HPRatio < 0.7f/* && IsUnder70_ == false*/)
 	{
 		//IsUnder70_ = true;
-		Value_.Speed = 245.0f;
+		Value_.Speed = 160.0f;
 		MainRenderer_->GetPixelData().PlusColor.r += 0.25f;
 	}
 	if (HPRatio < 0.5f && IsUnder50_ == false) //체력이 35이하일경우에 딱1번만 실행
@@ -139,7 +141,7 @@ void CrazyIvanCaptain::CheckIvanFury()
 	if (HPRatio < 0.35f /*&& IsUnder35_ == false*/)
 	{
 		//IsUnder35_ = true;
-		Value_.Speed = 310.0f;
+		Value_.Speed = 180.0f;
 		MainRenderer_->GetPixelData().PlusColor.r += 0.25f;
 	}
 }
@@ -184,7 +186,9 @@ void CrazyIvanCaptain::SelfDestruct_Update(float _DeltaTime, const StateInfo _In
 		BoomEffect* NewBoom = GetLevel()->CreateActor<BoomEffect>();
 		NewBoom->GetTransform().SetWorldPosition(AddPos + GetTransform().GetWorldPosition() + Value_.DieEffectAddPos);
 		NewBoom->GetTransform().SetLocalScale({ 0.5f,0.5f,0.5f });
-
+		//Sound
+		GameEngineSound::SoundPlayControl("bomb_01.wav");
+		CurAttackData_.AttackSound = "bomb_hit_01.wav";
 		//Set Attack
 		CurAttackData_.Type = AttackType::Below;
 		CurAttackData_.AttackName = "SelfDestruct";
@@ -237,6 +241,7 @@ void CrazyIvanCaptain::CreateMonsterAniFunc()
 		{
 			if (_Desc.Frames[_Desc.CurFrame - 1] == Ivan_Attack_1_Start + 1)
 			{
+				GameEngineSound::SoundPlayControl("gbn_thw.wav");
 				//Set Attack
 				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.AttackName = "Attack_1";

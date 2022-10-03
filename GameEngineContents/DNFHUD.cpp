@@ -10,6 +10,7 @@
 
 #define Outragebreak_Icon 1
 #define Fury_Icon 2
+#define ExtremOverkill_Icon 3
 #define GoreCross_Icon 7
 #define HopSmash_Icon 8
 #define Frenzy_Icon 10
@@ -35,6 +36,7 @@ DNFHUD::DNFHUD() :
 	StringToInt_.insert(std::make_pair("Frenzy", Frenzy_Icon));
 	StringToInt_.insert(std::make_pair("Fury", Fury_Icon));
 	StringToInt_.insert(std::make_pair("Outragebreak", Outragebreak_Icon));
+	StringToInt_.insert(std::make_pair("ExtremOverkill", ExtremOverkill_Icon));
 }
 
 DNFHUD::~DNFHUD()
@@ -88,6 +90,20 @@ void DNFHUD::Start()
 		NewShortCutIcon->SetPivot(PIVOTMODE::CENTER);
 		ShortCut_.push_back(NewShortCutIcon);
 	}
+
+	//컷신
+	//윈도우 사이즈는 { 1280.0f, 720.0f }
+	CutScene_ = CreateComponent<GameEngineUIRenderer>(GetNameCopy());
+	CutScene_->SetTexture("CutScene.png");
+	CutScene_->SetScaleRatio(1.2f);
+	CutScene_->ScaleToTexture();
+	CutScene_->SetPivot(PIVOTMODE::LEFTBOT);
+	CutScene_->GetTransform().SetLocalMove(float4(-640.f - CutScene_->GetTransform().GetLocalScale().x, -360));
+	CutScene_->Off();
+
+	RootPos_ = CutScene_->GetTransform().GetLocalPosition();
+	DestPos_ = RootPos_;
+	DestPos_.x += CutScene_->GetTransform().GetLocalScale().x;
 }
 
 void DNFHUD::Update(float _DeltaTime)
@@ -96,11 +112,38 @@ void DNFHUD::Update(float _DeltaTime)
 	{
 		return;
 	}
-
+	CutSceneUpdate(_DeltaTime);
 	IconPosUpdate(_DeltaTime);
 	HPBarUpdate(_DeltaTime);
 	MPBarUpdate(_DeltaTime);
 	SkillIconUpdate(_DeltaTime);
+}
+
+void DNFHUD::CutSceneUpdate(float _DeltaTime)
+{
+	//각성기 컷신 Update
+	Player_Main* Player = DNFGlobalValue::CurrentPlayer_;
+	if (Player->StateManager_.GetCurStateStateName() == "ExtremOverkill")
+	{
+		CutScene_->On();
+		CutSceneAccTime_ += _DeltaTime;
+		if (CutSceneAccTime_ < 1.0f)
+		{
+			float4 CutScenePos = float4::LerpLimit(RootPos_, DestPos_, CutSceneAccTime_ * 4.f);
+			CutScene_->GetTransform().SetLocalPosition(CutScenePos);
+		}
+		else if (CutSceneAccTime_ >= 2.0f && CutSceneAccTime_ <= 3.0f)
+		{
+			float CurTime = CutSceneAccTime_ - 2.0f;
+			float4 CutScenePos = float4::LerpLimit(DestPos_, RootPos_, CurTime * 4.f);
+			CutScene_->GetTransform().SetLocalPosition(CutScenePos);
+		}
+	}
+	else
+	{
+		CutScene_->Off();
+		CutSceneAccTime_ = 0.f;
+	}
 }
 
 void DNFHUD::HPBarUpdate(float _DeltaTime)
@@ -211,6 +254,10 @@ void DNFHUD::SkillRendererInit()
 	SkillIcon_[Outragebreak_Icon]->On();
 	SkillIcon_[Outragebreak_Icon]->SetTexture("Outragebreak.png");
 	SkillIcon_[Outragebreak_Icon]->GetTransform().SetLocalScale({ 28,28 });
+
+	SkillIcon_[ExtremOverkill_Icon]->On();
+	SkillIcon_[ExtremOverkill_Icon]->SetTexture("ExtremOverkill.png");
+	SkillIcon_[ExtremOverkill_Icon]->GetTransform().SetLocalScale({ 28,28 });
 
 	SkillIcon_[Fury_Icon]->On();
 	SkillIcon_[Fury_Icon]->SetTexture("Fury.png");

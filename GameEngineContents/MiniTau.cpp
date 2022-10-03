@@ -89,6 +89,9 @@ void MiniTau::Start()
 	StateManager_.CreateStateMember("Attack_2", std::bind(&MiniTau::Attack_2_Update, this, std::placeholders::_1, std::placeholders::_2)
 		, std::bind(&MiniTau::Attack_2_Start, this, std::placeholders::_1),
 		std::bind(&MiniTau::Attack_2_End, this, std::placeholders::_1));
+	//사운드 초기화
+	SetHitSound("captain_tau_dmg_0", 3, 1.1f);
+	DieSound_ = "tau_die.wav";
 }
 
 void MiniTau::Update(float _DeltaTime)
@@ -134,9 +137,10 @@ void MiniTau::Attack_2_Update(float _DeltaTime, const StateInfo _Info)
 		Attack_2_Wait_Timer_.Update(_DeltaTime);
 		if (Attack_2_Wait_Timer_.IsTimerOn() == false) //준비자세를 취하고 돌진하기 직전 순간
 		{
+			CurAttackData_.AttackSound = "axe_hit_03.wav";
+
 			//Set Attack
 			CurAttackData_.Type = AttackType::Below;
-			CurAttackData_.AttackName = "Attack_2";
 			CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
 			CurAttackData_.Font = 2;
 			CurAttackData_.XForce = 500.0f;
@@ -178,6 +182,7 @@ void MiniTau::Attack_2_Update(float _DeltaTime, const StateInfo _Info)
 	//오브젝트에 박았어
 	if (BotCol_->IsCollision(CollisionType::CT_OBB2D, ColOrder::Object, CollisionType::CT_OBB2D) == true)
 	{
+		GameEngineSound::SoundPlayControl("tau_crash.wav");
 		Player_->ShakeCamera(11.5f, 0.35f);
 		StateManager_.ChangeState("Hit");
 		return;
@@ -185,6 +190,7 @@ void MiniTau::Attack_2_Update(float _DeltaTime, const StateInfo _Info)
 	//픽셀충돌 범위 밖에 도달했어
 	if (CheckColMap() == false)
 	{
+		GameEngineSound::SoundPlayControl("tau_crash.wav");
 		StateManager_.ChangeState("Hit");
 		return;
 	}
@@ -244,6 +250,8 @@ void MiniTau::CreateMonsterAniFunc()
 			if (_Desc.Frames[_Desc.CurFrame - 1] == 3)
 			{
 				//Set Attack
+				CurAttackData_.AttackSound = "axe_hit_03.wav";
+
 				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.AttackName = "Attack_1";
 				CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);

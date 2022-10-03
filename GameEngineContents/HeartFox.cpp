@@ -59,6 +59,10 @@ void HeartFox::Start()
 
 	Value_.BleedingPos.y -= 50.0f;
 
+	//사운드 초기화
+	SetHitSound("bloodgaru_dmg_0", 2, 1.5f);
+	DieSound_ = "bloodgaru_slayer.wav";
+
 	//전이 추가
 	{
 		DNFTransition Attack_2;
@@ -153,7 +157,7 @@ void HeartFox::Attack_2_Start(const StateInfo _Info)
 	{
 		GetTransform().PixLocalNegativeX();
 	}
-
+	GameEngineSound::SoundPlayControl("clawA_01.wav");
 	//TargetPos Set
 	Attack_2_TargetPos_ = PlayerPos;
 	GroundYPos_ = PlayerPos.y;
@@ -253,6 +257,7 @@ void HeartFox::CreateMonsterAniFunc()
 		{
 			if (_Desc.Frames[_Desc.CurFrame - 1] == Lugaru_Angry_End)
 			{
+				GameEngineSound::SoundPlayControl("fox_talk_01.wav");
 				StateManager_.ChangeState("Chase");
 			}
 		});
@@ -269,6 +274,8 @@ void HeartFox::CreateMonsterAniFunc()
 			}
 			if (_Desc.Frames[_Desc.CurFrame - 1] == Lugaru_Attack_1_Start + 1)
 			{
+				GameEngineSound::SoundPlayControl("clawA_01.wav");
+				CurAttackData_.AttackSound = "clawA_hit_01.wav";
 				//Set Attack
 				CurAttackData_.Type = AttackType::Below;
 				CurAttackData_.AttackName = "Attack_1";
@@ -287,6 +294,8 @@ void HeartFox::CreateMonsterAniFunc()
 			}
 			else if (_Desc.Frames[_Desc.CurFrame - 1] == Lugaru_Attack_1_Start + 3)
 			{
+				GameEngineSound::SoundPlayControl("clawA_01.wav");
+				CurAttackData_.AttackSound = "clawA_hit_01.wav";
 				CurAttackData_.AttCount++;
 				CurAttackData_.Att = CalAtt(Value_.Attack_1_Att);
 				CurAttackData_.AttEffect = Effect::SlashSRight;
@@ -306,6 +315,8 @@ void HeartFox::CreateMonsterAniFunc()
 		{
 			if (_Desc.Frames[_Desc.CurFrame - 1] == Lugaru_Attack_2_Start + 1)
 			{
+				GameEngineSound::SoundPlayControl("clawA_01.wav");
+				CurAttackData_.AttackSound = "clawA_hit_01.wav";
 				//Set Attack
 				CurAttackData_.Type = AttackType::Above;
 				CurAttackData_.AttackName = "Attack_2";

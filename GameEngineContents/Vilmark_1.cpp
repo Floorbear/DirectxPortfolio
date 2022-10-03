@@ -23,17 +23,17 @@ void Vilmark_1::Start()
 
 	{
 		Generator* NewGe = CreateActor<Generator>();
-		NewGe->Init< CrazyIvan>(14, 2.5f);//3.5
+		NewGe->Init< CrazyIvan>(9, 2.5f);//3.5
 		NewGe->GetTransform().SetWorldPosition({ 554,-439 ,-439 });
 	}
 	{
 		Generator* NewGe = CreateActor<Generator>();
-		NewGe->Init< CrazyIvan>(14, 2.5f);//3.5
+		NewGe->Init< CrazyIvan>(9, 2.5f);//3.5
 		NewGe->GetTransform().SetWorldPosition({ 772,-502 ,-472 });
 	}
 	{
 		Generator* NewGe = CreateActor<Generator>();
-		NewGe->Init< CrazyIvan>(14, 2.5f);//3.5
+		NewGe->Init< CrazyIvan>(9, 2.5f);//3.5
 		NewGe->GetTransform().SetWorldPosition({ 772,-406 ,-406 });
 	}
 

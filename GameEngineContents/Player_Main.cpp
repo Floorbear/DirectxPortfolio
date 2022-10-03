@@ -110,6 +110,7 @@ void Player_Main::InitDefaultValue()
 	MPConsumption_.insert(std::make_pair("Frenzy", 1));
 	MPConsumption_.insert(std::make_pair("Fury", Value_.Fury_MP));
 	MPConsumption_.insert(std::make_pair("Outragebreak", Value_.Outragebreak_MP));
+	MPConsumption_.insert(std::make_pair("ExtremOverkill", Value_.Outragebreak_MP * 3.f));
 }
 
 Player_Main::~Player_Main()
@@ -157,11 +158,25 @@ void Player_Main::Start()
 			GameEngineSound::LoadRessource(Sounds[i].GetFullPath());
 		}
 	}
+	{
+		GameEngineDirectory Dir;
+		Dir.MoveParentToExitsChildDirectory("ContentsResources");
+		Dir.Move("ContentsResources");
+		Dir.Move("Sounds");
+		Dir.Move("Monster");
+
+		std::vector<GameEngineFile> Sounds = Dir.GetAllFile();
+
+		for (size_t i = 0; i < Sounds.size(); i++)
+		{
+			GameEngineSound::LoadRessource(Sounds[i].GetFullPath());
+		}
+	}
 
 	//스테이트 초기화
 	InitState();
 	StateManager_.ChangeState("Idle");
-	Frenzy_Init();
+	AddRenderer_Init();
 
 	InitAniFunc();
 
@@ -372,6 +387,10 @@ void Player_Main::InitState()
 	StateManager_.CreateStateMember("Outragebreak", std::bind(&Player_Main::OutragebreakUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::OutragebreakStart, this, std::placeholders::_1),
 		std::bind(&Player_Main::OutragebreakEnd, this, std::placeholders::_1));
+
+	StateManager_.CreateStateMember("ExtremOverkill", std::bind(&Player_Main::ExtremOverkillUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::ExtremOverkillStart, this, std::placeholders::_1),
+		std::bind(&Player_Main::ExtremOverkillEnd, this, std::placeholders::_1));
 
 	StateManager_.CreateStateMember("GoreCross", std::bind(&Player_Main::GoreCrossUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::GoreCrossStart, this, std::placeholders::_1),
@@ -622,6 +641,7 @@ void Player_Main::InitSkillCoolTime()
 	CreateSkillCoolTime("Frenzy", 5.0f);
 	CreateSkillCoolTime("Fury", 43.0f);
 	CreateSkillCoolTime("Outragebreak", 34.0f);
+	CreateSkillCoolTime("ExtremOverkill", 70.0f);
 }
 
 void Player_Main::CoolTimeUpdate(float _DeltaTime)

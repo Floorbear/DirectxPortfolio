@@ -18,24 +18,6 @@ ExtremOverkill::~ExtremOverkill()
 
 void ExtremOverkill::Start()
 {
-	//익오킬 텍스처가 없으면 로드한다.
-	if (GameEngineFolderTexture::Find("kaaa-d2") == nullptr)
-	{
-		{
-			GameEngineDirectory Dir;
-			Dir.MoveParentToExitsChildDirectory("ContentsResources");
-			Dir.Move("ContentsResources");
-			Dir.Move("FolderTexture");
-			Dir.Move("SkillTexture");
-			Dir.Move("ExtremOverkill");
-			std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
-			for (GameEngineDirectory Dir_i : Dirs)
-			{
-				GameEngineFolderTexture::Load(Dir_i.GetFullPath());
-			}
-		}
-	}
-
 	//바닥 텍스처 로드
 	{
 		Floor_1_ = CreateComponent<GameEngineTextureRenderer>();
@@ -167,6 +149,23 @@ void ExtremOverkill::Update(float _DeltaTime)
 				Phase_1_Timer.StartTimer();
 				Particle_SpawnIter_.StartTimer();
 				Phase_ = 1;
+
+				//첫번째 폭발 타격점
+				GameEngineSound::SoundPlayOneShot("bomb_01.wav");
+				Player->GetAttData().AttackSound = Player->GetRandomSound("bomb_hit_0", 1, 2) + ".wav";
+
+				Player->GetAttData().AttackName = "ExtremOverKill";
+				Player->GetAttData().Att = Player->CalAtt(static_cast<int>(Player->Value_.OutrageBreakAtt));
+				Player->GetAttData().Type = AttackType::Below;
+				Player->GetAttData().XForce = 00.0f;
+				Player->GetAttData().AttCount++;
+				int Random = GameEngineRandom::MainRandom.RandomInt(1, 3);
+				Player->GetAttData().AttEffect = static_cast<Effect>(Random);
+				Player->GetAttData().Stiffness = 0.04f;
+				Player->GetAttData().RStiffness = 0.01f;
+				Player->GetAttData().YForce = 300.0f;
+				Player->GetAttData().Bleeding = 0;
+				Player->GetAttData().ZPos = 0;
 			}
 		}
 	}
@@ -191,6 +190,23 @@ void ExtremOverkill::Update(float _DeltaTime)
 				{
 					Player->ShakeCamera(7.f, 0.15f);
 					ShakeIter.StartTimer();
+
+					//추가 공격 로직
+
+					Player->GetAttData().AttackSound = Player->GetRandomSound("bomb_hit_0", 1, 2) + ".wav";
+
+					Player->GetAttData().AttackName = "ExtremOverKill";
+					Player->GetAttData().Att = Player->CalAtt(static_cast<int>(Player->Value_.OutrageBreakAtt * 0.90f));
+					Player->GetAttData().Type = AttackType::Below;
+					Player->GetAttData().XForce = 00.0f;
+					Player->GetAttData().AttCount++;
+					int Random = GameEngineRandom::MainRandom.RandomInt(1, 3);
+					Player->GetAttData().AttEffect = static_cast<Effect>(Random);
+					Player->GetAttData().Stiffness = 0.01f;
+					Player->GetAttData().RStiffness = 0.01f;
+					Player->GetAttData().YForce = 120.0f;
+					Player->GetAttData().Bleeding = 0;
+					Player->GetAttData().ZPos = 0;
 				}
 			}
 		}
@@ -218,6 +234,24 @@ void ExtremOverkill::Update(float _DeltaTime)
 					NewParticle->GetTransform().SetWorldPosition(SpawnPos);
 					NewParticle->GetTransform().SetLocalScale({ 1.4f,1.4f,1.4f });
 				}
+
+				//마지막 폭발 타격점
+				GameEngineSound::SoundPlayOneShot("bomb_01.wav");
+
+				Player->GetAttData().AttackSound = Player->GetRandomSound("bomb_hit_0", 1, 2) + ".wav";
+
+				Player->GetAttData().AttackName = "ExtremOverKill";
+				Player->GetAttData().Att = Player->CalAtt(static_cast<int>(Player->Value_.OutrageBreakAtt));
+				Player->GetAttData().Type = AttackType::Below;
+				Player->GetAttData().XForce = 00.0f;
+				Player->GetAttData().AttCount++;
+				int Random = GameEngineRandom::MainRandom.RandomInt(1, 3);
+				Player->GetAttData().AttEffect = static_cast<Effect>(Random);
+				Player->GetAttData().Stiffness = 0.01f;
+				Player->GetAttData().RStiffness = 0.01f;
+				Player->GetAttData().YForce = 120.0f;
+				Player->GetAttData().Bleeding = 0;
+				Player->GetAttData().ZPos = 0;
 			}
 
 			if (IsBoomSpawn_1_ == false && Blood_1_Alpha_.GetCurTime() < 0.77f)
@@ -257,6 +291,10 @@ void ExtremOverkill::Update(float _DeltaTime)
 					NewParticle->Init("exi-particle");
 					NewParticle->Option(false, 3.0f, -200.f);
 				}
+
+				//파편 파티클이 생길때 공격중을 중단시킨다.
+				Player_Main* Player = DNFGlobalValue::CurrentLevel->GetPlayer();
+				Player->CurAttEnd();
 			}
 
 			if (Blood_1_Alpha_.IsTimerOn() == false)

@@ -26,6 +26,9 @@
 #define BuffOn_Start 75
 #define BuffOn_End 89
 
+#define ExtremOverkill_Start 139
+#define ExtremOverkill_End 156
+
 #define Move_Start 180
 #define Move_End 187
 

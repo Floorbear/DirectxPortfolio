@@ -65,5 +65,9 @@ enum class PlayerAnimations
 	Outragebreak_0,
 	Outragebreak_1,
 	Outragebreak_2,
-	Outragebreak_3
+	Outragebreak_3,
+	ExtremOverkill,
+	ExtremOverkill_0,
+	ExtremOverkill_1,
+	ExtremOverkill_2
 };

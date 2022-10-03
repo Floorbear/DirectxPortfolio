@@ -479,6 +479,11 @@ void DNFMonster::HitStart(const StateInfo _Info)
 	ResetDNFAnimation();
 	ChangeHitColTrans("Hit");
 	Hit_Timer_.StartTimer();
+	if (HitSound_ != "")
+	{
+		GameEngineSoundPlayer Sound = GameEngineSound::SoundPlayControl(GetRandomSound(HitSound_, 1, LastHitNum_));
+		Sound.Volume(HitVolume_);
+	}
 
 	//플레이어를 마주보는 방향으로 Flip
 	FlipX(-Player_->GetDirX());
@@ -510,6 +515,11 @@ void DNFMonster::AirborneStart(const StateInfo _Info)
 	ChangeDNFAnimation("Hit");
 	ResetDNFAnimation();
 	ChangeHitColTrans("Hit");
+	if (HitSound_ != "")
+	{
+		GameEngineSoundPlayer Sound = GameEngineSound::SoundPlayControl(GetRandomSound(HitSound_, 1, LastHitNum_));
+		Sound.Volume(HitVolume_);
+	}
 	//플레이어를 마주보는 방향으로 Flip
 	FlipX(-Player_->GetDirX());
 	Force_.ForceX_ += -PrevHitData_.XForce;
@@ -605,6 +615,10 @@ void DNFMonster::DieStart(const StateInfo _Info)
 	for (auto i : AdditionRenderer_)
 	{
 		(*i)->Off();
+	}
+	if (DieSound_ != "")
+	{
+		GameEngineSoundPlayer Sound = GameEngineSound::SoundPlayControl(DieSound_);
 	}
 	Force_.OffGravity();
 	Force_.ForceX_ = 0;

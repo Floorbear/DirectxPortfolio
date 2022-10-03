@@ -3,7 +3,7 @@
 #include "DNFMath.h"
 #include "DNFTransition.h"
 #include <GameEngineCore/GameEngineStateManager.h>
-
+#include <GameEngineBase/GameEngineRandom.h>
 class Player_Main;
 class GameEngineCollision;
 class DNFMonster : public DNFRenderObject
@@ -73,6 +73,25 @@ protected:
 	void DieUpdate(float _DeltaTime, const StateInfo _Info);
 
 	void ChangeHitColTrans(std::string _State);
+
+	//사운드 관련
+	std::string GetRandomSound(std::string _SoundBase, int _Min, int _Max)
+	{
+		std::string SoundName = _SoundBase;
+		int Number = GameEngineRandom::MainRandom.RandomInt(_Min, _Max);
+		SoundName = SoundName + std::to_string(Number);
+		return SoundName + ".wav";
+	}
+	void SetHitSound(std::string _SoundBase, int _Number, float _Volume = 1.0f) //Random넣기 전 베이스 , 사운드 개수
+	{
+		HitSound_ = _SoundBase;
+		LastHitNum_ = _Number;
+		HitVolume_ = _Volume;
+	}
+	int LastHitNum_ = 1;
+	float HitVolume_ = 1.0f;
+	std::string HitSound_ = "";
+	std::string DieSound_ = "";
 
 	//슈퍼아머 관련
 	GameEngineTextureRenderer* SuperArmorRenderer_;

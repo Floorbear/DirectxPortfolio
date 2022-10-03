@@ -10,6 +10,7 @@ class Player_Main : public DNFRenderObject
 {
 	friend AvatarManager;
 	friend VilmarkLevel;
+	friend DNFHUD;
 public:
 	Player_Main();
 	~Player_Main();
@@ -78,6 +79,8 @@ private:
 
 	//캐릭터의 애니메이션 함수 초기화
 	void InitAniFunc();
+
+	void ExtremOverkillAniFunc();
 
 	void OutragebreakAniFunc();
 
@@ -215,11 +218,15 @@ private:
 	GameEngineTextureRenderer* Frenzy_Trail_ = nullptr;
 	GameEngineTextureRenderer* Blood_Effect_ = nullptr;
 
+	//익오킬 관련
+	GameEngineTextureRenderer* EOKRenderer_ = nullptr;
+	GameEngineTextureRenderer* EOKRenderer_Dodge_ = nullptr;
+
 	//아웃뷁 관련
 	GameEngineTextureRenderer* Outragebreak_Sword_ = nullptr;
 	bool IsOutragebreak_first_ = true;
 
-	void Frenzy_Init();
+	void AddRenderer_Init();
 
 	void IdleStart(const StateInfo _Info);
 	void IdleUpdate(float _DeltaTime, const StateInfo _Info);
@@ -255,6 +262,10 @@ private:
 	void OutragebreakUpdate(float _DeltaTime, const StateInfo _Info);
 	void OutragebreakEnd(const StateInfo _Info);
 
+	void ExtremOverkillStart(const StateInfo _Info);
+	void ExtremOverkillUpdate(float _DeltaTime, const StateInfo _Info);
+	void ExtremOverkillEnd(const StateInfo _Info);
+
 	void GoreCrossStart(const StateInfo _Info);
 	void GoreCrossUpdate(float _DeltaTime, const StateInfo _Info);
 	void GoreCrossEnd(const StateInfo _Info);
@@ -288,11 +299,15 @@ private:
 		float4 AutoAttackScale;
 		float4 UpperSlashPos;
 		float4 UpeerSlashScale;
+		float4 HopSmashScale = float4(230, 140, 1);;
 		float4 GoreCrossPos;
 		float4 GoreCrossScale;
 
 		float4 OutrageBreakPos = float4(145, -45, -500);
 		float4 OutrageBreakScale = float4(420, 180, 1);
+
+		float4 ExtremOverKillPos = float4(290, 0, -500);
+		float4 ExtremOverKillScale = float4(470, 350, 1);
 
 		float4 SuperArmorPos;
 		float4 SuperArmorScale;
@@ -305,7 +320,7 @@ private:
 		int AutoAttackAtt;
 		int FrenzyAtt = 5000;
 		int GoreCrossAtt = 15000;
-		int OutrageBreakAtt = 22000;
+		int OutrageBreakAtt = 35000;
 
 		//마나, 체력
 		int Default_HP = 30000;
