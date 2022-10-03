@@ -289,6 +289,8 @@ void Player_Main::ExtremOverkillAniFunc()
 	EOKRenderer_->AnimationBindEnd("ExtremOverkill_2",
 		[&](const FrameAnimation_DESC& _Desc)
 		{
+			EOKRenderer_->Off();
+			EOKRenderer_Dodge_->Off();
 			float4 MovePos = { 290,-60,450 };
 			MovePos.x = MovePos.x * GetDirX().x;
 			float4 SpawnPos = GetTransform().GetWorldPosition() + MovePos;
