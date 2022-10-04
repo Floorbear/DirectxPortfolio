@@ -187,7 +187,7 @@ void ContentsCore::Start()
 	CreateLevel<Vilmark_4>("Vilmark_4");
 	CreateLevel<Vilmark_5>("Vilmark_5");
 
-	ChangeLevel("Elvenguard");
+	ChangeLevel("SeriaRoom");
 
 	GameEngineGUI::CreateGUIWindow<GameEngineStatusWindow>("EngineStatus", nullptr);
 	GameEngineGUI::CreateGUIWindow<DNFDebugGUI>("DNFDebug", nullptr);

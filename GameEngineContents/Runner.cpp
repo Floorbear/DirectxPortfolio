@@ -149,7 +149,9 @@ void Runner::SelfDestruct_Update(float _DeltaTime, const StateInfo _Info)
 		BoomEffect* NewBoom = GetLevel()->CreateActor<BoomEffect>();
 		NewBoom->GetTransform().SetWorldPosition(AddPos + GetTransform().GetWorldPosition() + Value_.DieEffectAddPos);
 		NewBoom->GetTransform().SetLocalScale({ 0.5f,0.5f,0.5f });
-
+		//Sound
+		GameEngineSound::SoundPlayControl("bomb_01.wav");
+		CurAttackData_.AttackSound = "bomb_hit_01.wav";
 		//Set Attack
 		CurAttackData_.Type = AttackType::Below;
 		CurAttackData_.AttackName = "SelfDestruct";

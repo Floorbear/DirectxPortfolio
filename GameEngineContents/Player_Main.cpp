@@ -199,6 +199,8 @@ void Player_Main::Update(float _DeltaTime)
 	{
 		return;
 	}
+	//Resurrection_->GetTransform().SetLocalPosition(DNFGlobalValue::Temp1);
+
 	CopyRendererUpdate(_DeltaTime);
 	CoolTimeUpdate(_DeltaTime);
 	StiffnessUpdate(_DeltaTime);
@@ -207,6 +209,15 @@ void Player_Main::Update(float _DeltaTime)
 		return;
 	}
 	UpdateShakeCamera(_DeltaTime);
+	if (IsSuperArmor_ == true && CurHP_ <= 0) //슈퍼아머상태에서는 Idle상태에서도 HP =0 이 될수있으므로 그것에 대한 예외처리
+	{
+		for (auto i : AllCopyRenderer_)
+		{
+			i->Off();
+		}
+		IsSuperArmor_ = false;
+		StateManager_.ChangeState("Die");
+	}
 	if (SuperArmorTimer_.IsTimerOn() == true)
 	{
 		SuperArmorTimer_.Update(_DeltaTime);

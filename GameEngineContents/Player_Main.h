@@ -223,6 +223,9 @@ private:
 
 	bool IsPressMoveKey();
 
+	//부활 상태 관련
+	GameEngineTextureRenderer* Resurrection_ = nullptr;
+
 	//프렌지 상태 관련
 	bool IsFrenzy_ = false;
 	float FrenzyXForce = 35.f;
@@ -341,7 +344,7 @@ private:
 		int OutrageBreakAtt = 35000;
 
 		//마나, 체력
-		int Default_HP = 8000;//30000
+		int Default_HP = 30000;//30000
 		int Default_MP = 20000;
 
 		//마나 소비량

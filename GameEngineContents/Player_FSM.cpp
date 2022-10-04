@@ -63,6 +63,24 @@ void Player_Main::AddRenderer_Init()
 			}
 		}
 	}
+
+	//스파크 텍스처가 없으면 로드한다
+	if (GameEngineFolderTexture::Find("electric065_etc") == nullptr)
+	{
+		{
+			GameEngineDirectory Dir;
+			Dir.MoveParentToExitsChildDirectory("ContentsResources");
+			Dir.Move("ContentsResources");
+			Dir.Move("FolderTexture");
+			Dir.Move("SkillTexture");
+			Dir.Move("Electric");
+			std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
+			for (GameEngineDirectory Dir_i : Dirs)
+			{
+				GameEngineFolderTexture::Load(Dir_i.GetFullPath());
+			}
+		}
+	}
 	float Iter_2 = 0.027f;
 
 	Frenzy_Upper_ = CreateComponent<GameEngineTextureRenderer>();
@@ -131,6 +149,23 @@ void Player_Main::AddRenderer_Init()
 	EOKRenderer_Dodge_->SetScaleModeImage();
 	EOKRenderer_Dodge_->GetTransform().SetLocalMove(EOKPos);
 	EOKRenderer_Dodge_->Off();
+
+	Resurrection_ = CreateComponent<GameEngineTextureRenderer>();
+	Resurrection_->CreateFrameAnimationFolder("Default", FrameAnimation_DESC("electric065_etc", Iter_2 * 3.0f, false));
+	Resurrection_->ChangeFrameAnimation("Default");
+	Resurrection_->GetPipeLine()->SetOutputMergerBlend("TransparentBlend");
+	Resurrection_->SetScaleRatio(1.6f);
+	Resurrection_->SetScaleModeImage();
+	Resurrection_->GetTransform().SetLocalPosition({ -70,350,-500 });
+
+	//Resurrection_->GetTransform().SetLocalMove(EOKPos);
+	Resurrection_->Off();
+	Resurrection_->AnimationBindEnd("Default", [&](const FrameAnimation_DESC _Desc)
+		{
+			Resurrection_->Off();
+			AttackCol_->Off();
+			CurAttackData_ = {};
+		});
 }
 
 void Player_Main::IdleStart(const StateInfo _Info)
@@ -860,10 +895,28 @@ void Player_Main::DieUpdate(float _DeltaTime, const StateInfo _Info)
 	{
 		GodTime_.StartTimer(1.5f);
 		GameEngineSoundPlayer Sound = GameEngineSound::SoundPlayControl("revive_cast.wav");//revive_cast
-
-		StateManager_.ChangeState("Idle");
+		Resurrection_->On();
+		Resurrection_->CurAnimationReset();
 		CurHP_ = MaxHP_;
 		CurMP_ = MaxMP_;
 		PrevHitData_ = {};
+		IsFrenzy_ = false;
+		Blood_Effect_->Off();
+		*SuperArmorTimer_.GetIterTime() = 0.f;
+
+		StateManager_.ChangeState("Idle");
+		//공격 잠시만 키기
+		SetAttackCol({ 0,0,-500 }, Value_.HopSmashScale);
+		CurAttackData_.AttackName = "Resurrection";
+		CurAttackData_.Att = CalAtt(100);
+		CurAttackData_.Type = AttackType::Below;
+		CurAttackData_.XForce = 250.0f;
+		CurAttackData_.YForce = 150.0f;
+
+		CurAttackData_.AttCount++;
+		CurAttackData_.AttEffect = Effect::None;
+		CurAttackData_.Stiffness = 0.02f;
+		CurAttackData_.RStiffness = 0.01f;
+		CurAttackData_.ZPos = 0;
 	}
 }

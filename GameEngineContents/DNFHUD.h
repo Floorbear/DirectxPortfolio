@@ -55,6 +55,9 @@ private:
 	float4 RootPos_ = {};
 	float4 DestPos_ = {};
 
+	//코인 사용
+	GameEngineUIRenderer* Coin_ = nullptr;
+
 	struct DefaultValue
 	{
 		float4 SkillIconBackPos;

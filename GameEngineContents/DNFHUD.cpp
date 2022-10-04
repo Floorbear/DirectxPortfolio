@@ -104,6 +104,14 @@ void DNFHUD::Start()
 	RootPos_ = CutScene_->GetTransform().GetLocalPosition();
 	DestPos_ = RootPos_;
 	DestPos_.x += CutScene_->GetTransform().GetLocalScale().x;
+
+	//ÄÚÀÎ
+	Coin_ = CreateComponent<GameEngineUIRenderer>(GetNameCopy());
+	Coin_->SetTexture("Coin.png");
+	Coin_->SetScaleRatio(1.4f);
+	Coin_->ScaleToTexture();
+	Coin_->GetTransform().SetLocalMove({ 0,0,-500 });
+	Coin_->Off();
 }
 
 void DNFHUD::Update(float _DeltaTime)
@@ -111,6 +119,15 @@ void DNFHUD::Update(float _DeltaTime)
 	if (DNFGlobalValue::CurrentLevel == nullptr)
 	{
 		return;
+	}
+	Player_Main* Player = DNFGlobalValue::CurrentPlayer_;
+	if (Player->StateManager_.GetCurStateStateName() == "Die")
+	{
+		Coin_->On();
+	}
+	else
+	{
+		Coin_->Off();
 	}
 	CutSceneUpdate(_DeltaTime);
 	IconPosUpdate(_DeltaTime);
