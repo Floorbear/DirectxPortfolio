@@ -33,7 +33,7 @@ public:
 	float FadeTimeAcc_ = 1.2f;
 protected:
 	void InitBackground(const std::string& _FileName);
-
+	void BackgroundUpdate(float _DeltaTime);
 	GameEngineTextureRenderer* MainRenderer_;
 	GameEngineTextureRenderer* BushRenderer_;
 	GameEngineTextureRenderer* ColRenderer;

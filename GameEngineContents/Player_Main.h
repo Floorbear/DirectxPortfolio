@@ -6,11 +6,15 @@
 #include <GameEngineCore/GameEngineCollision.h>
 
 class VilmarkLevel;
+class SeriaRoom;
+class Elvenguard;
 class Player_Main : public DNFRenderObject
 {
 	friend AvatarManager;
 	friend VilmarkLevel;
 	friend DNFHUD;
+	friend SeriaRoom;
+	friend Elvenguard;
 public:
 	Player_Main();
 	~Player_Main();
@@ -49,6 +53,17 @@ public:
 	bool IsLevelChanging_ = false; //레벨을 바꾸고 있는중입니다.
 	//아바타 관련 변수들
 	AvatarManager AvatarManager_;
+
+	//배틀모드 관련
+	bool IsBattleMode_ = false;
+	inline void OnBattleMode()
+	{
+		IsBattleMode_ = true;
+	}
+	inline void OffBattleMode()
+	{
+		IsBattleMode_ = false;
+	}
 protected:
 	void Start() override;
 	void Update(float _DeltaTime) override;
@@ -279,6 +294,9 @@ private:
 	void HitStart(const StateInfo _Info);
 	void HitUpdate(float _DeltaTime, const StateInfo _Info);
 
+	void DieStart(const StateInfo _Info);
+	void DieUpdate(float _DeltaTime, const StateInfo _Info);
+
 	//DefaultValues
 	void InitDefaultValue();
 	struct DefaultValue
@@ -323,7 +341,7 @@ private:
 		int OutrageBreakAtt = 35000;
 
 		//마나, 체력
-		int Default_HP = 30000;
+		int Default_HP = 8000;//30000
 		int Default_MP = 20000;
 
 		//마나 소비량

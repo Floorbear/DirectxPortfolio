@@ -135,12 +135,29 @@ void Player_Main::AddRenderer_Init()
 
 void Player_Main::IdleStart(const StateInfo _Info)
 {
-	AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
+	if (IsBattleMode_ == false)
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
+	}
+	else
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::BattleIdle);
+	}
+
 	PrevHitData_ = {};
 }
 
 void Player_Main::IdleUpdate(float _DeltaTime, const StateInfo _Info)
 {
+	if (IsBattleMode_ == false)
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::Idle);
+	}
+	else
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::BattleIdle);
+	}
+
 	//방향키 조작이 감지 되면
 	if (IsPressMoveKey() == true)
 	{
@@ -162,11 +179,27 @@ void Player_Main::IdleUpdate(float _DeltaTime, const StateInfo _Info)
 
 void Player_Main::MoveStart(const StateInfo _Info)
 {
-	AvatarManager_.ChangeMotion(PlayerAnimations::Move);
+	if (IsBattleMode_ == false)
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::Move);
+	}
+	else
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::BattleMove);
+	}
 }
 
 void Player_Main::MoveUpdate(float _DeltaTime, const StateInfo _Info)
 {
+	if (IsBattleMode_ == false)
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::Move);
+	}
+	else
+	{
+		AvatarManager_.ChangeMotion(PlayerAnimations::BattleMove);
+	}
+
 	if (IsPressMoveKey() == false)
 	{
 		StateManager_.ChangeState("Idle");
@@ -187,7 +220,15 @@ void Player_Main::MoveUpdate(float _DeltaTime, const StateInfo _Info)
 	}
 
 	FlipX(GetMoveDir());
-	GetTransform().SetLocalMove(GetMoveDir() * _DeltaTime * 200.0f);
+	if (IsBattleMode_ == false)
+	{
+		GetTransform().SetLocalMove(GetMoveDir() * _DeltaTime * 200.0f);
+	}
+	else
+	{
+		GetTransform().SetLocalMove(GetMoveDir() * _DeltaTime * 300.0f);
+	}
+
 	ShadowUpdate();
 }
 
@@ -212,9 +253,19 @@ void Player_Main::JumpUpdate(float _DeltaTime, const StateInfo _Info)
 
 	//점프중 이동
 	FlipX(GetMoveDir());
-	if (CanMove(float4(GetMoveDir().x, 0, 0) * _DeltaTime * 200.0f) == true)
+	if (IsBattleMode_ == false)
 	{
-		GetTransform().SetLocalMove(float4(GetMoveDir().x, 0, 0) * _DeltaTime * 200.0f);
+		if (CanMove(float4(GetMoveDir().x, 0, 0) * _DeltaTime * 200.0f) == true)
+		{
+			GetTransform().SetLocalMove(float4(GetMoveDir().x, 0, 0) * _DeltaTime * 200.0f);
+		}
+	}
+	else
+	{
+		if (CanMove(float4(GetMoveDir().x, 0, 0) * _DeltaTime * 300.0f) == true)
+		{
+			GetTransform().SetLocalMove(float4(GetMoveDir().x, 0, 0) * _DeltaTime * 300.0f);
+		}
 	}
 }
 
@@ -289,11 +340,11 @@ void Player_Main::DownUpdate(float _DeltaTime, const StateInfo _Info)
 	float CurYPos = GetTransform().GetWorldPosition().y;
 
 	//사망검사
-	//if (CurHP_ == 0)
-	//{
-	//	//StateManager_.ChangeState("Die");
-	//	return;
-	//}
+	if (CurHP_ == 0)
+	{
+		StateManager_.ChangeState("Die");
+		return;
+	}
 
 	if (CurYPos <= GroundYPos_)
 	{
@@ -776,11 +827,11 @@ void Player_Main::HitStart(const StateInfo _Info)
 void Player_Main::HitUpdate(float _DeltaTime, const StateInfo _Info)
 {
 	//사망검사
-	//if (CurHP_ == 0)
-	//{
-	//	StateManager_.ChangeState("Die");
-	//	return;
-	//}
+	if (CurHP_ == 0)
+	{
+		StateManager_.ChangeState("Die");
+		return;
+	}
 	if (Hit_Timer_.IsTimerOn() == true)
 	{
 		Hit_Timer_ -= _DeltaTime;
@@ -790,5 +841,29 @@ void Player_Main::HitUpdate(float _DeltaTime, const StateInfo _Info)
 		StateManager_.ChangeState("Idle");
 		PrevHitData_ = {};
 		return;
+	}
+}
+
+void Player_Main::DieStart(const StateInfo _Info)
+{
+	AvatarManager_.ChangeMotion(PlayerAnimations::Down);
+	GodTime_.StartTimer(99999.f);
+	Force_.OffGravity();
+	Force_.ForceX_ = 0;
+	GameEngineSoundPlayer Sound = GameEngineSound::SoundPlayControl("sm_die.wav");//revive_cast
+	Sound.Volume(1.3f);
+}
+
+void Player_Main::DieUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	if (GameEngineInput::GetInst()->IsDown("X") == true)
+	{
+		GodTime_.StartTimer(1.5f);
+		GameEngineSoundPlayer Sound = GameEngineSound::SoundPlayControl("revive_cast.wav");//revive_cast
+
+		StateManager_.ChangeState("Idle");
+		CurHP_ = MaxHP_;
+		CurMP_ = MaxMP_;
+		PrevHitData_ = {};
 	}
 }

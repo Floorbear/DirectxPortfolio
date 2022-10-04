@@ -36,6 +36,8 @@ enum class PlayerAnimations
 {
 	ChangeAvatar,
 	Idle,
+	BattleIdle,
+	BattleMove,
 	Move,
 	Buff,
 	Fury,

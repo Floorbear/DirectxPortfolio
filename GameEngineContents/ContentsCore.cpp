@@ -175,8 +175,8 @@ void ContentsCore::Start()
 		NewPipe->SetPixelShader("Gauge.hlsl");
 	}
 
-	//CreateLevel<SeriaRoom>("SeriaRoom");
-	//CreateLevel<Elvenguard>("Elvenguard");
+	CreateLevel<SeriaRoom>("SeriaRoom");
+	CreateLevel<Elvenguard>("Elvenguard");
 	//CreateLevel<Elvenguard_Front>("Elvenguard_Front");
 	//CreateLevel<Bar>("Bar");
 
@@ -187,7 +187,7 @@ void ContentsCore::Start()
 	CreateLevel<Vilmark_4>("Vilmark_4");
 	CreateLevel<Vilmark_5>("Vilmark_5");
 
-	ChangeLevel("Vilmark_0");
+	ChangeLevel("Elvenguard");
 
 	GameEngineGUI::CreateGUIWindow<GameEngineStatusWindow>("EngineStatus", nullptr);
 	GameEngineGUI::CreateGUIWindow<DNFDebugGUI>("DNFDebug", nullptr);

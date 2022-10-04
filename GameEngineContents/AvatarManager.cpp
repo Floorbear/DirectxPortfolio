@@ -318,6 +318,10 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 		});
 
 	CurRenderer->CreateFrameAnimationFolder("Move" + Name, FrameAnimation_DESC(_AvatarFolderName, Move_Start, Move_End, Iter_1));
+
+	CurRenderer->CreateFrameAnimationFolder("BattleIdle" + Name, FrameAnimation_DESC(_AvatarFolderName, BattleIdle_Start, BattleIdle_End, Iter_0));
+	CurRenderer->CreateFrameAnimationFolder("BattleMove" + Name, FrameAnimation_DESC(_AvatarFolderName, BattleMove_Start, BattleMove_End, Iter_1));
+
 	CurRenderer->CreateFrameAnimationFolder("AutoAttack_0" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_0_Start, AutoAttack_0_End, Iter_2, false));
 	CurRenderer->CreateFrameAnimationFolder("AutoAttack_1" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_1_Start, AutoAttack_1_End, Iter_2, false));
 	CurRenderer->CreateFrameAnimationFolder("AutoAttack_2" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_2_Start, AutoAttack_2_End, Iter_2, false));
@@ -363,6 +367,9 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 	case PlayerAnimations::Idle:
 		return "Idle";
 		break;
+	case PlayerAnimations::BattleIdle:
+		return "BattleIdle";
+		break;
 	case PlayerAnimations::Buff:
 		return "Buff";
 		break;
@@ -371,6 +378,9 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 		break;
 	case PlayerAnimations::Move:
 		return "Move";
+		break;
+	case PlayerAnimations::BattleMove:
+		return "BattleMove";
 		break;
 	case PlayerAnimations::AutoAttack: //Enum To String StateÀüÀÌ¿ë
 		return "AutoAttack";

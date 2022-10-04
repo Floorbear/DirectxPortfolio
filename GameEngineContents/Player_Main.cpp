@@ -7,6 +7,7 @@
 #include "DNFLevel.h"
 #include "DNFBackground.h"
 #include "DNFDebugGUI.h"
+#include "SeriaRoom.h"
 
 #include <GameEngineBase/GameEngineRandom.h>
 #include <GameEngineCore/GameEngineLevel.h>
@@ -310,7 +311,7 @@ void Player_Main::CheckColMap()
 	PlayerPosBot.y = -PlayerPosBot.y - BotPos_.y;
 
 	GameEngineTexture* ColMap = DNFGlobalValue::CurrentLevel->GetBackground()->GetColRenderer()->GetCurTexture();
-
+	DNFDebugGUI::AddValue("Color", ColMap->GetPixelToFloat4(static_cast<int>(PlayerPosBot.x), static_cast<int>(PlayerPosBot.y)));
 	//픽셀충돌범위를 넘어가면 이전 위치로 고정시킨다.
 	if (OnAir_ == false)
 	{
@@ -398,6 +399,9 @@ void Player_Main::InitState()
 
 	StateManager_.CreateStateMember("Hit", std::bind(&Player_Main::HitUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::HitStart, this, std::placeholders::_1));
+
+	StateManager_.CreateStateMember("Die", std::bind(&Player_Main::DieUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::DieStart, this, std::placeholders::_1));
 
 	StateManager_.CreateStateMember("Airborne", std::bind(&Player_Main::AirborneUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::AirborneStart, this, std::placeholders::_1));
@@ -558,8 +562,8 @@ float4 Player_Main::GetMoveDir()
 	}
 	else
 	{
-		MoveDir.y *= 0.5f;
 		MoveDir.Normalize();
+		MoveDir.y *= 0.5f;
 		return MoveDir;
 	}
 }

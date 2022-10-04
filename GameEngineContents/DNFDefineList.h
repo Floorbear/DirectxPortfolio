@@ -23,6 +23,9 @@
 #define Idle_Start 176
 #define Idle_End 179
 
+#define BattleIdle_Start 90
+#define BattleIdle_End 95
+
 #define BuffOn_Start 75
 #define BuffOn_End 89
 
@@ -31,6 +34,9 @@
 
 #define Move_Start 180
 #define Move_End 187
+
+#define BattleMove_Start 105
+#define BattleMove_End 112
 
 #define Guard_Start 123
 #define Guard_End 124

@@ -1,6 +1,7 @@
 #pragma once
 #include "DNFLevel.h"
 
+class SeriaBackground;
 class SeriaRoom : public DNFLevel
 {
 public:
@@ -17,7 +18,10 @@ protected:
 	void Update(float _DeltaTime) override;
 	void End() override;
 
+	void DNFOnEvent() override;
+
 private:
 	int Value_;
+	bool IsFirstEntrance_ = true;
+	SeriaBackground* SeriaBackground_ = nullptr;
 };
-

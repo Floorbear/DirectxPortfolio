@@ -42,3 +42,17 @@ void DNFBackground::InitBackground(const std::string& _FileName)
 	FadeRenderer_->GetTransform().SetLocalMove({ 0,0,-4000 });
 	FadeRenderer_->GetPixelData().PlusColor = { -1,-1,-1,0 };
 }
+
+void DNFBackground::BackgroundUpdate(float _DeltaTime)
+{
+	if (FadeInTimer_.IsTimerOn() == true)//Fade In : Á¡Á¡ ¹à¾ÆÁü
+	{
+		FadeInTimer_.Update(_DeltaTime * FadeTimeAcc_);
+		FadeRenderer_->GetPixelData().MulColor.a = FadeInTimer_.GetCurTime();
+	}
+	if (FadeOutTimer_.IsTimerOn() == true)//Fade Out : Á¡Á¡ ¹à¾ÆÁü
+	{
+		FadeOutTimer_.Update(_DeltaTime * FadeTimeAcc_);
+		FadeRenderer_->GetPixelData().MulColor.a = (1.f - FadeOutTimer_.GetCurTime());
+	}
+}

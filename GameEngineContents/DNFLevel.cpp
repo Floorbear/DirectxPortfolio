@@ -10,7 +10,8 @@ DNFLevel::DNFLevel() :
 	IsStart_(false),
 	MapScale_(float4::ZERO),
 	Player_(),
-	MonsterHP_()
+	MonsterHP_(),
+	LevelChangeTimer_()
 {
 }
 

@@ -144,7 +144,9 @@ protected:
 	float4 ShadowRot_;
 	float ShadowAirAcc_ = 1.f;
 
+public:
 	float4 PrevPos_;
+protected:
 	float4 BotPos_;
 	GameEngineCollision* BotCol_;
 

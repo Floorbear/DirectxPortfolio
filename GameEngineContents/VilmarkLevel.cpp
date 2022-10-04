@@ -13,8 +13,7 @@
 #include "BoomEffect.h"
 VilmarkLevel::VilmarkLevel() :
 	VilmarkMap_(),
-	MonsterList_(),
-	LevelChangeTimer_()
+	MonsterList_()
 {
 }
 
@@ -29,7 +28,7 @@ void VilmarkLevel::VilmarkStart()
 	InitCamera({ 0,0,-2000 }, 0.6f);
 	//맵 생성
 	CreateBackground<VilmarkMap>();
-	VilmarkMap_ = reinterpret_cast<VilmarkMap*>(Background_);
+	VilmarkMap_ = dynamic_cast<VilmarkMap*>(Background_);
 	//몬스터바 생성
 	MonsterHP_ = CreateActor<MonsterHP>();
 }
@@ -64,6 +63,7 @@ void VilmarkLevel::Update_Door(float _DeltaTime)
 	//맵에 몬스터가 없으면 문이 열리게
 	if (MonsterList_.empty() == true)
 	{
+		Player_->OffBattleMode();
 		VilmarkMap_->OnDoor();
 		VilmarkMap_->FadeTimeAcc_ = 2.0f; //최초의 Vilmark_0에서 FadeTime을 느리게 만들었기 때문에 여기서 별도 수정
 		//플레이어가 오른쪽Door Order에 충돌하면 다음 맵으로
@@ -109,6 +109,10 @@ void VilmarkLevel::Update_Door(float _DeltaTime)
 				}
 			}
 		}
+	}
+	else
+	{
+		Player_->OnBattleMode();
 	}
 }
 

@@ -76,6 +76,5 @@ protected:
 
 	VilmarkMap* VilmarkMap_;
 
-	Timer LevelChangeTimer_;
 	std::map<int, DNFMonster*> MonsterList_;
 };

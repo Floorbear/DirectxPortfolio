@@ -2,6 +2,8 @@
 #include <GameEngineCore/GameEngineLevel.h>
 #include <GameEngineBase/GameEngineMath.h>
 
+#include "DNFMath.h"
+
 //던파의 레벨에서 필요한 공통 기능을 담당할 클래스
 class GameEngineCameraActor;
 class Player_Main;
@@ -62,6 +64,8 @@ protected:
 	DNFHUD* HUD_;
 	MonsterHP* MonsterHP_;
 	DNFBackground* Background_;
+
+	Timer LevelChangeTimer_;
 
 private:
 	//에러 체크용 Bool 함수
