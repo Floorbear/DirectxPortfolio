@@ -224,6 +224,9 @@
     <ClInclude Include="OverkillParticle.h">
       <Filter>Player\Skill</Filter>
     </ClInclude>
+    <ClInclude Include="Barricade.h">
+      <Filter>Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp">
@@ -392,6 +395,9 @@
     </ClCompile>
     <ClCompile Include="OverkillParticle.cpp">
       <Filter>Player\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="Barricade.cpp">
+      <Filter>Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

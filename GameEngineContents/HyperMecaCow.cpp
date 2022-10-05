@@ -8,6 +8,7 @@
 #include "SummonCircle.h"
 #include "MonsterHP.h"
 #include "Player_Main.h"
+#include "DNFHUD.h"
 HyperMecaCow::HyperMecaCow() :
 	WeaponRenderer_(),
 	Attack_2_Change_Timer_(),
@@ -50,9 +51,9 @@ HyperMecaCow::HyperMecaCow() :
 	Value_.Type = MonsterType::MecaTauM;
 	Value_.DieParticleName = "DieParticleBrown";
 	Value_.DieParticleSize = { 1.5f,1.5f,1.5f };
-	MaxHP_ = 2700000;
+	MaxHP_ = 3000000; //3000000
 	CurHP_ = MaxHP_;
-	PerHP_ = 110000;
+	PerHP_ = 110000; //110000
 	FindRange_ = 1250.0f;
 
 	Value_.SuperArmorPos = { 0.0f,0.0f };
@@ -160,11 +161,25 @@ void HyperMecaCow::Start()
 
 	//사운드 초기화
 	SetHitSound("hyper_tau_dmg_0", 4, 1.1f);
-	DieSound_ = "hyper_tau_die_01.wav";
+	DieSound_ = "boneCrusher_charge.wav";
 }
 
 void HyperMecaCow::Update(float _DeltaTime)
 {
+	if (StateManager_.GetCurStateStateName() == "Die" && StateManager_.GetCurStateTime() < 0.25f)
+	{
+		GameEngineTime::GetInst()->SetGlobalScale(0.1f);
+	}
+	else
+	{
+		GameEngineTime::GetInst()->SetGlobalScale(1.0f);
+		if (StateManager_.GetCurStateStateName() == "Die" && IsDieFirst_ == true)
+		{
+			IsDieFirst_ = false;
+			GameEngineSound::SoundPlayOneShot("hyper_tau_die_01.wav");
+			DNFGlobalValue::CurrentHUD_->EndingTimer_.StartTimer(2.5f);
+		}
+	}
 	UpdateMonster(_DeltaTime);
 	CheckCoolTime(_DeltaTime);
 }

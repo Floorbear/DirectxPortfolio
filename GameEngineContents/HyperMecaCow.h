@@ -67,4 +67,7 @@ protected:
 	Timer Runner_CoolTimer = 10.1f;
 
 	float4 Attack_2_Pos_ = { 0.0f,-38.0f,-500.0f };
+
+	//죽은이후 연출
+	bool IsDieFirst_ = true;
 };

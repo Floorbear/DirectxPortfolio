@@ -14,6 +14,8 @@ public:
 	DNFHUD& operator=(const DNFHUD& _Ohter) = delete;
 	DNFHUD& operator=(const DNFHUD&& _Other) noexcept = delete;
 
+	Timer EndingTimer_ = Timer();
+
 protected:
 	void Start() override;
 	void Update(float _DeltaTime) override;
@@ -28,6 +30,7 @@ private:
 	void SkillRendererInit();
 	void SkillIconUpdate(float _DeltaTime);
 	GameEngineUIRenderer* MainRenderer_;
+	GameEngineUIRenderer* EndingRenderer_ = nullptr;
 
 	GaugeRenderer* HPRenderer_;
 	GaugeRenderer* MPRenderer_;

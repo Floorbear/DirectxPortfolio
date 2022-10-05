@@ -105,6 +105,13 @@ void DNFHUD::Start()
 	DestPos_ = RootPos_;
 	DestPos_.x += CutScene_->GetTransform().GetLocalScale().x;
 
+	//엔딩
+	EndingRenderer_ = CreateComponent<GameEngineUIRenderer>(GetNameCopy());
+	EndingRenderer_->SetTexture("Ending.png");
+	EndingRenderer_->ScaleToTexture();
+	EndingRenderer_->GetTransform().SetLocalMove({ 0,0,-1500 });
+	EndingRenderer_->Off();
+
 	//코인
 	Coin_ = CreateComponent<GameEngineUIRenderer>(GetNameCopy());
 	Coin_->SetTexture("Coin.png");
@@ -119,6 +126,16 @@ void DNFHUD::Update(float _DeltaTime)
 	if (DNFGlobalValue::CurrentLevel == nullptr)
 	{
 		return;
+	}
+	if (EndingTimer_.IsTimerOn() == true)
+	{
+		EndingTimer_.Update(_DeltaTime);
+		if (EndingTimer_.IsTimerOn() == false)
+		{
+			DNFGlobalValue::Bgm_.Stop();
+			GameEngineSound::SoundPlayOneShot("result.ogg");
+			EndingRenderer_->On();
+		}
 	}
 	Player_Main* Player = DNFGlobalValue::CurrentPlayer_;
 	if (Player->StateManager_.GetCurStateStateName() == "Die")
