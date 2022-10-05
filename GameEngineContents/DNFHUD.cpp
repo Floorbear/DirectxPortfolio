@@ -11,8 +11,10 @@
 #define Outragebreak_Icon 1
 #define Fury_Icon 2
 #define ExtremOverkill_Icon 3
+#define QuickStanding_Icon 6
 #define GoreCross_Icon 7
 #define HopSmash_Icon 8
+#define TripleSlash_Icon 9
 #define Frenzy_Icon 10
 #define UpperSlash_Icon 13
 
@@ -33,10 +35,13 @@ DNFHUD::DNFHUD() :
 	StringToInt_.insert(std::make_pair("UpperSlash", UpperSlash_Icon));
 	StringToInt_.insert(std::make_pair("GoreCross", GoreCross_Icon));
 	StringToInt_.insert(std::make_pair("HopSmash", HopSmash_Icon));
+	StringToInt_.insert(std::make_pair("QuickStanding", QuickStanding_Icon));
+
 	StringToInt_.insert(std::make_pair("Frenzy", Frenzy_Icon));
 	StringToInt_.insert(std::make_pair("Fury", Fury_Icon));
 	StringToInt_.insert(std::make_pair("Outragebreak", Outragebreak_Icon));
 	StringToInt_.insert(std::make_pair("ExtremOverkill", ExtremOverkill_Icon));
+	StringToInt_.insert(std::make_pair("TripleSlash", TripleSlash_Icon));
 }
 
 DNFHUD::~DNFHUD()
@@ -284,10 +289,17 @@ void DNFHUD::SkillRendererInit()
 		//NewSkillIcon->SetPivot(PIVOTMODE::CENTER);
 		SkillIcon_.push_back(NewSkillIcon);
 	}
+	SkillIcon_[QuickStanding_Icon]->On();
+	SkillIcon_[QuickStanding_Icon]->SetTexture("QuickStanding.png");
+	SkillIcon_[QuickStanding_Icon]->GetTransform().SetLocalScale({ 28,28 });
 
 	SkillIcon_[Outragebreak_Icon]->On();
 	SkillIcon_[Outragebreak_Icon]->SetTexture("Outragebreak.png");
 	SkillIcon_[Outragebreak_Icon]->GetTransform().SetLocalScale({ 28,28 });
+
+	SkillIcon_[TripleSlash_Icon]->On();
+	SkillIcon_[TripleSlash_Icon]->SetTexture("TripleSlash.png");
+	SkillIcon_[TripleSlash_Icon]->GetTransform().SetLocalScale({ 28,28 });
 
 	SkillIcon_[ExtremOverkill_Icon]->On();
 	SkillIcon_[ExtremOverkill_Icon]->SetTexture("ExtremOverkill.png");

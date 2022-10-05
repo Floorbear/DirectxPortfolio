@@ -95,7 +95,10 @@ bool Player_Main::CheckAttackKey()
 	{
 		return CheckCanUsingSkill("HopSmash", PlayerAnimations::HopSmash);
 	}
-
+	if (GameEngineInput::GetInst()->IsDown("D") == true)
+	{
+		return CheckCanUsingSkill("TripleSlash", PlayerAnimations::TripleSlash);
+	}
 	if (GameEngineInput::GetInst()->IsDown("F") == true)
 	{
 		return CheckCanUsingSkill("Frenzy", PlayerAnimations::Frenzy);
@@ -175,6 +178,8 @@ void Player_Main::InitAniFunc()
 			StateManager_.ChangeState("Idle");
 		});
 
+	TripleSlashAniFunc();
+
 	AutoAttackAniFunc();
 
 	Frenzy_AutoAttackAniFunc();
@@ -188,6 +193,166 @@ void Player_Main::InitAniFunc()
 	OutragebreakAniFunc();
 
 	ExtremOverkillAniFunc();
+}
+
+void Player_Main::TripleSlashAniFunc()
+{
+	//TripleSlash_0
+	MainRenderer_->AnimationBindFrame("TripleSlash_0",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.CurFrame == 2)
+			{
+				Force_.ForceX_ = TripleSlashForceX;
+				//CheckAttackKey();
+				TripleSlash_->On();
+				TripleSlash_->ChangeFrameAnimation("TripleSlash_0");
+				TripleSlash_Trail_->On();
+				TripleSlash_Trail_->ChangeFrameAnimation("TripleSlash_0");
+
+				GameEngineSound::SoundPlayControl("tslash_01.wav");
+				GameEngineSound::SoundPlayControl("sm_triple1.wav");
+			}
+
+			if (_Desc.CurFrame == 3)
+			{
+				SetAttackCol(Value_.TripleSlashhPos, Value_.TripleSlashhScale);
+				//Set Attack
+				CurAttackData_.AttackSound = GetRandomSound("slessSwd_hit_0", 1, 2) + ".wav";
+
+				CurAttackData_.Type = AttackType::Below;
+				CurAttackData_.AttackName = "TripleSlash";
+				CurAttackData_.Att = CalAtt(Value_.GoreCrossAtt);
+				CurAttackData_.XForce = FrenzyXForce;
+				CurAttackData_.Stiffness = 0.07f;
+				CurAttackData_.RStiffness = 0.05f;
+				CurAttackData_.Bleeding = 17;
+				CurAttackData_.AttCount = 0;
+				CurAttackData_.AttCount++;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
+				CurAttackData_.AttEffect = Effect::SlashSRight;
+			}
+			//else if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_0_End - 1)
+			//{
+			//	CurAttackData_.Att = CalAtt(Value_.FrenzyAtt);
+			//	CurAttackData_.AttCount++;
+			//	CurAttackData_.AttEffect = Effect::SlashSLeft;
+			//}
+
+			else if (_Desc.CurFrame == _Desc.Frames.size())
+			{
+				TripleSlash_->Off();
+				TripleSlash_Trail_->Off();
+
+				AttackCol_->Off();
+				IsAttack_End_ = true;
+			}
+		});
+
+	//AutoAttack_1
+	MainRenderer_->AnimationBindFrame("TripleSlash_1",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.CurFrame == 2)
+			{
+				Force_.ForceX_ = TripleSlashForceX;
+				GameEngineSound::SoundPlayControl("tslash_02.wav");
+				GameEngineSound::SoundPlayControl("sm_triple2.wav");
+				TripleSlash_->On();
+				TripleSlash_->ChangeFrameAnimation("TripleSlash_1");
+
+				TripleSlash_Trail_->On();
+				TripleSlash_Trail_->ChangeFrameAnimation("TripleSlash_1");
+			}
+
+			/*	if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_1_Start + 1)
+				{
+					AutoAttackSound();
+				}*/
+
+			if (_Desc.CurFrame == 3)
+			{
+				SetAttackCol(Value_.TripleSlashhPos, Value_.TripleSlashhScale);
+				CurAttackData_.AttackSound = GetRandomSound("slessSwd_hit_0", 1, 2) + ".wav";
+
+				//Set Attack
+				CurAttackData_.Type = AttackType::Below;
+				CurAttackData_.AttackName = "TripleSlash";
+				CurAttackData_.Att = CalAtt(Value_.GoreCrossAtt);
+				CurAttackData_.XForce = FrenzyXForce;
+				CurAttackData_.Stiffness = 0.15f;
+				CurAttackData_.RStiffness = 0.05f;
+				CurAttackData_.Bleeding = 17;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
+				CurAttackData_.AttCount++;
+
+				CurAttackData_.AttEffect = Effect::SlashSRight;
+			}
+			//else if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_1_End - 1)
+			//{
+			//	CurAttackData_.Att = CalAtt(Value_.FrenzyAtt);
+			//	CurAttackData_.AttCount++;
+			//	CurAttackData_.AttEffect = Effect::SlashSHori;
+			//}
+
+			else if (_Desc.CurFrame == _Desc.Frames.size())
+			{
+				TripleSlash_Trail_->Off();
+				TripleSlash_->Off();
+				AttackCol_->Off();
+				IsAttack_End_ = true;
+			}
+		});
+
+	//AutoAttack_3
+	MainRenderer_->AnimationBindFrame("TripleSlash_2",
+		[&](const FrameAnimation_DESC& _Desc)
+		{
+			if (_Desc.CurFrame == 2)
+			{
+				Force_.ForceX_ = TripleSlashForceX;
+				GameEngineSound::SoundPlayControl("tslash_03.wav");
+				GameEngineSound::SoundPlayControl("sm_triple3.wav");
+				TripleSlash_->On();
+				TripleSlash_->ChangeFrameAnimation("TripleSlash_2");
+				TripleSlash_Trail_->On();
+				TripleSlash_Trail_->ChangeFrameAnimation("TripleSlash_2");
+			}
+
+			/*	if (_Desc.Frames[_Desc.CurFrame - 1] == Frenzy_AutoAttack_3_Start + 1)
+				{
+					AutoAttackSound();
+				}*/
+			if (_Desc.CurFrame == 3)
+			{
+				float4 Sclae = Value_.TripleSlashhScale;
+				Sclae.x = Value_.TripleSlashhScale.x * 1.4f;
+				SetAttackCol(Value_.TripleSlashhPos, Sclae);
+				//Set Attack
+				CurAttackData_.AttackSound = GetRandomSound("slessSwd_hit_0", 1, 2) + ".wav";
+
+				CurAttackData_.AttackName = "TripleSlash";
+				CurAttackData_.Att = CalAtt(Value_.GoreCrossAtt);
+				CurAttackData_.Type = AttackType::Below;
+				CurAttackData_.Stiffness = 0.15f;
+				CurAttackData_.RStiffness = 0.11f;
+				CurAttackData_.Bleeding = 17;
+
+				CurAttackData_.YForce = 550.0f;
+				CurAttackData_.ZPos = static_cast<int>(GetTransform().GetWorldPosition().y + BotPos_.y);
+				CurAttackData_.AttCount++;
+				CurAttackData_.AttEffect = Effect::SlashSHori;
+			}
+
+			else if (_Desc.CurFrame == _Desc.Frames.size())
+			{
+				TripleSlash_->Off();
+				TripleSlash_Trail_->Off();
+
+				AttackCol_->Off();
+				IsAttack_End_ = true;
+			}
+		});
 }
 
 void Player_Main::ExtremOverkillAniFunc()

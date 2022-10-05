@@ -73,6 +73,7 @@ void ContentsCore::Start()
 	GameEngineInput::GetInst()->CreateKey("Right", VK_RIGHT);
 	GameEngineInput::GetInst()->CreateKey("Up", VK_UP);
 	GameEngineInput::GetInst()->CreateKey("Down", VK_DOWN);
+	GameEngineInput::GetInst()->CreateKey("Shift", VK_LSHIFT);
 
 	//노말 텍스처 로드
 	{

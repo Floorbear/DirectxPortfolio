@@ -4,7 +4,6 @@
 #include <GameEngineBase/GameEngineTime.h>
 #include <GameEngineBase/GameEngineDebugObject.h>
 
-
 class GameEngineUpdateObject : public GameEngineDebugObject
 {
 public:
@@ -17,7 +16,6 @@ public:
 	GameEngineUpdateObject(GameEngineUpdateObject&& _Other) noexcept = delete;
 	GameEngineUpdateObject& operator=(const GameEngineUpdateObject& _Other) = delete;
 	GameEngineUpdateObject& operator=(GameEngineUpdateObject&& _Other) noexcept = delete;
-
 
 	inline bool& IsUpdateRef()
 	{
@@ -52,7 +50,6 @@ public:
 		{
 			return IsUpdate_ && false == IsDeath_;
 		}
-
 	}
 
 	inline bool IsDeath()
@@ -146,7 +143,6 @@ public:
 		return CurObject;
 	}
 
-
 	virtual void SetParent(GameEngineUpdateObject* _Parent);
 	virtual void DetachObject();
 
@@ -156,7 +152,6 @@ public:
 	virtual void Update(float _DeltaTime) = 0;
 
 	void AllUpdate(float _DeltaTime);
-
 
 	virtual void LevelStartEvent() {}
 	virtual void LevelEndEvent() { }
@@ -183,7 +178,7 @@ protected:
 	virtual void ReleaseObject(std::list<GameEngineUpdateObject*>& _RelaseList);
 
 	template<typename ConvertType>
-	std::list<ConvertType*> GetConvertChilds() 
+	std::list<ConvertType*> GetConvertChilds()
 	{
 		std::list<ConvertType*> NewList;
 
@@ -201,9 +196,6 @@ protected:
 
 	std::list<GameEngineUpdateObject*> Childs;
 
-
-
-
 private:
 	int Order_;
 	bool IsReleaseUpdate_;
@@ -215,4 +207,3 @@ private:
 
 	GameEngineUpdateObject* Parent;
 };
-

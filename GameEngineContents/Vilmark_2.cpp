@@ -40,7 +40,7 @@ void Vilmark_2::Start()
 	}
 	{
 		Generator* NewGe = CreateActor<Generator>();
-		NewGe->Init< MiniTau>(2, 20.f);//3.5
+		NewGe->Init< MiniTau>(1, 21.f);//3.5
 		NewGe->GetTransform().SetWorldPosition({ Acc + 772,-406 ,-406 });
 	}
 	float4 AccPos = { 0,-30.f };

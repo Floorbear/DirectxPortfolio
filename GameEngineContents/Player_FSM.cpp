@@ -81,6 +81,24 @@ void Player_Main::AddRenderer_Init()
 			}
 		}
 	}
+
+	//트리플 어택 텍스처가 없으면 로드한다
+	if (GameEngineFolderTexture::Find("Triple1") == nullptr)
+	{
+		{
+			GameEngineDirectory Dir;
+			Dir.MoveParentToExitsChildDirectory("ContentsResources");
+			Dir.Move("ContentsResources");
+			Dir.Move("FolderTexture");
+			Dir.Move("SkillTexture");
+			Dir.Move("TripleSlash");
+			std::vector<GameEngineDirectory> Dirs = Dir.GetRecursiveAllDirectory();
+			for (GameEngineDirectory Dir_i : Dirs)
+			{
+				GameEngineFolderTexture::Load(Dir_i.GetFullPath());
+			}
+		}
+	}
 	float Iter_2 = 0.027f;
 
 	Frenzy_Upper_ = CreateComponent<GameEngineTextureRenderer>();
@@ -166,6 +184,27 @@ void Player_Main::AddRenderer_Init()
 			AttackCol_->Off();
 			CurAttackData_ = {};
 		});
+
+	float4 TriPos = { 0,0,-20 };
+	TripleSlash_ = CreateComponent<GameEngineTextureRenderer>();
+	TripleSlash_->CreateFrameAnimationFolder("TripleSlash_0", FrameAnimation_DESC("Triple1", Iter_2 * 1.3f, false));
+	TripleSlash_->CreateFrameAnimationFolder("TripleSlash_1", FrameAnimation_DESC("Triple2", Iter_2 * 1.3f, false));
+	TripleSlash_->CreateFrameAnimationFolder("TripleSlash_2", FrameAnimation_DESC("Triple3", Iter_2 * 1.3f, false));
+	TripleSlash_->ChangeFrameAnimation("TripleSlash_0");
+	TripleSlash_->GetPipeLine()->SetOutputMergerBlend("TransparentBlend");
+	TripleSlash_->SetScaleModeImage();
+	TripleSlash_->GetTransform().SetLocalMove(TriPos);
+	TripleSlash_->Off();
+
+	TripleSlash_Trail_ = CreateComponent<GameEngineTextureRenderer>();
+	TripleSlash_Trail_->CreateFrameAnimationFolder("TripleSlash_0", FrameAnimation_DESC("TripleTrail", 0, 3, Iter_2 * 1.3f, false));
+	TripleSlash_Trail_->CreateFrameAnimationFolder("TripleSlash_1", FrameAnimation_DESC("TripleTrail", 0, 3, Iter_2 * 1.3f, false));
+	TripleSlash_Trail_->CreateFrameAnimationFolder("TripleSlash_2", FrameAnimation_DESC("TripleTrail", 4, 7, Iter_2 * 1.3f, false));
+	TripleSlash_Trail_->ChangeFrameAnimation("TripleSlash_0");
+	TripleSlash_Trail_->GetPipeLine()->SetOutputMergerBlend("TransparentBlend");
+	TripleSlash_Trail_->SetScaleModeImage();
+	TripleSlash_Trail_->GetTransform().SetLocalMove(TriPos);
+	TripleSlash_Trail_->Off();
 }
 
 void Player_Main::IdleStart(const StateInfo _Info)
@@ -390,6 +429,25 @@ void Player_Main::DownUpdate(float _DeltaTime, const StateInfo _Info)
 		OnAir_ = false;
 		Force_.OffGravity();
 
+		//퀵스텐딩 검사
+		{
+			if (GameEngineInput::GetInst()->IsPress("C") == true)
+			{
+				//해당 스킬을 사용해서 쿨타임이 돌고있는 상태면 무시한다.
+				if (SkillCoolTime_["QuickStanding"]->IsTimerOn() == false)
+				{
+					OnAir_ = false;
+					Force_.ForceY_ = 0.0f;
+					AirborneTime_ = 0.0f;
+					Force_.OffGravity();
+					GodTime_.StartTimer(Value_.Down_God_Time);
+					PrevHitData_ = {};
+					StateManager_.ChangeState("QuickStanding");
+					return;
+				}
+			}
+		}
+
 		//기상검사
 		if (Down_Timer_.IsTimerOn() == false)
 		{
@@ -403,6 +461,34 @@ void Player_Main::DownUpdate(float _DeltaTime, const StateInfo _Info)
 			return;
 		}
 	}
+}
+
+void Player_Main::QuickStandingStart(const StateInfo _Info)
+{
+	AvatarManager_.ChangeMotion(PlayerAnimations::QuickStanding);
+	GodTime_.StartTimer(2.5f);
+}
+
+void Player_Main::QuickStandingUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	if (GameEngineInput::GetInst()->IsPress("C") == false && GodTime_.GetCurTime() < 2.0f)
+	{
+		StateManager_.ChangeState("Idle");
+		return;
+	}
+
+	if (GodTime_.IsTimerOn() == false)
+	{
+		StateManager_.ChangeState("Idle");
+		return;
+	}
+}
+
+void Player_Main::QuickStandingEnd(const StateInfo _Info)
+{
+	SkillCoolTime_["QuickStanding"]->StartTimer();
+	GodTime_.StartTimer(0.05f);
+	StartSuperArmor(0.2f);
 }
 
 void Player_Main::AutoAttackStart(const StateInfo _Info)
@@ -530,6 +616,91 @@ void Player_Main::UpperSlashUpdate(float _DeltaTime, const StateInfo _Info)
 
 void Player_Main::UpperSlashEnd(const StateInfo _Info)
 {
+	AttackEnd();
+}
+
+void Player_Main::TripleSlashStart(const StateInfo _Info)
+{
+	AvatarManager_.ChangeMotion(PlayerAnimations::TripleSlash_0);
+	TripleSlashTimer_.StartTimer(TripleSlashGetKeyTime_);
+
+	TripleSlash_->CurAnimationReset();
+	TripleSlash_Trail_->CurAnimationReset();
+
+	//마나 소모
+	CurMP_ -= Value_.HopSmash_MP;
+}
+
+void Player_Main::TripleSlashUpdate(float _DeltaTime, const StateInfo _Info)
+{
+	//공격중인 상태
+	if (TripleSlashTimer_.IsTimerOn() == true)
+	{
+		TripleSlashTimer_.Update(_DeltaTime);
+		//특정 시간까지 키 입력을 받는다.
+		if (GameEngineInput::GetInst()->IsDown("D") == true)
+		{
+			IsReadyNextAttack_ = true;
+
+			//같은 공격인데 이미 공격횟수를 전부 했음
+			if (CurAttackData_.AttCount >= 3)
+			{
+				IsReadyNextAttack_ = false;
+			}
+			switch (CurAttackData_.AttCount)
+			{
+			case 1:
+				NextAttackAni_ = PlayerAnimations::TripleSlash_1;
+				break;
+			case 2:
+				NextAttackAni_ = PlayerAnimations::TripleSlash_2;
+				break;
+			default:
+				break;
+			}
+			//특정시간에 키입력을 받으면 모션을 바로 바꾼다.
+			if (TripleSlashTimer_.GetCurTime() < TripleSlashGetKeyTime_ * 0.5f)
+			{
+				TripleSlashTimer_.Off();
+			}
+		}
+	}
+	//공격이 끝났어 == 한사이클이 돌았어
+	if (TripleSlashTimer_.IsTimerOn() == false)
+	{
+		if (IsReadyNextAttack_ == true)
+		{
+			if (NextAttackAni_ == PlayerAnimations::TripleSlash_1 || NextAttackAni_ == PlayerAnimations::TripleSlash_2)
+			{
+				FlipX(GetMoveDir());
+				TripleSlashTimer_.StartTimer(TripleSlashGetKeyTime_);
+				AvatarManager_.ChangeMotion(NextAttackAni_);
+				IsAttack_End_ = false;
+				IsReadyNextAttack_ = false;
+				return;
+			}
+		}
+
+		if (IsPressMoveKey() == false)
+		{
+			StateManager_.ChangeState("Idle");
+			return;
+		}
+		else
+		{
+			StateManager_.ChangeState("Move");
+			return;
+		}
+	}
+}
+
+void Player_Main::TripleSlashEnd(const StateInfo _Info)
+{
+	//CoolTime Set
+	SkillCoolTime_["TripleSlash"]->StartTimer();
+	Force_.ForceX_ = 0.f;
+	TripleSlash_->Off();
+	TripleSlash_Trail_->Off();
 	AttackEnd();
 }
 

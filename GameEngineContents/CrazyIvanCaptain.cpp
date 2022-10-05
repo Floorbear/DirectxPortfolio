@@ -15,7 +15,7 @@ CrazyIvanCaptain::CrazyIvanCaptain() :
 	SelfDestructCol_Timer_(),
 	IsUnder50_(false)
 {
-	MaxHP_ = 1200000;
+	MaxHP_ = 700000;
 	CurHP_ = MaxHP_;
 
 	Value_.Type = MonsterType::CrazyIvanCapM;

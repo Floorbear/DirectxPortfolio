@@ -95,6 +95,8 @@ private:
 	//캐릭터의 애니메이션 함수 초기화
 	void InitAniFunc();
 
+	void TripleSlashAniFunc();
+
 	void ExtremOverkillAniFunc();
 
 	void OutragebreakAniFunc();
@@ -244,6 +246,13 @@ private:
 	GameEngineTextureRenderer* Outragebreak_Sword_ = nullptr;
 	bool IsOutragebreak_first_ = true;
 
+	//단공참관련
+	Timer TripleSlashTimer_ = Timer();
+	float TripleSlashGetKeyTime_ = 0.5f;
+	float TripleSlashForceX = 450.0f;
+	GameEngineTextureRenderer* TripleSlash_ = nullptr;
+	GameEngineTextureRenderer* TripleSlash_Trail_ = nullptr;
+
 	void AddRenderer_Init();
 
 	void IdleStart(const StateInfo _Info);
@@ -264,6 +273,10 @@ private:
 	void DownStart(const StateInfo _Info);
 	void DownUpdate(float _DeltaTime, const StateInfo _Info);
 
+	void QuickStandingStart(const StateInfo _Info);
+	void QuickStandingUpdate(float _DeltaTime, const StateInfo _Info);
+	void  QuickStandingEnd(const StateInfo _Info);
+
 	void AutoAttackStart(const StateInfo _Info);
 	void AutoAttackUpdate(float _DeltaTime, const StateInfo _Info);
 	void AutoAttackEnd(const StateInfo _Info);
@@ -271,6 +284,10 @@ private:
 	void UpperSlashStart(const StateInfo _Info);
 	void UpperSlashUpdate(float _DeltaTime, const StateInfo _Info);
 	void UpperSlashEnd(const StateInfo _Info);
+
+	void TripleSlashStart(const StateInfo _Info);
+	void TripleSlashUpdate(float _DeltaTime, const StateInfo _Info);
+	void TripleSlashEnd(const StateInfo _Info);
 
 	void HopSmashStart(const StateInfo _Info);
 	void HopSmashUpdate(float _DeltaTime, const StateInfo _Info);
@@ -320,6 +337,8 @@ private:
 		float4 AutoAttackScale;
 		float4 UpperSlashPos;
 		float4 UpeerSlashScale;
+		float4 TripleSlashhPos = float4(20, -45, -500);
+		float4 TripleSlashhScale = float4(180, 100, 1);
 		float4 HopSmashScale = float4(230, 140, 1);;
 		float4 GoreCrossPos;
 		float4 GoreCrossScale;

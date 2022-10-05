@@ -112,6 +112,7 @@ void Player_Main::InitDefaultValue()
 	MPConsumption_.insert(std::make_pair("Fury", Value_.Fury_MP));
 	MPConsumption_.insert(std::make_pair("Outragebreak", Value_.Outragebreak_MP));
 	MPConsumption_.insert(std::make_pair("ExtremOverkill", Value_.Outragebreak_MP * 3.f));
+	MPConsumption_.insert(std::make_pair("TripleSlash", Value_.HopSmash_MP));
 }
 
 Player_Main::~Player_Main()
@@ -188,9 +189,6 @@ void Player_Main::Start()
 	Force_.SetTransfrom(&GetTransform());
 
 	DNFDebugGUI::AddMutableValue("Temp1", &DNFGlobalValue::Temp1);
-
-	DNFDebugGUI::AddMutableValue("Pos", &Value_.OutrageBreakPos);
-	DNFDebugGUI::AddMutableValue("Sca", &Value_.OutrageBreakScale);
 }
 
 void Player_Main::Update(float _DeltaTime)
@@ -388,6 +386,10 @@ void Player_Main::InitState()
 		std::bind(&Player_Main::JumpStart, this, std::placeholders::_1),
 		std::bind(&Player_Main::JumpEnd, this, std::placeholders::_1));
 
+	StateManager_.CreateStateMember("QuickStanding", std::bind(&Player_Main::QuickStandingUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::QuickStandingStart, this, std::placeholders::_1),
+		std::bind(&Player_Main::QuickStandingEnd, this, std::placeholders::_1));
+
 	StateManager_.CreateStateMember("UpperSlash", std::bind(&Player_Main::UpperSlashUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::UpperSlashStart, this, std::placeholders::_1),
 		std::bind(&Player_Main::UpperSlashEnd, this, std::placeholders::_1));
@@ -407,6 +409,11 @@ void Player_Main::InitState()
 	StateManager_.CreateStateMember("GoreCross", std::bind(&Player_Main::GoreCrossUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::GoreCrossStart, this, std::placeholders::_1),
 		std::bind(&Player_Main::GoreCrossEnd, this, std::placeholders::_1));
+
+	StateManager_.CreateStateMember("TripleSlash",
+		std::bind(&Player_Main::TripleSlashUpdate, this, std::placeholders::_1, std::placeholders::_2),
+		std::bind(&Player_Main::TripleSlashStart, this, std::placeholders::_1),
+		std::bind(&Player_Main::TripleSlashEnd, this, std::placeholders::_1));
 
 	StateManager_.CreateStateMember("Hit", std::bind(&Player_Main::HitUpdate, this, std::placeholders::_1, std::placeholders::_2),
 		std::bind(&Player_Main::HitStart, this, std::placeholders::_1));
@@ -650,9 +657,13 @@ Timer* Player_Main::CreateSkillCoolTime(std::string _Name, float Time_)
 
 void Player_Main::InitSkillCoolTime()
 {
+	CreateSkillCoolTime("QuickStanding", 7.0f);
+
 	CreateSkillCoolTime("UpperSlash", 2.0f);
-	CreateSkillCoolTime("GoreCross", 3.0f);
-	CreateSkillCoolTime("HopSmash", 4.0f);
+	CreateSkillCoolTime("GoreCross", 5.3f);
+	CreateSkillCoolTime("HopSmash", 5.3f);
+	CreateSkillCoolTime("TripleSlash", 5.3f);
+
 	CreateSkillCoolTime("Frenzy", 5.0f);
 	CreateSkillCoolTime("Fury", 43.0f);
 	CreateSkillCoolTime("Outragebreak", 34.0f);

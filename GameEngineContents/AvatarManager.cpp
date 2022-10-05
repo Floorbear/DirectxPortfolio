@@ -332,6 +332,7 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 	CurRenderer->CreateFrameAnimationFolder("Down" + Name, FrameAnimation_DESC(_AvatarFolderName, Down_Start, Down_End, 0.04f, false));
 	CurRenderer->CreateFrameAnimationFolder("Jump_Start" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Start, Jump_Motion_Middle, 0.06f, false));
 	CurRenderer->CreateFrameAnimationFolder("Jump_End" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Middle + 1, Jump_Motion_End, 0.06f, false));
+	CurRenderer->CreateFrameAnimationFolder("QuickStanding" + Name, FrameAnimation_DESC(_AvatarFolderName, 157, 158, 0.1f, false));
 
 	CurRenderer->CreateFrameAnimationFolder("Frenzy" + Name, FrameAnimation_DESC(_AvatarFolderName, Frenzy_Start, Frenzy_End, Iter_1, false));
 	CurRenderer->CreateFrameAnimationFolder("Frenzy_AutoAttack_0" + Name, FrameAnimation_DESC(_AvatarFolderName, Frenzy_AutoAttack_0_Start, Frenzy_AutoAttack_0_End, Iter_2 * 2.1f, false));
@@ -341,6 +342,10 @@ void AvatarManager::CreateAvatar(const std::string& _AvatarFolderName, AvatarPar
 
 	CurRenderer->CreateFrameAnimationFolder("GoreCross_0" + Name, FrameAnimation_DESC(_AvatarFolderName, GoreCross_0_Start, GoreCross_0_End, GoreCrossIter, false));
 	CurRenderer->CreateFrameAnimationFolder("GoreCross_1" + Name, FrameAnimation_DESC(_AvatarFolderName, GoreCross_1_Start, GoreCross_1_End, GoreCrossIter, false));
+
+	CurRenderer->CreateFrameAnimationFolder("TripleSlash_0" + Name, FrameAnimation_DESC(_AvatarFolderName, AutoAttack_0_Start, AutoAttack_0_End, Iter_2, false));
+	CurRenderer->CreateFrameAnimationFolder("TripleSlash_1" + Name, FrameAnimation_DESC(_AvatarFolderName, Frenzy_AutoAttack_0_Start, Frenzy_AutoAttack_0_End, Iter_2, false));
+	CurRenderer->CreateFrameAnimationFolder("TripleSlash_2" + Name, FrameAnimation_DESC(_AvatarFolderName, GoreCross_1_Start, GoreCross_1_End, Iter_2, false));
 
 	CurRenderer->CreateFrameAnimationFolder("HopSmash_0" + Name, FrameAnimation_DESC(_AvatarFolderName, Jump_Motion_Start, Jump_Motion_Middle, 0.06f, false));
 	CurRenderer->CreateFrameAnimationFolder("HopSmash_1" + Name, FrameAnimation_DESC(_AvatarFolderName, HopSmash_1_Start, HopSmash_1_End, Iter_2, false));
@@ -394,6 +399,18 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 	case PlayerAnimations::AutoAttack_2:
 		return "AutoAttack_2";
 		break;
+	case PlayerAnimations::TripleSlash: //Enum To String State전이용
+		return "TripleSlash";
+		break;
+	case PlayerAnimations::TripleSlash_0:
+		return "TripleSlash_0";
+		break;
+	case PlayerAnimations::TripleSlash_1:
+		return "TripleSlash_1";
+		break;
+	case PlayerAnimations::TripleSlash_2:
+		return "TripleSlash_2";
+		break;
 	case PlayerAnimations::Frenzy:
 		return "Frenzy";
 		break;
@@ -432,6 +449,9 @@ std::string AvatarManager::EnumToString(PlayerAnimations _Ani)
 		break;
 	case PlayerAnimations::GoreCross_1:
 		return "GoreCross_1";
+		break;
+	case PlayerAnimations::QuickStanding:
+		return "QuickStanding";
 		break;
 	case PlayerAnimations::HopSmash: //State 전이용
 		return "HopSmash";
