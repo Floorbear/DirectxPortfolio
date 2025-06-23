@@ -15,6 +15,12 @@
 - [다운 링크](<https://drive.google.com/file/d/15mmvsJWkaX7NokR3OGf7nvwFEX5PLdE9/view?usp=sharing>)
 - 실행 : DirectxPortfolio\Bin\Release\x64\GameEngineApp.exe 로 실행
 
+---
+
+##  기술소개서
+
+- [다운](https://drive.google.com/file/d/1Ia1EGuGqAz2j_CBeaNlbsc76H71lMs5a/view?usp=sharing)
+
 ## 기술 스택
 
 - **C++**
