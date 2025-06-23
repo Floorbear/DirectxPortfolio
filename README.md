@@ -12,7 +12,7 @@
 
 ## 설치 및 실행
 
-- [다운 링크](<https://drive.google.com/file/d/15mmvsJWkaX7NokR3OGf7nvwFEX5PLdE9/view?usp=sharing>)
+- [다운 링크](<https://mega.nz/file/j2ZT3SzY#Dx1t-3hIhigd4e9uMUveO2HmAvikcU-8sU1jWqlcVuA>)
 - 실행 : DirectxPortfolio\Bin\Release\x64\GameEngineApp.exe 로 실행
 
 ---
